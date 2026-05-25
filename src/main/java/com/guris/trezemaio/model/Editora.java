@@ -11,6 +11,8 @@ public class Editora {
 
     private String name;
 
+    private String cnpj;
+
     @OneToOne
     @JoinColumn(name = "address_id")
     private Endereco address;
