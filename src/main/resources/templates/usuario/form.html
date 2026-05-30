@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Usuário</title>
+</head>
+<body>
+<h1>Cadastro de Usuário</h1>
+
+<form th:action="@{/usuario/create}" th:object="${usuario}" method="post">
+    <label>
+        Nome
+        <input type="text" th:field="*{name}" placeholder="Digite o nome" required>
+    </label>
+
+    <label>
+        Senha
+        <input type="password" th:field="*{password}" placeholder="Digite a senha" required>
+    </label>
+
+    <label>
+        Tipo
+        <select th:field="*{type}" required>
+            <option value="">Selecione</option>
+            <option th:each="tipo : ${T(com.guris.trezemaio.model.enums.TipoUsuario).values()}"
+                    th:value="${tipo}"
+                    th:text="${tipo}"></option>
+        </select>
+    </label>
+
+    <div class="actions">
+        <button type="submit">Salvar</button>
+        <a th:href="@{/usuario/list}">Ver lista</a>
+    </div>
+</form>
+</body>
+</html>
