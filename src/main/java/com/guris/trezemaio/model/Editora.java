@@ -1,7 +1,11 @@
 package com.guris.trezemaio.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_editora")
 public class Editora {
@@ -16,13 +20,4 @@ public class Editora {
     @OneToOne
     @JoinColumn(name = "address_id")
     private Endereco address;
-
-    public Endereco getAddress() {
-        return address;
-    }
-
-    public void setAddress(Endereco address) {
-        this.address = address;
-    }
-
 }

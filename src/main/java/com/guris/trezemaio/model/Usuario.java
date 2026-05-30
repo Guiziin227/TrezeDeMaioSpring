@@ -2,7 +2,11 @@ package com.guris.trezemaio.model;
 
 import com.guris.trezemaio.model.enums.TipoUsuario;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_usuario")
 public class Usuario {
