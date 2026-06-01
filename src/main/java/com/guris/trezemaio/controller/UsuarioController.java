@@ -24,7 +24,7 @@ public class UsuarioController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute Usuario usuario) {
-        usuarioService.create(usuario);
+        usuarioService.criarUsuario(usuario);
         return "redirect:/usuario/list";
     }
 
@@ -36,7 +36,7 @@ public class UsuarioController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        model.addAttribute("usuarios", usuarioService.findAll());
+        model.addAttribute("usuarios", usuarioService.listarUsuarios());
         return LIST_VIEW;
     }
 }

@@ -21,13 +21,13 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void create(Usuario usuario){
+    public void criarUsuario(Usuario usuario){
         logger.info("Criando usuário: {}", usuario.getName());
         usuarioRepository.save(usuario);
     }
 
     @Transactional(readOnly = true)
-    public List<Usuario> findAll() {
+    public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
     }
 }
