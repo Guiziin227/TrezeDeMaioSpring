@@ -1,5 +1,6 @@
 package com.guris.trezemaio;
 
+import com.guris.trezemaio.model.Livro;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
