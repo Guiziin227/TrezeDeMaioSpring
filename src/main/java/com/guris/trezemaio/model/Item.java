@@ -9,14 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "tb_item")
 public class Item {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String title;
     private String subtitle;
     private int pagesCount;
@@ -25,6 +18,10 @@ public class Item {
     private int quantity;
     private String observation;
     private Boolean isActive;
+
+    private String autor;
+    private String edicao;
+    private Doador doador;
 
     private String localization;
     private String description;
