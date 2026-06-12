@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treze de Maio - Home</title>
+</head>
+<body>
+<h1>Bem-vindo ao sistema</h1>
+
+<!-- Se não estiver logado -->
+<div sec:authorize="isAnonymous()">
+    <p>Você não está autenticado.</p>
+    <p>
+        <a href="/usuario/login">Ir para login</a>
+    </p>
+
+    <p>
+        <a th:href="@{/livro}">Ver Acervo</a>
+    </p>
+</div>
+
+<!-- Se estiver logado -->
+<div sec:authorize="isAuthenticated()">
+    <p>Olá, <strong sec:authentication="name">Usuário</strong>!</p>
+    <p>Perfil/Permissão: <strong sec:authentication="principal.authorities">Permissões</strong></p>
+    
+    <!-- Ações específicas por perfil -->
+    <div sec:authorize="hasAuthority('BIBLIOTECARIO')">
+        <p><a th:href="@{/livro}">Gerenciar Acervo (CRUD)</a></p>
+    </div>
+    
+    <div sec:authorize="hasAuthority('ADMINISTRADOR')">
+        <p><a th:href="@{/livro}">Gerenciar Acervo (CRUD)</a></p>
+        <p><a th:href="@{/usuario/form}">Cadastrar Novo Usuário</a></p>
+        <p><a th:href="@{/usuario/list}">Gerenciar Usuários (CRUD)</a></p>
+    </div>
+    
+    <!-- Formulário de Logout (Padrão Spring Security com CSRF) -->
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Sair (Logout)</button>
+    </form>
+</div>
+
+</body>
+</html>
