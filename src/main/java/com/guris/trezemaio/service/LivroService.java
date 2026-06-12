@@ -3,6 +3,14 @@ package com.guris.trezemaio.service;
 import com.guris.trezemaio.model.Livro;
 import com.guris.trezemaio.repository.LivroRepository;
 
+import com.guris.trezemaio.model.Item;
+import com.guris.trezemaio.model.Jornal;
+import com.guris.trezemaio.model.Revista;
+import com.guris.trezemaio.model.Doador;
+import com.guris.trezemaio.model.Editora;
+import com.guris.trezemaio.repository.ItemRepository;
+import com.guris.trezemaio.repository.DoadorRepository;
+import com.guris.trezemaio.repository.EditoraRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,12 +21,21 @@ import java.util.List;
 @Service
 public class LivroService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UsuarioService.class);
+    private static final Logger logger = LoggerFactory.getLogger(LivroService.class);
 
     private final LivroRepository livroRepository;
+    private final ItemRepository itemRepository;
+    private final DoadorRepository doadorRepository;
+    private final EditoraRepository editoraRepository;
 
-    public LivroService(LivroRepository livroRepository) {
+    public LivroService(LivroRepository livroRepository,
+                        ItemRepository itemRepository,
+                        DoadorRepository doadorRepository,
+                        EditoraRepository editoraRepository) {
         this.livroRepository = livroRepository;
+        this.itemRepository = itemRepository;
+        this.doadorRepository = doadorRepository;
+        this.editoraRepository = editoraRepository;
     }
 
     @Transactional
@@ -31,5 +48,79 @@ public class LivroService {
     public List<Livro> listarLivros() {
         logger.info("Listando livros");
         return livroRepository.findAll();
+    }
+
+    @Transactional
+    public void cadastrarItem(Item item) {
+        logger.info("Cadastrando item: {}", item.getClass().getSimpleName());
+
+        // Gera o código automaticamente
+        String codigoGerado = gerarProximoCodigo(item.getType());
+
+        if (item instanceof Livro) {
+            ((Livro) item).setCodigo(codigoGerado);
+        } else if (item instanceof Jornal) {
+            ((Jornal) item).setCodigo(codigoGerado);
+        } else if (item instanceof Revista) {
+            ((Revista) item).setCodigo(codigoGerado);
+        }
+
+        itemRepository.save(item);
+    }
+
+    private String gerarProximoCodigo(com.guris.trezemaio.model.enums.TipoItem tipo) {
+        String prefixo;
+        if (tipo == com.guris.trezemaio.model.enums.TipoItem.LIVRO) {
+            prefixo = "L";
+        } else if (tipo == com.guris.trezemaio.model.enums.TipoItem.JORNAL) {
+            prefixo = "J";
+        } else if (tipo == com.guris.trezemaio.model.enums.TipoItem.REVISTA) {
+            prefixo = "R";
+        } else {
+            prefixo = "I";
+        }
+
+        // Busca o último item cadastrado deste tipo
+        Item ultimo = itemRepository.findFirstByTypeOrderByIdDesc(tipo).orElse(null);
+
+        int proximoNumero = 1;
+        if (ultimo != null && ultimo.getCodigo() != null) {
+            String codigoUltimo = ultimo.getCodigo();
+            try {
+                // Remove a primeira letra e extrai o número sequencial
+                String numeroStr = codigoUltimo.substring(1);
+                proximoNumero = Integer.parseInt(numeroStr) + 1;
+            } catch (Exception e) {
+                logger.warn("Erro ao extrair número do código anterior: " + codigoUltimo, e);
+            }
+        }
+
+        return prefixo + String.format("%04d", proximoNumero);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Item> listarItens() {
+        logger.info("Listando todos os itens");
+        return itemRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Doador> listarDoadores() {
+        return doadorRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Editora> listarEditoras() {
+        return editoraRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Doador findDoadorById(Long id) {
+        return doadorRepository.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Editora findEditoraById(Long id) {
+        return editoraRepository.findById(id).orElse(null);
     }
 }

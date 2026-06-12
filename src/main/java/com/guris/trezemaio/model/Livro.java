@@ -16,4 +16,9 @@ public class Livro extends Item {
 
     @Column(nullable = false)
     private String codigo;
+
+    @Override
+    public String getInfoEspecifica() {
+        return "ISBN: " + isbn + " | Assuntos: " + assuntos;
+    }
 }

@@ -1,6 +1,11 @@
 package com.guris.trezemaio.controller;
 
+import com.guris.trezemaio.dto.ItemDTO;
+import com.guris.trezemaio.model.Item;
 import com.guris.trezemaio.model.Livro;
+import com.guris.trezemaio.model.Jornal;
+import com.guris.trezemaio.model.Revista;
+import com.guris.trezemaio.model.enums.TipoItem;
 import com.guris.trezemaio.service.LivroService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/livro")
 public class LivroController {
 
-    private static final String VIEW_LIVRO = "livro/form";
+    private static final String FORM_VIEW = "livro/form";
+    private static final String LIST_VIEW = "livro/list";
 
     private final LivroService livroService;
 
@@ -22,14 +28,65 @@ public class LivroController {
     }
 
     @PostMapping("/create")
-    private String create(@ModelAttribute Livro livro) {
-        livroService.cadastrarLivro(livro);
+    public String create(@ModelAttribute("item") ItemDTO dto) {
+        Item item;
+        if (dto.getType() == TipoItem.JORNAL) {
+            Jornal jornal = new Jornal();
+            jornal.setSecao(dto.getSecao());
+            jornal.setCidade(dto.getCidade());
+            jornal.setCodigo(dto.getCodigo());
+            item = jornal;
+        } else if (dto.getType() == TipoItem.REVISTA) {
+            Revista revista = new Revista();
+            revista.setIssn(dto.getIssn());
+            revista.setCodigo(dto.getCodigo());
+            item = revista;
+        } else {
+            Livro livro = new Livro();
+            livro.setIsbn(dto.getIsbn());
+            livro.setAssuntos(dto.getAssuntos());
+            livro.setCodigo(dto.getCodigo());
+            item = livro;
+        }
+
+        // Copy common fields
+        item.setTitle(dto.getTitle());
+        item.setSubtitle(dto.getSubtitle());
+        item.setPagesCount(dto.getPagesCount());
+        item.setPublicationDate(dto.getPublicationDate());
+        item.setLanguage(dto.getLanguage());
+        item.setQuantity(dto.getQuantity());
+        item.setObservation(dto.getObservation());
+        item.setAutor(dto.getAutor());
+        item.setEdicao(dto.getEdicao());
+        item.setLocalization(dto.getLocalization());
+        item.setDescription(dto.getDescription());
+        item.setIsActive(true);
+        item.setType(dto.getType());
+
+        if (dto.getDoadorId() != null) {
+            item.setDoador(livroService.findDoadorById(dto.getDoadorId()));
+        }
+        if (dto.getEditoraId() != null) {
+            item.setEditora(livroService.findEditoraById(dto.getEditoraId()));
+        }
+
+        livroService.cadastrarItem(item);
         return "redirect:/livro";
     }
 
     @GetMapping("/form")
-    private String form(Model model) {
-        model.addAttribute("livro", new Livro());
-        return VIEW_LIVRO;
+    public String form(Model model) {
+        model.addAttribute("item", new ItemDTO());
+        model.addAttribute("tipos", TipoItem.values());
+        model.addAttribute("doadores", livroService.listarDoadores());
+        model.addAttribute("editoras", livroService.listarEditoras());
+        return FORM_VIEW;
+    }
+
+    @GetMapping
+    public String list(Model model) {
+        model.addAttribute("itens", livroService.listarItens());
+        return LIST_VIEW;
     }
 }
