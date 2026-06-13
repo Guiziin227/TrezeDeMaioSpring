@@ -15,4 +15,9 @@ public class Revista extends Item {
 
     @Column(nullable = false)
     private String codigo;
+
+    @Override
+    public String getInfoEspecifica() {
+        return "ISSN: " + issn;
+    }
 }
