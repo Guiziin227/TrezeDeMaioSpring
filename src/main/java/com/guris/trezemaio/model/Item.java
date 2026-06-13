@@ -31,7 +31,7 @@ public class Item {
     private String autor;
     private String edicao;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "doador_id")
     private Doador doador;
 
@@ -45,4 +45,11 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private TipoItem type;
 
+    public String getCodigo() {
+        return null;
+    }
+
+    public String getInfoEspecifica() {
+        return "";
+    }
 }

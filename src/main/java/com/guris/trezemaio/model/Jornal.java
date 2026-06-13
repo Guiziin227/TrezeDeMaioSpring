@@ -15,4 +15,9 @@ public class Jornal extends Item{
 
     @Column(nullable = false)
     private String codigo;
+
+    @Override
+    public String getInfoEspecifica() {
+        return "Seção: " + secao + " | Cidade: " + cidade;
+    }
 }
