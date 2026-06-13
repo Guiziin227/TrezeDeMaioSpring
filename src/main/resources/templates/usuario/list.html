@@ -3,31 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Usuários</title>
+    <title>Usuários</title>
 </head>
 <body>
 <h1>Lista de Usuários</h1>
 
-<div class="actions">
+<p>
     <a th:href="@{/usuario/form}">Novo usuário</a>
-</div>
+</p>
 
-<table>
+<table border="1" cellpadding="8">
     <thead>
     <tr>
-        <th>ID</th>
         <th>Nome</th>
         <th>Tipo</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="usuario : ${usuarios}">
-        <td th:text="${usuario.id}">1</td>
         <td th:text="${usuario.name}">Nome</td>
-        <td th:text="${usuario.type}">TIPO</td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(usuarios)}">
-        <td colspan="3">Nenhum usuário cadastrado.</td>
+        <td th:text="${usuario.type}">Tipo</td>
     </tr>
     </tbody>
 </table>
