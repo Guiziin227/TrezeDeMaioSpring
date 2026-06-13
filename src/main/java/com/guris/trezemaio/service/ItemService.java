@@ -1,6 +1,7 @@
 package com.guris.trezemaio.service;
 
 import com.guris.trezemaio.model.Livro;
+import com.guris.trezemaio.model.enums.TipoItem;
 import com.guris.trezemaio.repository.LivroRepository;
 
 import com.guris.trezemaio.model.Item;
@@ -19,16 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class LivroService {
+public class ItemService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LivroService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
 
     private final LivroRepository livroRepository;
     private final ItemRepository itemRepository;
     private final DoadorRepository doadorRepository;
     private final EditoraRepository editoraRepository;
 
-    public LivroService(LivroRepository livroRepository,
+    public ItemService(LivroRepository livroRepository,
                         ItemRepository itemRepository,
                         DoadorRepository doadorRepository,
                         EditoraRepository editoraRepository) {
@@ -70,24 +71,22 @@ public class LivroService {
 
     private String gerarProximoCodigo(com.guris.trezemaio.model.enums.TipoItem tipo) {
         String prefixo;
-        if (tipo == com.guris.trezemaio.model.enums.TipoItem.LIVRO) {
+        if (tipo == TipoItem.LIVRO) {
             prefixo = "L";
-        } else if (tipo == com.guris.trezemaio.model.enums.TipoItem.JORNAL) {
+        } else if (tipo == TipoItem.JORNAL) {
             prefixo = "J";
-        } else if (tipo == com.guris.trezemaio.model.enums.TipoItem.REVISTA) {
+        } else if (tipo == TipoItem.REVISTA) {
             prefixo = "R";
         } else {
             prefixo = "I";
         }
 
-        // Busca o último item cadastrado deste tipo
         Item ultimo = itemRepository.findFirstByTypeOrderByIdDesc(tipo).orElse(null);
 
         int proximoNumero = 1;
         if (ultimo != null && ultimo.getCodigo() != null) {
             String codigoUltimo = ultimo.getCodigo();
             try {
-                // Remove a primeira letra e extrai o número sequencial
                 String numeroStr = codigoUltimo.substring(1);
                 proximoNumero = Integer.parseInt(numeroStr) + 1;
             } catch (Exception e) {

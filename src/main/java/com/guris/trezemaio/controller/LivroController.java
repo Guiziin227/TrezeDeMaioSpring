@@ -6,7 +6,7 @@ import com.guris.trezemaio.model.Livro;
 import com.guris.trezemaio.model.Jornal;
 import com.guris.trezemaio.model.Revista;
 import com.guris.trezemaio.model.enums.TipoItem;
-import com.guris.trezemaio.service.LivroService;
+import com.guris.trezemaio.service.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +21,10 @@ public class LivroController {
     private static final String FORM_VIEW = "livro/form";
     private static final String LIST_VIEW = "livro/list";
 
-    private final LivroService livroService;
+    private final ItemService itemService;
 
-    public LivroController(LivroService livroService) {
-        this.livroService = livroService;
+    public LivroController(ItemService itemService) {
+        this.itemService = itemService;
     }
 
     @PostMapping("/create")
@@ -49,7 +49,6 @@ public class LivroController {
             item = livro;
         }
 
-        // Copy common fields
         item.setTitle(dto.getTitle());
         item.setSubtitle(dto.getSubtitle());
         item.setPagesCount(dto.getPagesCount());
@@ -65,13 +64,13 @@ public class LivroController {
         item.setType(dto.getType());
 
         if (dto.getDoadorId() != null) {
-            item.setDoador(livroService.findDoadorById(dto.getDoadorId()));
+            item.setDoador(itemService.findDoadorById(dto.getDoadorId()));
         }
         if (dto.getEditoraId() != null) {
-            item.setEditora(livroService.findEditoraById(dto.getEditoraId()));
+            item.setEditora(itemService.findEditoraById(dto.getEditoraId()));
         }
 
-        livroService.cadastrarItem(item);
+        itemService.cadastrarItem(item);
         return "redirect:/livro";
     }
 
@@ -79,14 +78,14 @@ public class LivroController {
     public String form(Model model) {
         model.addAttribute("item", new ItemDTO());
         model.addAttribute("tipos", TipoItem.values());
-        model.addAttribute("doadores", livroService.listarDoadores());
-        model.addAttribute("editoras", livroService.listarEditoras());
+        model.addAttribute("doadores", itemService.listarDoadores());
+        model.addAttribute("editoras", itemService.listarEditoras());
         return FORM_VIEW;
     }
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("itens", livroService.listarItens());
+        model.addAttribute("itens", itemService.listarItens());
         return LIST_VIEW;
     }
 }
