@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Acervo</title>
+</head>
+<body>
+<h1>Itens cadastrados no Acervo</h1>
+
+<table border="1" cellpadding="5">
+    <thead>
+    <tr>
+        <th>Tipo</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Código</th>
+        <th>Detalhes Específicos</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${itens}">
+        <td th:text="${item.type}"></td>
+        <td th:text="${item.title}"></td>
+        <td th:text="${item.autor}"></td>
+        <td th:text="${item.codigo}"></td>
+        <td th:text="${item.infoEspecifica}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+    <a th:href="@{/livro/form}">Cadastrar novo item (Livro, Jornal ou Revista)</a>
+</p>
+<p>
+    <a th:href="@{/}">Voltar para a página inicial</a>
+</p>
+</body>
+</html>
