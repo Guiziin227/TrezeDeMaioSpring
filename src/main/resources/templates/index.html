@@ -5,44 +5,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Treze de Maio - Home</title>
+    <link th:href="@{/css/header.css}" rel="stylesheet">
+    <link th:href="@{/css/sobre.css}" rel="stylesheet">
 </head>
 <body>
-<h1>Bem-vindo ao sistema</h1>
+
 
 <!-- Se não estiver logado -->
-<div sec:authorize="isAnonymous()">
-    <p>Você não está autenticado.</p>
-    <p>
-        <a href="/usuario/login">Ir para login</a>
-    </p>
+<header th:replace="~{fragments :: cabecalho}"></header>
+<div class="main-container">
+    <div class="sobre-box">
 
-    <p>
-        <a th:href="@{/livro}">Ver Acervo</a>
-    </p>
+        <div class="logo-container">
+            <img th:src="@{/img/logo_treze.png}" alt="Logo Museu Trezedemaio" class="logo-img">
+        </div>
+
+        <div>
+            <h1 class="sobre-titulo">Sobre o museu</h1>
+            <p class="sobre-texto">O Museu Treze de Maio surgiu em 2001 como uma estratégia para “salvaguardar” o patrimônio da Sociedade Cultural Ferroviária 13 de Maio, dando um sentido útil para a comunidade interessada e, partindo desta idéia, vislumbrar políticas públicas que dessem conta de sua preservação. Nesse sentido, o prédio que abriga o Museu foi tombado como patrimônio cultural municipal em dezembro de 2004 – Lei Nº. 4809/04 e em 21 de dezembro desse mesmo ano o Governo do Estado sancionou a Lei n° 12.183, que “declarou como bem integrante do Patrimônio Histórico e Cultural do Estado do RS, o edifício da antiga Sociedade Cultural Ferroviária 13 de Maio”.</p>
+        </div>
+
+    </div>
+
 </div>
 
-<!-- Se estiver logado -->
-<div sec:authorize="isAuthenticated()">
-    <p>Olá, <strong sec:authentication="name">Usuário</strong>!</p>
-    <p>Perfil/Permissão: <strong sec:authentication="principal.authorities">Permissões</strong></p>
-    
-    <!-- Ações específicas por perfil -->
-    <div sec:authorize="hasAuthority('BIBLIOTECARIO')">
-        <p><a th:href="@{/livro}">Gerenciar Acervo (CRUD)</a></p>
-    </div>
-    
-    <div sec:authorize="hasAuthority('ADMINISTRADOR')">
-        <p><a th:href="@{/livro}">Gerenciar Acervo (CRUD)</a></p>
-        <p><a th:href="@{/usuario/form}">Cadastrar Novo Usuário</a></p>
-        <p><a th:href="@{/usuario/list}">Gerenciar Usuários (CRUD)</a></p>
-    </div>
-    
-    <!-- Formulário de Logout (Padrão Spring Security com CSRF) -->
-    <form th:action="@{/logout}" method="post">
-        <button type="submit">Sair (Logout)</button>
-    </form>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
