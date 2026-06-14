@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
 
 @Controller
 @RequestMapping("/livro")
@@ -84,8 +86,29 @@ public class LivroController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("itens", itemService.listarItens());
+    public String list(
+            @RequestParam(value = "query", required = false) String query,
+            @RequestParam(value = "type", required = false) TipoItem type,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "8") int size,
+            Model model) {
+        
+        String searchQuery = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
+        Page<Item> itemPage = itemService.buscarItensComPaginacao(type, searchQuery, page, size);
+        
+        model.addAttribute("itens", itemPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", itemPage.getTotalPages());
+        model.addAttribute("totalItems", itemPage.getTotalElements());
+        model.addAttribute("selectedType", type);
+        model.addAttribute("query", query);
+        
         return LIST_VIEW;
+    }
+
+    @GetMapping("/gerenciar")
+    public String gerenciar(Model model) {
+        model.addAttribute("itens", itemService.listarItens());
+        return "livro/gerenciar";
     }
 }

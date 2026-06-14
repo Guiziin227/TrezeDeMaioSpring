@@ -122,4 +122,11 @@ public class ItemService {
     public Editora findEditoraById(Long id) {
         return editoraRepository.findById(id).orElse(null);
     }
+
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<Item> buscarItensComPaginacao(TipoItem type, String query, int page, int size) {
+        logger.info("Buscando itens com paginação: tipo={}, query={}, pagina={}, tamanho={}", type, query, page, size);
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return itemRepository.searchAcervo(type, query, pageable);
+    }
 }
