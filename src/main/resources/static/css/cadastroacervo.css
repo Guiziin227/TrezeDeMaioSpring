@@ -1,0 +1,266 @@
+/* ==========================================================================
+   CADASTRO DE ACERVO - DESIGN MODERNO E RESPONSIVO
+   Baseado na identidade visual do Cadastro de Usuário (Cores, Fontes e Bordas)
+   ========================================================================== */
+
+/* Fundo da tela inteira (Cor solicitada) */
+body, html {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #C3AA8E;
+    font-family: 'Baloo 2', sans-serif;
+    color: #352c23;
+}
+
+/* Centralizador de tela cheia (desconta a altura do header) */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* Desconta o tamanho estimado do header */
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+/* O Card do formulário (Cor solicitada) */
+.cadastro-card {
+    background-color: #DBCDBE;
+    width: 100%;
+    max-width: 450px; /* Largura padrão */
+    padding: 40px;
+    border-radius: 20px; /* Cantos arredondados elegantes */
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12); /* Sombra moderna */
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Modificador para deixar o card mais largo em formulários grandes */
+.cadastro-card.card-grande {
+    max-width: 800px; /* Largura maior para acomodar a grade de campos */
+}
+
+/* Título do Card */
+.cadastro-titulo {
+    text-align: center;
+    color: #352c23; /* Marrom escuro */
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 30px;
+    letter-spacing: -0.5px;
+}
+
+/* Espaçamento do formulário */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Espaço confortável entre seções/campos */
+}
+
+/* Criação da Grade de 2 colunas */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas de tamanhos iguais */
+    gap: 20px 24px; /* Espaçamento vertical e horizontal */
+}
+
+/* Container de cada Input + Label */
+.input-group-custom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Espaço entre a Label e a Caixinha */
+}
+
+/* Classe para fazer um campo ocupar a linha inteira da grade */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Textos descritivos das caixas (Nome, Senha, Título, etc.) */
+.input-group-custom label {
+    color: #352c23;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-left: 4px;
+}
+
+/* Inputs, Selects e Textareas BRANCOS (Cor solicitada) */
+.custom-input {
+    background-color: #ffffff; /* Fundo branco solicitado */
+    border: 1px solid rgba(53, 44, 35, 0.08); /* Borda muito sutil */
+    border-radius: 12px;
+    padding: 13px 18px;
+    font-size: 0.98rem;
+    color: #2b231c;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    font-family: inherit;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efeito ao focar no campo (Acessibilidade + Premium) */
+.custom-input:focus {
+    border-color: #352c23;
+    box-shadow: 0 0 0 3px rgba(53, 44, 35, 0.15);
+    background-color: #ffffff;
+}
+
+/* Placeholders suaves */
+.custom-input::placeholder {
+    color: #a59d95;
+    opacity: 0.8;
+}
+
+/* Ajuste específico para área de texto */
+textarea.custom-input {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.5;
+}
+
+/* Inputs desabilitados (ex: Código gerado automaticamente) */
+.custom-input:disabled {
+    background-color: rgba(255, 255, 255, 0.45);
+    color: #7a7065;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+/* ==========================================================================
+   SEÇÕES DINÂMICAS (Campos específicos de Livro, Jornal e Revista)
+   ========================================================================== */
+
+.subtype-section {
+    background-color: rgba(255, 255, 255, 0.45); /* Branco translúcido que destaca no card bege */
+    border: 1px solid rgba(53, 44, 35, 0.08);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Título das subseções */
+.subtype-titulo {
+    color: #352c23;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(53, 44, 35, 0.1);
+    padding-bottom: 8px;
+}
+
+/* Animação suave de surgimento para as seções */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   BOTÕES E AÇÕES
+   ========================================================================== */
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn-salvar {
+    background-color: #352c23; /* Botão marrom escuro consistente */
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    width: 100%; /* Ocupa a largura total do card */
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 10px rgba(53, 44, 35, 0.2);
+    transition: all 0.25s ease;
+}
+
+.btn-salvar:hover {
+    background-color: #241e18;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(53, 44, 35, 0.35);
+}
+
+.btn-salvar:active {
+    transform: translateY(0);
+}
+
+.link-voltar {
+    color: #352c23;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.link-voltar:hover {
+    color: #000000;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (Ajustes para Celular e Tablet)
+   ========================================================================== */
+
+/* Telas Médias (Tablets) */
+@media (max-width: 768px) {
+    .cadastro-card.card-grande {
+        padding: 30px 24px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* Colapsa para uma única coluna */
+        gap: 16px;
+    }
+
+    .subtype-section {
+        padding: 18px;
+    }
+}
+
+/* Telas Pequenas (Celulares) */
+@media (max-width: 480px) {
+    .main-container {
+        padding: 20px 10px;
+        min-height: calc(100vh - 70px);
+    }
+
+    .cadastro-card {
+        padding: 24px 16px;
+        border-radius: 16px;
+    }
+
+    .cadastro-titulo {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .btn-salvar {
+        padding: 12px;
+        font-size: 1rem;
+    }
+}

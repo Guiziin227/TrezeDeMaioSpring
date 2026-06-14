@@ -3,178 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Item</title>
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: inline-block;
-            width: 150px;
-            font-weight: bold;
-        }
-        input, select, textarea {
-            width: 300px;
-            padding: 5px;
-        }
-        .subtype-section {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin: 15px 0;
-            background-color: #f9f9f9;
-        }
-    </style>
+    <title>Cadastro de Item - Museu</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link th:href="@{/css/header.css}" rel="stylesheet">
+    <link th:href="@{/css/cadastroacervo.css}" rel="stylesheet">
 </head>
 <body>
-<h1>Cadastro de Acervo (Livro, Jornal ou Revista)</h1>
 
-<form th:action="@{/livro/create}" th:object="${item}" method="post">
-    <!-- Seleção de Tipo -->
-    <div class="form-group">
-        <label for="type">Tipo de Item</label>
-        <select id="type" th:field="*{type}" onchange="toggleFields()" required>
-            <option value="">Selecione o tipo</option>
-            <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
-        </select>
+<header th:replace="~{fragments :: cabecalho}"></header>
+
+<div class="main-container">
+
+    <div class="cadastro-card card-grande">
+        <h1 class="cadastro-titulo">Cadastro de Acervo</h1>
+
+        <form th:action="@{/livro/create}" th:object="${item}" method="post" class="form-container">
+
+            <div class="input-group-custom full-width">
+                <label for="type">Tipo de Item</label>
+                <select id="type" th:field="*{type}" class="custom-input" onchange="toggleFields()" required>
+                    <option value="">Selecione o tipo de acervo...</option>
+                    <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
+                </select>
+            </div>
+
+            <div id="sec-livro" class="subtype-section" style="display:none;">
+                <h3 class="subtype-titulo">Campos do Livro</h3>
+                <div class="form-grid">
+                    <div class="input-group-custom">
+                        <label for="isbn">ISBN</label>
+                        <input id="isbn" type="text" th:field="*{isbn}" class="custom-input" placeholder="ISBN do livro">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="assuntos">Assuntos</label>
+                        <input id="assuntos" type="text" th:field="*{assuntos}" class="custom-input" placeholder="Assuntos (separados por vírgula)">
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-jornal" class="subtype-section" style="display:none;">
+                <h3 class="subtype-titulo">Campos do Jornal</h3>
+                <div class="form-grid">
+                    <div class="input-group-custom">
+                        <label for="secao">Seção</label>
+                        <input id="secao" type="text" th:field="*{secao}" class="custom-input" placeholder="Seção do jornal">
+                    </div>
+                    <div class="input-group-custom">
+                        <label for="cidade">Cidade</label>
+                        <input id="cidade" type="text" th:field="*{cidade}" class="custom-input" placeholder="Cidade de publicação">
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec-revista" class="subtype-section" style="display:none;">
+                <h3 class="subtype-titulo">Campos da Revista</h3>
+                <div class="form-grid">
+                    <div class="input-group-custom full-width">
+                        <label for="issn">ISSN</label>
+                        <input id="issn" type="text" th:field="*{issn}" class="custom-input" placeholder="ISSN da revista">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+                <div class="input-group-custom">
+                    <label for="title">Título</label>
+                    <input id="title" type="text" th:field="*{title}" class="custom-input" required placeholder="Título principal">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="subtitle">Subtítulo</label>
+                    <input id="subtitle" type="text" th:field="*{subtitle}" class="custom-input" placeholder="Subtítulo (opcional)">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="autor">Autor</label>
+                    <input id="autor" type="text" th:field="*{autor}" class="custom-input" placeholder="Autor do item">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="edicao">Edição</label>
+                    <input id="edicao" type="text" th:field="*{edicao}" class="custom-input" placeholder="Ex: 1ª Edição">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="pagesCount">Qtd. de Páginas</label>
+                    <input id="pagesCount" type="number" th:field="*{pagesCount}" class="custom-input" min="0">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="publicationDate">Data de Publicação</label>
+                    <input id="publicationDate" type="date" th:field="*{publicationDate}" class="custom-input">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="language">Idioma</label>
+                    <input id="language" type="text" th:field="*{language}" class="custom-input" placeholder="Ex: Português">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="quantity">Qtd. em Estoque</label>
+                    <input id="quantity" type="number" th:field="*{quantity}" class="custom-input" min="0" required>
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="doadorId">Doador</label>
+                    <select id="doadorId" th:field="*{doadorId}" class="custom-input">
+                        <option value="">Nenhum</option>
+                        <option th:each="d : ${doadores}" th:value="${d.id}" th:text="${d.name}"></option>
+                    </select>
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="editoraId">Editora</label>
+                    <select id="editoraId" th:field="*{editoraId}" class="custom-input">
+                        <option value="">Nenhuma</option>
+                        <option th:each="e : ${editoras}" th:value="${e.id}" th:text="${e.name}"></option>
+                    </select>
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="localization">Localização física</label>
+                    <input id="localization" type="text" th:field="*{localization}" class="custom-input" placeholder="Corredor A, Prateleira 2">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="codigo">Código de Identificação</label>
+                    <input id="codigo" type="text" class="custom-input" placeholder="Gerado automaticamente" disabled>
+                </div>
+
+                <div class="input-group-custom full-width">
+                    <label for="description">Descrição</label>
+                    <textarea id="description" th:field="*{description}" class="custom-input" rows="3" placeholder="Descrição resumida..."></textarea>
+                </div>
+
+                <div class="input-group-custom full-width">
+                    <label for="observation">Observações</label>
+                    <textarea id="observation" th:field="*{observation}" class="custom-input" rows="2" placeholder="Observações gerais..."></textarea>
+                </div>
+            </div>
+
+
+
+            <div class="actions" style="margin-top: 10px;">
+                <button type="submit" class="btn-salvar">Salvar Acervo</button>
+                <a th:href="@{/livro}" class="link-voltar">Voltar para a lista</a>
+            </div>
+        </form>
     </div>
-
-    <!-- Campos comuns do Item -->
-    <div class="form-group">
-        <label for="title">Título</label>
-        <input id="title" type="text" th:field="*{title}" required placeholder="Título principal">
-    </div>
-
-    <div class="form-group">
-        <label for="subtitle">Subtítulo</label>
-        <input id="subtitle" type="text" th:field="*{subtitle}" placeholder="Subtítulo (opcional)">
-    </div>
-
-    <div class="form-group">
-        <label for="autor">Autor</label>
-        <input id="autor" type="text" th:field="*{autor}" placeholder="Autor do item">
-    </div>
-
-    <div class="form-group">
-        <label for="edicao">Edição</label>
-        <input id="edicao" type="text" th:field="*{edicao}" placeholder="Ex: 1ª Edição">
-    </div>
-
-    <div class="form-group">
-        <label for="pagesCount">Quantidade de Páginas</label>
-        <input id="pagesCount" type="number" th:field="*{pagesCount}" min="0">
-    </div>
-
-    <div class="form-group">
-        <label for="publicationDate">Data de Publicação</label>
-        <input id="publicationDate" type="date" th:field="*{publicationDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="language">Idioma</label>
-        <input id="language" type="text" th:field="*{language}" placeholder="Ex: Português">
-    </div>
-
-    <div class="form-group">
-        <label for="quantity">Quantidade em Estoque</label>
-        <input id="quantity" type="number" th:field="*{quantity}" min="0" required>
-    </div>
-
-    <div class="form-group">
-        <label for="localization">Localização física</label>
-        <input id="localization" type="text" th:field="*{localization}" placeholder="Ex: Corredor A, Prateleira 2">
-    </div>
-
-    <div class="form-group">
-        <label for="description">Descrição</label>
-        <textarea id="description" th:field="*{description}" rows="3" placeholder="Descrição resumida..."></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="observation">Observações</label>
-        <textarea id="observation" th:field="*{observation}" rows="2" placeholder="Observações gerais..."></textarea>
-    </div>
-
-    <!-- Dropdown Doador -->
-    <div class="form-group">
-        <label for="doadorId">Doador</label>
-        <select id="doadorId" th:field="*{doadorId}">
-            <option value="">Nenhum</option>
-            <option th:each="d : ${doadores}" th:value="${d.id}" th:text="${d.name}"></option>
-        </select>
-    </div>
-
-    <!-- Dropdown Editora -->
-    <div class="form-group">
-        <label for="editoraId">Editora</label>
-        <select id="editoraId" th:field="*{editoraId}">
-            <option value="">Nenhuma</option>
-            <option th:each="e : ${editoras}" th:value="${e.id}" th:text="${e.name}"></option>
-        </select>
-    </div>
-
-    <!-- Campo Código (Gerado automaticamente pelo servidor) -->
-    <div class="form-group">
-        <label for="codigo">Código de Identificação</label>
-        <input id="codigo" type="text" placeholder="Gerado automaticamente" disabled>
-    </div>
-
-
-    <!-- SEÇÃO ESPECÍFICA: LIVRO -->
-    <div id="sec-livro" class="subtype-section" style="display:none;">
-        <h3>Campos do Livro</h3>
-        <div class="form-group">
-            <label for="isbn">ISBN</label>
-            <input id="isbn" type="text" th:field="*{isbn}" placeholder="ISBN do livro">
-        </div>
-        <div class="form-group">
-            <label for="assuntos">Assuntos</label>
-            <input id="assuntos" type="text" th:field="*{assuntos}" placeholder="Assuntos (separados por vírgula)">
-        </div>
-    </div>
-
-    <!-- SEÇÃO ESPECÍFICA: JORNAL -->
-    <div id="sec-jornal" class="subtype-section" style="display:none;">
-        <h3>Campos do Jornal</h3>
-        <div class="form-group">
-            <label for="secao">Seção</label>
-            <input id="secao" type="text" th:field="*{secao}" placeholder="Seção do jornal">
-        </div>
-        <div class="form-group">
-            <label for="cidade">Cidade</label>
-            <input id="cidade" type="text" th:field="*{cidade}" placeholder="Cidade de publicação">
-        </div>
-    </div>
-
-    <!-- SEÇÃO ESPECÍFICA: REVISTA -->
-    <div id="sec-revista" class="subtype-section" style="display:none;">
-        <h3>Campos da Revista</h3>
-        <div class="form-group">
-            <label for="issn">ISSN</label>
-            <input id="issn" type="text" th:field="*{issn}" placeholder="ISSN da revista">
-        </div>
-    </div>
-
-
-    <div class="actions" style="margin-top: 20px;">
-        <button type="submit">Salvar</button>
-        <a th:href="@{/livro}">Ver lista</a>
-    </div>
-</form>
+</div>
 
 <script>
     function toggleFields() {
         var type = document.getElementById("type").value;
-        
-        // Esconder todas as seções
+
+        // Esconder todas as seções com animação/display
         document.getElementById("sec-livro").style.display = "none";
         document.getElementById("sec-jornal").style.display = "none";
         document.getElementById("sec-revista").style.display = "none";
-        
-        // Desabilitar inputs das seções ocultas para não enviar dados desnecessários ou dar erro de validação
+
+        // Desabilitar inputs das seções ocultas
         toggleInputs("sec-livro", true);
         toggleInputs("sec-jornal", true);
         toggleInputs("sec-revista", true);
-        
+
         if (type === "LIVRO") {
             document.getElementById("sec-livro").style.display = "block";
             toggleInputs("sec-livro", false);
@@ -198,5 +194,7 @@
     // Executar no carregamento
     window.onload = toggleFields;
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

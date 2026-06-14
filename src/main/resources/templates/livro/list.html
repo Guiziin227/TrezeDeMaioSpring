@@ -1,40 +1,233 @@
 <!DOCTYPE html>
-<html lang="pt-BR" 
-      xmlns:th="http://www.thymeleaf.org" 
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Acervo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acervo - Museu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/header.css}" rel="stylesheet">
+    <link th:href="@{/css/catalogoacervo.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-<h1>Itens cadastrados no Acervo</h1>
 
-<table border="1" cellpadding="5">
-    <thead>
-    <tr>
-        <th>Tipo</th>
-        <th>Título</th>
-        <th>Autor</th>
-        <th>Código</th>
-        <th>Detalhes Específicos</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${itens}">
-        <td th:text="${item.type}"></td>
-        <td th:text="${item.title}"></td>
-        <td th:text="${item.autor}"></td>
-        <td th:text="${item.codigo}"></td>
-        <td th:text="${item.infoEspecifica}"></td>
-    </tr>
-    </tbody>
-</table>
+<header th:replace="~{fragments :: cabecalho}"></header>
 
-<p sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
-    <a th:href="@{/livro/form}">Cadastrar novo item (Livro, Jornal ou Revista)</a>
-</p>
-<p>
-    <a th:href="@{/}">Voltar para a página inicial</a>
-</p>
+<div class="main-container">
+    <div class="catalogo-container">
+        <h1 class="catalogo-titulo">Acervo do Museu</h1>
+
+        <!-- Barra de Busca e Filtros Rápidos -->
+        <div class="search-filter-bar">
+            <!-- Form de Busca Livre (Preserva o tipo ativo) -->
+            <form th:action="@{/livro}" method="get" class="search-box">
+                <input type="hidden" name="type" th:value="${selectedType}">
+                <i class="material-icons search-icon">search</i>
+                <input type="text" name="query" th:value="${query}" placeholder="Procurar no acervo..." class="search-input">
+            </form>
+
+            <!-- Abas/Filtros por Tipo (Preserva a busca ativa) -->
+            <div class="filter-group">
+                <a th:href="@{/livro(query=${query})}" class="filter-btn" th:classappend="${selectedType == null} ? 'active'">
+                    <span>Todos</span>
+                </a>
+                <a th:href="@{/livro(type='LIVRO', query=${query})}" class="filter-btn" th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO} ? 'active'">
+                    <i class="material-icons">menu_book</i>
+                    <span>Livros</span>
+                </a>
+                <a th:href="@{/livro(type='REVISTA', query=${query})}" class="filter-btn" th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA} ? 'active'">
+                    <i class="material-icons">auto_stories</i>
+                    <span>Revistas</span>
+                </a>
+                <a th:href="@{/livro(type='JORNAL', query=${query})}" class="filter-btn" th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL} ? 'active'">
+                    <i class="material-icons">newspaper</i>
+                    <span>Jornais</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Grade de Cards de Itens -->
+        <div class="acervo-grid">
+            <div class="acervo-card" th:each="item : ${itens}">
+                <div class="card-img-wrapper">
+                    <!-- Badge de Tipo de Acervo -->
+                    <span class="card-badge" th:text="${item.type}">Tipo</span>
+                    <!-- Imagem dinamicamente selecionada por Tipo baseada no Unsplash -->
+                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}" src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
+                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
+                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}" src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
+                </div>
+                <div class="card-content">
+                    <div class="card-info">
+                        <h3 class="card-title" th:text="${item.title}">Título</h3>
+                        <p class="card-subtitle" th:text="${item.autor != null ? item.autor : 'Autor Desconhecido'}">Autor</p>
+                    </div>
+                    <!-- Botão de "Ver mais" que passa os dados por data-attributes -->
+                    <button type="button" class="btn-ver-mais"
+                            th:data-title="${item.title}"
+                            th:data-subtitle="${item.subtitle}"
+                            th:data-type="${item.type}"
+                            th:data-autor="${item.autor}"
+                            th:data-edicao="${item.edicao}"
+                            th:data-language="${item.language}"
+                            th:data-pages="${item.pagesCount}"
+                            th:data-date="${item.publicationDate}"
+                            th:data-quantity="${item.quantity}"
+                            th:data-localization="${item.localization}"
+                            th:data-description="${item.description}"
+                            th:data-doador="${item.doador != null ? item.doador.name : 'Nenhum'}"
+                            th:data-editora="${item.editora != null ? item.editora.name : 'Nenhuma'}"
+                            th:data-codigo="${item.codigo}"
+                            th:data-info="${item.infoEspecifica}"
+                            onclick="openDetailModal(this)">
+                        Ver mais
+                    </button>
+                </div>
+            </div>
+
+            <!-- Caso não encontre itens com a pesquisa -->
+            <div class="no-results" th:if="${#lists.isEmpty(itens)}">
+                <i class="material-icons">info_outline</i>
+                Nenhum item do acervo encontrado.
+            </div>
+        </div>
+
+        <!-- Rodapé de Paginação Dinâmica (Thymeleaf) -->
+        <div class="pagination-wrapper" th:if="${totalPages > 1}">
+            <!-- Botão Anterior -->
+            <a th:href="@{/livro(type=${selectedType}, query=${query}, page=${currentPage - 1})}"
+               class="page-link-custom"
+               th:classappend="${currentPage == 0} ? 'disabled'">
+                <i class="material-icons">chevron_left</i>
+                <span>Anterior</span>
+            </a>
+
+            <!-- Números sequenciais das páginas -->
+            <a th:each="pageNum : ${totalPages > 1 ? #numbers.sequence(0, totalPages - 1) : {0}}"
+               th:href="@{/livro(type=${selectedType}, query=${query}, page=${pageNum})}"
+               class="page-link-custom"
+               th:classappend="${pageNum == currentPage} ? 'active'"
+               th:text="${pageNum + 1}">
+                1
+            </a>
+
+            <!-- Botão Próximo -->
+            <a th:href="@{/livro(type=${selectedType}, query=${query}, page=${currentPage + 1})}"
+               class="page-link-custom"
+               th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                <span>Próximo</span>
+                <i class="material-icons">chevron_right</i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes "Ver mais" Customizado -->
+<div id="detailModal" class="custom-modal">
+    <div class="modal-overlay" onclick="closeDetailModal()"></div>
+    <div class="modal-card">
+        <button class="modal-close-btn" onclick="closeDetailModal()">
+            <i class="material-icons">close</i>
+        </button>
+        <h2 id="modalTitle" class="modal-title">Título do Item</h2>
+        
+        <div class="modal-grid">
+            <div>
+                <span class="modal-label">Subtítulo</span>
+                <span id="modalSubtitle" class="modal-value">Subtítulo</span>
+            </div>
+            <div>
+                <span class="modal-label">Código</span>
+                <span id="modalCodigo" class="modal-value">Código</span>
+            </div>
+            <div>
+                <span class="modal-label">Tipo</span>
+                <span id="modalType" class="modal-value">Tipo</span>
+            </div>
+            <div>
+                <span class="modal-label">Autor</span>
+                <span id="modalAutor" class="modal-value">Autor</span>
+            </div>
+            <div>
+                <span class="modal-label">Edição</span>
+                <span id="modalEdicao" class="modal-value">Edição</span>
+            </div>
+            <div>
+                <span class="modal-label">Idioma</span>
+                <span id="modalLanguage" class="modal-value">Idioma</span>
+            </div>
+            <div>
+                <span class="modal-label">Páginas</span>
+                <span id="modalPages" class="modal-value">Páginas</span>
+            </div>
+            <div>
+                <span class="modal-label">Data de Publicação</span>
+                <span id="modalDate" class="modal-value">Data</span>
+            </div>
+            <div>
+                <span class="modal-label">Localização Física</span>
+                <span id="modalLocalization" class="modal-value">Localização</span>
+            </div>
+            <div>
+                <span class="modal-label">Estoque</span>
+                <span id="modalQuantity" class="modal-value">Quantidade</span>
+            </div>
+            <div>
+                <span class="modal-label">Doador</span>
+                <span id="modalDoador" class="modal-value">Doador</span>
+            </div>
+            <div>
+                <span class="modal-label">Editora</span>
+                <span id="modalEditora" class="modal-value">Editora</span>
+            </div>
+            <div id="modalInfoWrapper" class="modal-item-full">
+                <span class="modal-label">Campos Específicos</span>
+                <span id="modalInfo" class="modal-value">Info</span>
+            </div>
+            <div class="modal-item-full">
+                <span class="modal-label">Descrição</span>
+                <span id="modalDescription" class="modal-value">Descrição</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDetailModal(btn) {
+        document.getElementById("modalTitle").textContent = btn.getAttribute("data-title") || 'Sem título';
+        document.getElementById("modalSubtitle").textContent = btn.getAttribute("data-subtitle") || 'Não informado';
+        document.getElementById("modalCodigo").textContent = btn.getAttribute("data-codigo") || 'Não gerado';
+        document.getElementById("modalType").textContent = btn.getAttribute("data-type") || '-';
+        document.getElementById("modalAutor").textContent = btn.getAttribute("data-autor") || 'Não informado';
+        document.getElementById("modalEdicao").textContent = btn.getAttribute("data-edicao") || 'Não informado';
+        document.getElementById("modalLanguage").textContent = btn.getAttribute("data-language") || 'Não informado';
+        document.getElementById("modalPages").textContent = btn.getAttribute("data-pages") || '0';
+        document.getElementById("modalDate").textContent = btn.getAttribute("data-date") || 'Não informada';
+        document.getElementById("modalLocalization").textContent = btn.getAttribute("data-localization") || 'Não informada';
+        document.getElementById("modalQuantity").textContent = btn.getAttribute("data-quantity") || '0';
+        document.getElementById("modalDoador").textContent = btn.getAttribute("data-doador") || 'Nenhum';
+        document.getElementById("modalEditora").textContent = btn.getAttribute("data-editora") || 'Nenhuma';
+        document.getElementById("modalDescription").textContent = btn.getAttribute("data-description") || 'Sem descrição.';
+        
+        var info = btn.getAttribute("data-info");
+        if (info && info.trim() !== "") {
+            document.getElementById("modalInfo").textContent = info;
+            document.getElementById("modalInfoWrapper").style.display = "block";
+        } else {
+            document.getElementById("modalInfoWrapper").style.display = "none";
+        }
+        
+        document.getElementById("detailModal").classList.add("active");
+    }
+    
+    function closeDetailModal() {
+        document.getElementById("detailModal").classList.remove("active");
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
