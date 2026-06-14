@@ -1,0 +1,94 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Baloo 2', sans-serif;
+    overflow: hidden;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #BEA58F;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 100vw;
+    height: 100vh;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+
+    /* Caminho relativo partindo da pasta css para a pasta img */
+    background-image: url('../img/background.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.logo-img {
+    max-width: 550px;
+    margin-bottom: 10px;
+}
+
+.subtext {
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.input-field {
+    width: 100%;
+    background-color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 18px 25px;
+    margin-bottom: 18px;
+    font-size: 1rem;
+    color: #7D7C7B;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.input-field::placeholder {
+    color: #7D7C7B;
+}
+
+.forgot-password {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    align-self: flex-end;
+}
+
+.login-button {
+    background-color: #434241;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 40px;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: #2a2928;
+}
+

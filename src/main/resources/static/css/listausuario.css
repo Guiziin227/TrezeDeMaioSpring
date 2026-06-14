@@ -1,0 +1,448 @@
+/* ==========================================================================
+   LISTAGEM DE USUÁRIOS - DESIGN MODERNO E RESPONSIVO
+   Baseado na identidade visual do Projeto (Cores, Fontes, Bordas e Sombras)
+   ========================================================================== */
+
+/* Fundo da tela inteira (Cor solicitada) */
+body, html {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #C3AA8E;
+    font-family: 'Baloo 2', sans-serif;
+    color: #352c23;
+}
+
+/* Centralizador de tela cheia (desconta a altura do header) */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* Desconta o tamanho estimado do header */
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+/* O Card do formulário (Cor solicitada) */
+.cadastro-card {
+    background-color: #DBCDBE;
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 20px; /* Cantos arredondados elegantes */
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12); /* Sombra moderna */
+    box-sizing: border-box;
+}
+
+/* Modificador para deixar o card mais largo em listagens grandes */
+.cadastro-card.card-grande {
+    max-width: 800px; /* Largura maior para acomodar a tabela */
+}
+
+/* Título da Listagem */
+.cadastro-titulo {
+    text-align: center;
+    color: #352c23; /* Marrom escuro */
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+/* Ações no topo da listagem (Botão Novo Usuário) */
+.actions-top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.btn-novo {
+    background-color: #352c23; /* Botão marrom escuro consistente */
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(53, 44, 35, 0.2);
+    transition: all 0.25s ease;
+    display: inline-block;
+}
+
+.btn-novo:hover {
+    background-color: #241e18;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(53, 44, 35, 0.35);
+}
+
+.btn-novo:active {
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   TABELA CUSTOMIZADA E MODERNA
+   ========================================================================== */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 25px;
+    border-radius: 12px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; /* Espaço entre as linhas criando um efeito "card" */
+    margin: 0;
+}
+
+/* Cabeçalho da Tabela */
+.custom-table th {
+    background-color: #352c23;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 14px 20px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+/* Arredondar os cantos do cabeçalho da tabela */
+.custom-table th:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.custom-table th:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Corpo da Tabela */
+.custom-table tbody tr {
+    background-color: #ffffff; /* Fundo branco solicitado */
+    box-shadow: 0 2px 8px rgba(53, 44, 35, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(53, 44, 35, 0.12);
+}
+
+.custom-table td {
+    padding: 16px 20px;
+    color: #2b231c;
+    font-size: 1rem;
+    border: none;
+    vertical-align: middle;
+}
+
+/* Arredondar os cantos das linhas individuais */
+.custom-table tbody tr td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.custom-table tbody tr td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* ==========================================================================
+   BADGES DE PERFIL
+   ========================================================================== */
+
+.badge-perfil {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Perfil ADMINISTRADOR - Destaque em tom marrom escuro elegante */
+.badge-perfil.administrador {
+    background-color: #70624b;
+    color: #ffffff;
+}
+
+/* Perfil BIBLIOTECARIO - Tom terroso médio */
+.badge-perfil.bibliotecario {
+    background-color: #d6ba8a;
+    color: #ffffff;
+}
+
+/* Outros Perfis (Leitor, Visitante, etc.) - Bege suave */
+.badge-perfil.leitor,
+.badge-perfil.visitante,
+.badge-perfil.comum {
+    background-color: #e5dec9;
+    color: #352c23;
+}
+
+/* ==========================================================================
+   AÇÕES E VOLTAR
+   ========================================================================== */
+
+.actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.link-voltar {
+    color: #352c23;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    padding: 6px 14px;
+    border-radius: 8px;
+}
+
+.link-voltar:hover {
+    color: #000000;
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ==========================================================================
+   CLASSES DE UTILIDADE E AÇÕES DA TABELA
+   ========================================================================== */
+
+.text-center {
+    text-align: center !important;
+}
+
+.actions-cell {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-action i {
+    font-size: 1.2rem;
+}
+
+.btn-edit {
+    color: #352c23;
+    background-color: rgba(53, 44, 35, 0.08);
+}
+
+.btn-edit:hover {
+    background-color: #352c23;
+    color: #ffffff;
+    transform: scale(1.1) translateY(-1px);
+    box-shadow: 0 4px 8px rgba(53, 44, 35, 0.2);
+}
+
+.btn-edit:active {
+    transform: scale(1) translateY(0);
+}
+
+.btn-delete {
+    color: #bd4242;
+    background-color: rgba(189, 66, 66, 0.08);
+}
+
+.btn-delete:hover {
+    background-color: #bd4242;
+    color: #ffffff;
+    transform: scale(1.1) translateY(-1px);
+    box-shadow: 0 4px 8px rgba(189, 66, 66, 0.2);
+}
+
+.btn-delete:active {
+    transform: scale(1) translateY(0);
+}
+
+/* ==========================================================================
+   MODAL DE CONFIRMAÇÃO CUSTOMIZADO
+   ========================================================================== */
+
+.custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.custom-modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(53, 44, 35, 0.45); /* Overlay no tom marrom translúcido */
+    backdrop-filter: blur(4px); /* Desfoque moderno de fundo */
+}
+
+.modal-card {
+    position: relative;
+    background-color: #ffffff; /* Bege do card */
+    border: 1px solid rgba(53, 44, 35, 0.1);
+    width: 90%;
+    max-width: 420px;
+    padding: 35px 30px;
+    border-radius: 20px; /* Cantos de 20px no padrão do site */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1001;
+}
+
+.custom-modal.active .modal-card {
+    transform: scale(1);
+}
+
+.modal-title {
+    color: #352c23;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.modal-message {
+    color: #4e4033;
+    font-size: 1.05rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-message strong {
+    color: #352c23;
+    font-weight: 700;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 75px;
+}
+
+/* Botões do Modal */
+.btn-cancelar {
+    background-color: #DBCDBE;
+    color: #352c23;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: rgba(241, 122, 3, 0.08);
+}
+
+.btn-confirmar {
+    background-color: #bd4242; /* Vermelho para exclusão */
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 10px rgba(189, 66, 66, 0.2);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-confirmar:hover {
+    background-color: #a33232;
+    color: #ffffff;
+    box-shadow: 0 6px 15px rgba(189, 66, 66, 0.35);
+    transform: translateY(-1px);
+}
+
+.btn-confirmar:active {
+    transform: translateY(0);
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (Celular e Tablet)
+   ========================================================================== */
+
+/* Telas Médias (Tablets) */
+@media (max-width: 768px) {
+    .cadastro-card.card-grande {
+        padding: 30px 20px;
+    }
+
+    .custom-table td, .custom-table th {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Telas Pequenas (Celulares) */
+@media (max-width: 480px) {
+    .main-container {
+        padding: 20px 10px;
+        min-height: calc(100vh - 70px);
+    }
+
+    .cadastro-card {
+        padding: 20px 12px;
+        border-radius: 16px;
+    }
+
+    .cadastro-titulo {
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+    }
+
+    .actions-top {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .btn-novo {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+}

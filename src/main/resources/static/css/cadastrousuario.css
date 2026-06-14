@@ -1,0 +1,134 @@
+/* Fundo da tela inteira (Cor solicitada) */
+body, html {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #C3AA8E;
+    font-family: 'Baloo 2', sans-serif;
+}
+
+/* Centralizador de tela cheia (desconta a altura do header) */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* 80px é mais ou menos o tamanho do header */
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+/* O Card do formulário (Cor solicitada) */
+.cadastro-card {
+    background-color: #DBCDBE;
+    width: 100%;
+    max-width: 450px; /* Largura máxima para não ficar esticado no PC */
+    padding: 40px;
+    border-radius: 20px; /* Cantos arredondados iguais à tela de login */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Sombra elegante */
+    box-sizing: border-box;
+}
+
+/* Título do Card */
+.cadastro-titulo {
+    text-align: center;
+    color: #352c23; /* Usa a cor marrom escuro do seu header */
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Espaçamento do formulário */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaço entre os campos */
+}
+
+/* Container de cada Input + Label */
+.input-group-custom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Espaço entre o título "Nome" e a caixinha de digitar */
+}
+
+/* Textos "Nome", "Senha", etc */
+.input-group-custom label {
+    color: #352c23;
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-left: 5px; /* Alinha levemente com a curvatura do input */
+}
+
+/* Inputs e Selects BRANCOS */
+.custom-input {
+    background-color: #ffffff; /* Fundo branco */
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    color: #333;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Efeito ao clicar no campo para digitar (Acessibilidade) */
+.custom-input:focus {
+    box-shadow: 0 0 0 2px #352c23;
+}
+
+/* Placeholders mais suaves */
+.custom-input::placeholder {
+    color: #a0a0a0;
+}
+
+/* Botões e Links de ação */
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.btn-salvar {
+    background-color: #352c23; /* Botão marrom escuro combinando com a identidade */
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    width: 100%; /* Botão ocupa a largura total do card */
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-salvar:hover {
+    background-color: #241e18;
+}
+
+.link-voltar {
+    color: #352c23;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.link-voltar:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* Responsividade: Ajustes finos para celulares pequenos */
+@media (max-width: 480px) {
+    .cadastro-card {
+        padding: 30px 20px;
+    }
+
+    .cadastro-titulo {
+        font-size: 1.5rem;
+    }
+}

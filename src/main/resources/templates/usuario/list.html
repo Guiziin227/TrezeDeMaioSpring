@@ -2,29 +2,90 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link th:href="@{/css/header.css}" rel="stylesheet">
+    <link th:href="@{/css/listausuario.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-<h1>Lista de Usuários</h1>
+<header th:replace="~{fragments :: cabecalho}"></header>
 
-<p>
-    <a th:href="@{/usuario/form}">Novo usuário</a>
-</p>
+<div class="main-container">
+    <div class="cadastro-card card-grande">
+        <h1 class="cadastro-titulo">Lista de Usuários</h1>
 
-<table border="1" cellpadding="8">
-    <thead>
-    <tr>
-        <th>Nome</th>
-        <th>Tipo</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="usuario : ${usuarios}">
-        <td th:text="${usuario.name}">Nome</td>
-        <td th:text="${usuario.type}">Tipo</td>
-    </tr>
-    </tbody>
-</table>
+        <div class="actions-top">
+            <a th:href="@{/usuario/form}" class="btn-novo">Novo Usuário</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Perfil</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                        <td th:text="${usuario.name}">Nome</td>
+                        <td>
+                            <span class="badge-perfil" th:classappend="${#strings.toLowerCase(usuario.type)}" th:text="${usuario.type}">Perfil</span>
+                        </td>
+                        <td class="text-center actions-cell">
+                            <a th:href="@{/usuario/edit/{id}(id=${usuario.id})}" class="btn-action btn-edit" title="Editar Usuário">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <a href="#" class="btn-action btn-delete" title="Excluir Usuário"
+                               th:data-id="${usuario.id}"
+                               th:data-name="${usuario.name}"
+                               onclick="openDeleteModal(this)">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="actions">
+            <a th:href="@{/}" class="link-voltar">Voltar para o início</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão Customizado -->
+<div id="deleteModal" class="custom-modal">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-card">
+        <h3 class="modal-title">Confirmar Exclusão</h3>
+        <p class="modal-message">Deseja realmente excluir o usuário <strong id="deleteUserName"></strong>?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn-cancelar" onclick="closeModal()">Cancelar</button>
+            <a id="confirmDeleteBtn" href="#" class="btn-confirmar">Excluir</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal(element) {
+        var id = element.getAttribute("data-id");
+        var name = element.getAttribute("data-name");
+        
+        document.getElementById("deleteUserName").textContent = name;
+        document.getElementById("confirmDeleteBtn").setAttribute("href", "/usuario/delete/" + id);
+        document.getElementById("deleteModal").classList.add("active");
+    }
+
+    function closeModal() {
+        document.getElementById("deleteModal").classList.remove("active");
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
