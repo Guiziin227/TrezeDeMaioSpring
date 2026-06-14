@@ -1,0 +1,171 @@
+* {
+    font-family: 'Baloo 2', sans-serif;
+}
+
+.custom-navbar {
+    background-color: #352c23;
+    border-radius: 15px 15px 0 0;
+    width: 100%;
+}
+
+.nav-logo-img {
+    height: 40px;
+    width: auto;
+}
+
+.nav-title {
+    color: #ffffff;
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
+.nav-subtitle {
+    color: #ffffff;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.nav-btn {
+    background-color: #bfa68a;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    border: none;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    font-size: clamp(0.75rem, 1.5vw + 0.4rem, 0.95rem);
+    padding: clamp(5px, 1vw + 2px, 8px) clamp(10px, 2.5vw, 20px);
+}
+
+.nav-btn:hover, .nav-btn:focus {
+    background-color: #a68c70;
+    color: #ffffff;
+}
+
+
+.nav-btn.dropdown-toggle::after {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+
+.user-avatar {
+    background-color: #dfcdbf;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+
+.user-avatar:hover {
+    transform: scale(1.05);
+}
+
+.user-avatar::after {
+    display: none !important;
+}
+
+/* Estilização Customizada do Hambúrguer (Bootstrap Toggler) */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.25);
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(191, 166, 138, 0.35);
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-width='2.5' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (Menu Hambúrguer no Celular)
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+    .custom-navbar {
+        padding: 12px 18px !important;
+        border-radius: 0;
+    }
+
+    .nav-logo-img {
+        height: 32px; /* Reduz altura do logo */
+    }
+
+    /* Contêiner do menu colapsado */
+    .navbar-collapse {
+        width: 100%;
+        padding: 15px 0 5px 0;
+        background-color: #352c23; /* Fundo idêntico para consistência */
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+        align-items: stretch !important; /* Estica os botões para largura total */
+        gap: 12px !important;
+        margin-top: 10px;
+    }
+
+    .nav-btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px !important;
+        font-size: 0.9rem !important;
+        border-radius: 8px;
+    }
+
+    /* Acordeão para os dropdowns no mobile */
+    .navbar-nav .dropdown-menu {
+        position: static !important; /* Expande na vertical em vez de flutuar */
+        float: none;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: none !important;
+        margin: 5px 0 0 0 !important;
+        padding: 8px 0;
+        border-radius: 8px;
+    }
+
+    .navbar-nav .dropdown-item {
+        color: #dfcdbf !important;
+        text-align: center;
+        padding: 10px 16px;
+        font-size: 0.88rem;
+    }
+
+    .navbar-nav .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
+    }
+
+    .navbar-nav .dropdown-divider {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Avatar do Usuário centralizado no menu */
+    .user-avatar {
+        margin: 5px auto 0 auto;
+        width: 42px;
+        height: 42px;
+    }
+
+    /* Garante alinhamento das listas de dropdowns */
+    .dropdown-menu-end {
+        left: 0 !important;
+        right: 0 !important;
+    }
+}

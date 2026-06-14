@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<nav th:fragment="cabecalho" class="navbar navbar-expand-md custom-navbar px-4 py-3 d-flex justify-content-between align-items-center">
+
+    <a class="navbar-brand text-decoration-none d-flex align-items-center" th:href="@{/}">
+        <img th:src="@{/img/logo_treze_nav.png}" alt="Ícone Museu" class="nav-logo-img">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <div class="navbar-nav align-items-center gap-3 mt-3 mt-md-0">
+
+            <a th:href="@{/}" class="nav-btn">Sobre</a>
+            <a th:href="@{/livro}" class="nav-btn">Acervo</a>
+
+            <div class="dropdown" sec:authorize="hasAnyAuthority('BIBLIOTECARIO', 'ADMINISTRADOR')">
+                <button class="nav-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Gerenciar
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li><a class="dropdown-item" th:href="@{/livro/gerenciar}">Acervo (CRUD)</a></li>
+                    <li sec:authorize="hasAuthority('ADMINISTRADOR')"><hr class="dropdown-divider"></li>
+                    <li sec:authorize="hasAuthority('ADMINISTRADOR')"><a class="dropdown-item" th:href="@{/usuario/form}">Novo Usuário</a></li>
+                    <li sec:authorize="hasAuthority('ADMINISTRADOR')"><a class="dropdown-item" th:href="@{/usuario/list}">Lista de Usuários</a></li>
+                </ul>
+            </div>
+
+            <div class="dropdown ms-md-2">
+                <a href="#" class="user-avatar" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4A3B72" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow mt-2">
+                    <li sec:authorize="isAnonymous()">
+                        <a class="dropdown-item fw-bold" th:href="@{/usuario/login}">Entrar no Sistema</a>
+                    </li>
+
+                    <li sec:authorize="isAuthenticated()">
+                            <span class="dropdown-item-text">
+                                Logado como: <strong sec:authentication="name">User</strong>
+                            </span>
+                    </li>
+                    <li sec:authorize="isAuthenticated()"><hr class="dropdown-divider"></li>
+                    <li sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post" class="px-3 py-1">
+                            <button type="submit" class="btn btn-danger w-100 btn-sm">Sair</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+<footer th:fragment="rodape" class="text-center py-4 mt-5 border-top">
+    <p class="mb-0">© 2026 Museu Trezedemaio. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>

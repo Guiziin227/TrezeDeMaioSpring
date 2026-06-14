@@ -8,36 +8,39 @@ AUDITORIA NAS CLASSES
 
 ## Formulários/Forms
 ### Telas
-- [ ] cabeçalho
-  - [ ] sobre
-  - [ ] acervo
-  - [ ] usuarios
+- [X] cabeçalho
+  - [X] sobre
+  - [X] acervo
+  - [X] usuarios
   - [ ] dashboard?
-  - [ ] botao logout
-- [ ] acervo (home)
-    - [ ] filtro
-      - [ ] input
-      - [ ] slidebar
-    - [ ] adicionar item
-      - [ ] botão dropdown
-        - [ ] livro (pop up form)
-        - [ ] jornal (pop up form)
-        - [ ] revista (pop up form)
-    - [ ] listar itens
-      - [ ] card do item
+  - [X] botao logout
+- [X] acervo (home)
+    - [x] filtro
+      - [x] input
+      - [x] slidebar
+    - [x] adicionar item
+    - [x] listar itens
+      - [x] card do item
         - [ ] ver mais (pop up)
         - [ ] icone excluir e editar (pop up para editar e confirmação de exclusão)
-      - [ ] paginação
-- [ ] sobre
-- [ ] Tela de login
-  - [ ] inputs
-  - [ ] esqueci senha (pop up "pedir para adm trocar")
-  - [ ] botao entrar
-- [ ] Tela Gerenciar Usuários (bibliotecarios) (if adm)
-    - [ ] listagem de usuários
-        - [ ] icone editar (nome, senha) e excluir (com confirmação de exclusão)
-    - [ ] criação de novos usuários 
-      - [ ] botao e popup (form)
+      - [x] paginação
+- [X] sobre
+- [X] Tela de login
+  - [X] inputs
+  - [X] esqueci senha (pop up "pedir para adm trocar")
+  - [X] botao entrar
+- [X] Tela Gerenciar Usuários (bibliotecarios) (if adm)
+    - [X] listagem de usuários
+        - [x] icone editar (nome, senha) e excluir (com confirmação de exclusão)
+    - [X] criação de novos usuários 
+      - [X] botao e popup (form)
 - [ ] dashboard? estatisticas? (adm e biblio)
   - [ ] exibir infos de acesso geral do site e de itens especificos
+  
+# 14/06/2024
+- [ ] Melhorar a responsividade do acervo (visualização em celular)
+- [ ] Visualização do ver mais (Melhorar UI)
+- [ ] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
+- [ ] Imagens no cadastro de itens (input de upload)
+- [ ] Arrumar a tela de login (imagem)
 ## 
