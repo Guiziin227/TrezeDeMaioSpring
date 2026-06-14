@@ -6,8 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.UUID;
 
 @RequestMapping("/usuario")
 @Controller
@@ -50,5 +53,18 @@ public class UsuarioController {
     public String list(Model model) {
         model.addAttribute("usuarios", usuarioService.listarUsuarios());
         return LIST_VIEW;
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable UUID id, Model model) {
+        Usuario usuario = usuarioService.buscarPorId(id);
+        model.addAttribute("usuario", usuario);
+        return FORM_VIEW;
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable UUID id) {
+        usuarioService.deletarUsuario(id);
+        return "redirect:/usuario/list";
     }
 }
