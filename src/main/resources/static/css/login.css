@@ -3,29 +3,27 @@ body, html {
     padding: 0;
     height: 100%;
     font-family: 'Baloo 2', sans-serif;
-    overflow: hidden;
+    overflow: auto;   /* auto pra scroll */
 }
 
 .main-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh;  /* pro conteúdo não passar além da tela em telas pequenas*/
     background-color: #BEA58F;
 }
 
 .login-box {
     width: 100%;
-    max-width: 100vw;
-    height: 100vh;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    overflow: hidden;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px;
     box-sizing: border-box;
+    background-color: #BEA58F;
 
     /* Caminho relativo partindo da pasta css para a pasta img */
     background-image: url('../img/background.jpeg');
@@ -41,13 +39,16 @@ body, html {
 }
 
 .logo-img {
-    max-width: 550px;
-    margin-bottom: 10px;
+    width: 350px;
+    margin-bottom: 30px;
 }
 
-.subtext {
-    font-size: 1.2rem;
-    font-weight: normal;
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 460px;
 }
 
 .input-field {
@@ -76,12 +77,16 @@ body, html {
     align-self: flex-end;
 }
 
+.forgot-password:hover {
+    opacity: 1;
+}
+
 .login-button {
     background-color: #434241;
     color: #fff;
     border: none;
     border-radius: 20px;
-    padding: 12px 40px;
+    padding: 12px 80px;
     font-size: 1rem;
     cursor: pointer;
     outline: none;
@@ -91,4 +96,3 @@ body, html {
 .login-button:hover {
     background-color: #2a2928;
 }
-
