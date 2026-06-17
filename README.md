@@ -42,5 +42,5 @@ AUDITORIA NAS CLASSES
 - [ ] Visualização do ver mais (Melhorar UI)
 - [ ] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
 - [ ] Imagens no cadastro de itens (input de upload)
-- [ ] Arrumar a tela de login (imagem)
+- [x] Arrumar a tela de login (imagem)
 ## 
