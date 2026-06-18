@@ -52,14 +52,40 @@
         <!-- Grade de Cards de Itens -->
         <div class="acervo-grid">
             <div class="acervo-card" th:each="item : ${itens}">
-                <div class="card-img-wrapper">
+                <!-- Adicionada a classe Bootstrap 'position-relative' para ancorar o menu na imagem -->
+                <div class="card-img-wrapper position-relative">
                     <!-- Badge de Tipo de Acervo -->
                     <span class="card-badge" th:text="${item.type}">Tipo</span>
+
+                    <!-- Menu de Opções visível apenas para ADMINISTRADOR -->
+                    <div class="dropdown position-absolute top-0 end-0 m-2" style="z-index: 10;">
+                        <button class="btn btn-light btn-sm rounded-circle opacity-75" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px; padding: 0;">
+                            ⋮
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-menu-item d-flex align-items-center px-3 py-2 text-dark text-decoration-none"
+                                   th:href="@{/livro/editar/{id}(id=${item.id})}">
+                                    <i class="bi bi-pencil me-2"></i> Editar
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-menu-item d-flex align-items-center px-3 py-2 text-danger text-decoration-none"
+                                   th:href="@{/livro/excluir/{id}(id=${item.id})}"
+                                   onclick="return confirm('Tem certeza que deseja excluir este item?');">
+                                    <i class="bi bi-trash me-2"></i> Excluir
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                     <!-- Imagem dinamicamente selecionada por Tipo baseada no Unsplash -->
                     <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}" src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
                     <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
                     <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}" src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
                 </div>
+
                 <div class="card-content">
                     <div class="card-info">
                         <h3 class="card-title" th:text="${item.title}">Título</h3>

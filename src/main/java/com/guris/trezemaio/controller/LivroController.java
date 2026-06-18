@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.data.domain.Page;
-
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/livro")
 public class LivroController {
@@ -110,5 +111,22 @@ public class LivroController {
     public String gerenciar(Model model) {
         model.addAttribute("itens", itemService.listarItens());
         return "livro/gerenciar";
+    }
+
+    @GetMapping("/excluir/{id}")
+    public String excluirItem(@PathVariable("id") Long id, RedirectAttributes attributes) {
+        try {
+            // Executa a lógica de exclusão no banco de dados
+            itemService.excluirPorId(id);
+
+            // Envia uma mensagem de sucesso para a tela que será exibida após o redirecionamento
+            attributes.addFlashAttribute("mensagemSucesso", "Item excluído com sucesso!");
+        } catch (Exception e) {
+            // Caso ocorra algum erro (ex: item associado a empréstimos)
+            attributes.addFlashAttribute("mensagemErro", "Erro ao excluir o item: " + e.getMessage());
+        }
+
+        // Redireciona o usuário de volta para a página de listagem de itens
+        return "redirect:/livro";
     }
 }

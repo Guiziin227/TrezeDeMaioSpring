@@ -129,4 +129,14 @@ public class ItemService {
         org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
         return itemRepository.searchAcervo(type, query, pageable);
     }
+
+
+    @Transactional
+    public void excluirPorId(Long id) {
+        // Verifica se o item existe antes de tentar deletar para evitar exceções vazias
+        if (!itemRepository.existsById(id)) {
+            throw new IllegalArgumentException("Item não encontrado com o ID: " + id);
+        }
+        itemRepository.deleteById(id);
+    }
 }

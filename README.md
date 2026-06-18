@@ -7,7 +7,6 @@ ARRUMAR A CRIACAO DE CODIGOS
 AUDITORIA NAS CLASSES
 
 ## Formulários/Forms
-### Telas
 - [X] cabeçalho
   - [X] sobre
   - [X] acervo
@@ -21,7 +20,7 @@ AUDITORIA NAS CLASSES
     - [x] adicionar item
     - [x] listar itens
       - [x] card do item
-        - [ ] ver mais (pop up)
+        - [x] ver mais (pop up)
         - [ ] icone excluir e editar (pop up para editar e confirmação de exclusão)
       - [x] paginação
 - [X] sobre
