@@ -1,6 +1,7 @@
 package com.guris.trezemaio.controller;
 
 import com.guris.trezemaio.model.Usuario;
+// import com.guris.trezemaio.service.AcessoService;
 import com.guris.trezemaio.service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,15 +23,15 @@ public class UsuarioController {
     private static final String INDEX_VIEW = "index";
 
     private final UsuarioService usuarioService;
+    //private final AcessoService acessoService;
 
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
+
     @GetMapping({"/", "/index"})
-    public String index() {
-        return INDEX_VIEW;
-    }
+    public String index() { return INDEX_VIEW; }
 
     @GetMapping("/login")
     public String login() {

@@ -56,15 +56,17 @@ public class ItemService {
     public void cadastrarItem(Item item) {
         logger.info("Cadastrando item: {}", item.getClass().getSimpleName());
 
-        // Gera o código automaticamente
-        String codigoGerado = gerarProximoCodigo(item.getType());
+        // Só gera código novo se for um item NOVO (sem ID ainda)
+        if (item.getId() == null) {
+            String codigoGerado = gerarProximoCodigo(item.getType());
 
-        if (item instanceof Livro) {
-            ((Livro) item).setCodigo(codigoGerado);
-        } else if (item instanceof Jornal) {
-            ((Jornal) item).setCodigo(codigoGerado);
-        } else if (item instanceof Revista) {
-            ((Revista) item).setCodigo(codigoGerado);
+            if (item instanceof Livro) {
+                ((Livro) item).setCodigo(codigoGerado);
+            } else if (item instanceof Jornal) {
+                ((Jornal) item).setCodigo(codigoGerado);
+            } else if (item instanceof Revista) {
+                ((Revista) item).setCodigo(codigoGerado);
+            }
         }
 
         itemRepository.save(item);

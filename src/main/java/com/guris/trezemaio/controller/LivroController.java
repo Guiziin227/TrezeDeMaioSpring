@@ -7,6 +7,9 @@ import com.guris.trezemaio.model.Jornal;
 import com.guris.trezemaio.model.Revista;
 import com.guris.trezemaio.model.enums.TipoItem;
 import com.guris.trezemaio.service.ItemService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,28 +46,34 @@ public class LivroController {
                          RedirectAttributes attributes) {
         Item item;
 
-        // 1. Busca o item existente se for uma edição para não perder dados antigos
+        // Busca o item existente se for uma edição (para não perder dados antigos, como auditoria)
         Item itemAntigo = null;
         if (dto.getId() != null) {
             itemAntigo = itemService.buscarPorId(dto.getId());
         }
 
         if (dto.getType() == TipoItem.JORNAL) {
-            Jornal jornal = new Jornal();
+            Jornal jornal = (itemAntigo instanceof Jornal) ? (Jornal) itemAntigo : new Jornal();
             jornal.setSecao(dto.getSecao());
             jornal.setCidade(dto.getCidade());
-            jornal.setCodigo(dto.getCodigo());
+            if (dto.getId() == null) {
+                jornal.setCodigo(dto.getCodigo());
+            }
             item = jornal;
         } else if (dto.getType() == TipoItem.REVISTA) {
-            Revista revista = new Revista();
+            Revista revista = (itemAntigo instanceof Revista) ? (Revista) itemAntigo : new Revista();
             revista.setIssn(dto.getIssn());
-            revista.setCodigo(dto.getCodigo());
+            if (dto.getId() == null) {
+                revista.setCodigo(dto.getCodigo());
+            }
             item = revista;
         } else {
-            Livro livro = new Livro();
+            Livro livro = (itemAntigo instanceof Livro) ? (Livro) itemAntigo : new Livro();
             livro.setIsbn(dto.getIsbn());
             livro.setAssuntos(dto.getAssuntos());
-            livro.setCodigo(dto.getCodigo());
+            if (dto.getId() == null) {
+                livro.setCodigo(dto.getCodigo());
+            }
             item = livro;
         }
 
@@ -84,7 +93,7 @@ public class LivroController {
         item.setEdicao(dto.getEdicao());
         item.setLocalization(dto.getLocalization());
         item.setDescription(dto.getDescription());
-        item.setIsActive(dto.isActive()); // O Lombok gera o getter booleano como isActive()
+        item.setIsActive(true);
         item.setType(dto.getType());
 
         if (dto.getDoadorId() != null) {
@@ -94,10 +103,9 @@ public class LivroController {
             item.setEditora(itemService.findEditoraById(dto.getEditoraId()));
         }
 
-        // ================= TRATAMENTO DA IMAGEM =================
+        // Tratamento da imagem
         if (arquivo != null && !arquivo.isEmpty()) {
             try {
-                // Defina onde os arquivos serão salvos fisicamente
                 String pastaUploads = System.getProperty("user.home") + "/projeto_uploads/";
                 Path diretorio = Paths.get(pastaUploads);
 
@@ -105,14 +113,11 @@ public class LivroController {
                     Files.createDirectories(diretorio);
                 }
 
-                // Cria um nome único para o arquivo usando o timestamp atual
                 String nomeArquivoUnique = System.currentTimeMillis() + "_" + arquivo.getOriginalFilename();
                 Path caminhoCompleto = diretorio.resolve(nomeArquivoUnique);
 
-                // Salva o arquivo no disco rígido
                 Files.write(caminhoCompleto, arquivo.getBytes());
 
-                // Define o nome único gerado no objeto que vai para o banco
                 item.setImagemUrl(nomeArquivoUnique);
 
             } catch (IOException e) {
@@ -120,10 +125,8 @@ public class LivroController {
                 return "redirect:/livro";
             }
         } else if (itemAntigo != null) {
-            // Se for edição e o usuário não enviou uma nova foto, preserva a foto antiga do banco
             item.setImagemUrl(itemAntigo.getImagemUrl());
         }
-        // ========================================================
 
         try {
             itemService.cadastrarItem(item);
@@ -149,18 +152,17 @@ public class LivroController {
             @RequestParam(value = "type", required = false) TipoItem type,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "8") int size,
-            Model model,
-            org.springframework.security.core.Authentication authentication) {
+            Model model) {
 
         String searchQuery = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
 
-        // 1. Calcula a permissão antes de buscar os dados
-        boolean isFuncionario = authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ADMINISTRADOR") ||
-                        a.getAuthority().equals("BIBLIOTECARIO"));
+        // Verifica se o usuário logado é ADMINISTRADOR ou BIBLIOTECARIO
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdminOrBibliotecario = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals("ADMINISTRADOR") || role.equals("BIBLIOTECARIO"));
 
-        // 2. Altere o método do service para enviar essa variável (vamos ajustar o service no próximo passo)
-        Page<Item> itemPage = itemService.buscarItensComPaginacao(type, searchQuery, isFuncionario, page, size);
+        Page<Item> itemPage = itemService.buscarItensComPaginacao(type, searchQuery, isAdminOrBibliotecario, page, size);
 
         model.addAttribute("itens", itemPage.getContent());
         model.addAttribute("currentPage", page);
@@ -168,7 +170,6 @@ public class LivroController {
         model.addAttribute("totalItems", itemPage.getTotalElements());
         model.addAttribute("selectedType", type);
         model.addAttribute("query", query);
-        model.addAttribute("isFuncionario", isFuncionario);
 
         return LIST_VIEW;
     }
@@ -182,71 +183,54 @@ public class LivroController {
     @GetMapping("/excluir/{id}")
     public String excluirItem(@PathVariable("id") Long id, RedirectAttributes attributes) {
         try {
-            // Executa a lógica de exclusão no banco de dados
             itemService.excluirPorId(id);
-
-            // Envia uma mensagem de sucesso para a tela que será exibida após o redirecionamento
             attributes.addFlashAttribute("mensagemSucesso", "Item excluído com sucesso!");
         } catch (Exception e) {
-            // Caso ocorra algum erro (ex: item associado a empréstimos)
             attributes.addFlashAttribute("mensagemErro", "Erro ao excluir o item: " + e.getMessage());
         }
-
-        // Redireciona o usuário de volta para a página de listagem de itens
         return "redirect:/livro";
     }
 
     @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable("id") Long id, Model model, RedirectAttributes attributes) {
         try {
-            // 1. Busca o item no banco de dados pelo ID
             Item item = itemService.buscarPorId(id);
             if (item == null) {
                 attributes.addFlashAttribute("mensagemErro", "Item não encontrado!");
                 return "redirect:/livro";
             }
 
-            // 2. Transfere os dados do modelo (Banco) para o DTO (Tela)
             ItemDTO dto = new ItemDTO();
             dto.setId(item.getId());
-            dto.setCodigo(item.getCodigo()); // Adicionado para garantir o mapeamento do código
             dto.setTitle(item.getTitle());
             dto.setSubtitle(item.getSubtitle());
-            dto.setAutor(item.getAutor());
-            dto.setEdicao(item.getEdicao());
             dto.setPagesCount(item.getPagesCount());
             dto.setPublicationDate(item.getPublicationDate());
             dto.setLanguage(item.getLanguage());
             dto.setQuantity(item.getQuantity());
+            dto.setObservation(item.getObservation());
+            dto.setAutor(item.getAutor());
+            dto.setEdicao(item.getEdicao());
             dto.setLocalization(item.getLocalization());
             dto.setDescription(item.getDescription());
-            dto.setObservation(item.getObservation());
+            dto.setCodigo(item.getCodigo());
             dto.setType(item.getType());
+
             dto.setImagemUrl(item.getImagemUrl());
 
-            // 3. Define o estado ativo/inativo vindo do banco de dados
-            dto.setActive(item.getIsActive());
+            if (item.getDoador() != null) dto.setDoadorId(item.getDoador().getId());
+            if (item.getEditora() != null) dto.setEditoraId(item.getEditora().getId());
 
-            // 4. Mapeia os IDs das entidades de relacionamento
-            if (item.getDoador() != null) {
-                dto.setDoadorId(item.getDoador().getId());
-            }
-            if (item.getEditora() != null) {
-                dto.setEditoraId(item.getEditora().getId());
-            }
-
-            // 5. Aplica casts específicos com base na herança do item
-            if (item instanceof Livro) {
-                dto.setIsbn(((Livro) item).getIsbn());
-                dto.setAssuntos(((Livro) item).getAssuntos());
-            } else if (item instanceof Jornal) {
+            if (item instanceof Jornal) {
                 dto.setSecao(((Jornal) item).getSecao());
                 dto.setCidade(((Jornal) item).getCidade());
             } else if (item instanceof Revista) {
                 dto.setIssn(((Revista) item).getIssn());
+            } else if (item instanceof Livro) {
+                dto.setIsbn(((Livro) item).getIsbn());
+                dto.setAssuntos(((Livro) item).getAssuntos());
             }
 
-            // 6. Alimenta os dados necessários para renderizar o formulário
             model.addAttribute("item", dto);
             model.addAttribute("tipos", TipoItem.values());
             model.addAttribute("doadores", itemService.listarDoadores());
@@ -254,11 +238,8 @@ public class LivroController {
 
             return FORM_VIEW;
         } catch (Exception e) {
-            attributes.addFlashAttribute("mensagemErro", "Erro ao carregar dados para edição: " + e.getMessage());
+            attributes.addFlashAttribute("mensagemErro", "Erro ao carregar item para edição: " + e.getMessage());
             return "redirect:/livro";
         }
     }
-
-
-
 }

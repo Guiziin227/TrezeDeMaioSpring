@@ -24,6 +24,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html", "/index", "/login", "/css/**", "/img/**", "/js/**", "/usuario/login", "/livro", "/error").permitAll()
                         .requestMatchers("/usuario/form", "/usuario/create").hasAuthority("ADMINISTRADOR")
                         .requestMatchers("/livro/gerenciar", "/livro/form", "/livro/create").hasAnyAuthority("ADMINISTRADOR", "BIBLIOTECARIO")
+                        //.requestMatchers("/dashboard").hasAnyAuthority("ADMINISTRADOR", "BIBLIOTECARIO")
                         .requestMatchers("/usuario/list").authenticated()
                         .requestMatchers("/admin").hasAuthority("ADMINISTRADOR")
                         .anyRequest().authenticated()

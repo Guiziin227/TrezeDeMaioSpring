@@ -109,8 +109,8 @@
                         <h3 class="card-title" th:text="${item.title}">Título</h3>
                         <p class="card-subtitle" th:text="${item.autor != null ? item.autor : 'Autor Desconhecido'}">Autor</p>
                     </div>
-                    <!-- Botão de "Ver mais" que passa os dados por data-attributes -->
                     <button type="button" class="btn-ver-mais"
+                            th:data-imagem="${item.imagemExibicao}"
                             th:data-title="${item.title}"
                             th:data-subtitle="${item.subtitle}"
                             th:data-type="${item.type}"
@@ -126,6 +126,10 @@
                             th:data-editora="${item.editora != null ? item.editora.name : 'Nenhuma'}"
                             th:data-codigo="${item.codigo}"
                             th:data-info="${item.infoEspecifica}"
+                            th:data-criadopor="${item.criadoPor}"
+                            th:data-criadoem="${item.dataCriacao != null ? #temporals.format(item.dataCriacao, 'dd/MM/yyyy HH:mm') : null}"
+                            th:data-modificadopor="${item.modificadoPor}"
+                            th:data-modificadoem="${item.dataModificacao != null ? #temporals.format(item.dataModificacao, 'dd/MM/yyyy HH:mm') : null}"
                             onclick="openDetailModal(this)">
                         Ver mais
                     </button>
@@ -192,97 +196,153 @@
         <button class="modal-close-btn" onclick="closeDetailModal()">
             <i class="material-icons">close</i>
         </button>
-        <h2 id="modalTitle" class="modal-title">Título do Item</h2>
-        
-        <div class="modal-grid">
-            <div>
-                <span class="modal-label">Subtítulo</span>
-                <span id="modalSubtitle" class="modal-value">Subtítulo</span>
+
+        <div class="modal-header">
+            <img id="modalImg" class="modal-img" src="" alt="Capa do item">
+            <div class="modal-header-info">
+                <span id="modalType" class="modal-type-badge">Tipo</span>
+                <h2 id="modalTitle" class="modal-title">Título do Item</h2>
+                <p id="modalSubtitle" class="modal-subtitle">Subtítulo</p>
             </div>
-            <div>
-                <span class="modal-label">Código</span>
-                <span id="modalCodigo" class="modal-value">Código</span>
+        </div>
+
+        <div class="modal-body">
+
+            <p class="modal-section-label">Informações gerais</p>
+            <div class="modal-grid">
+                <div>
+                    <span class="modal-label">Autor</span>
+                    <span id="modalAutor" class="modal-value">Autor</span>
+                </div>
+                <div>
+                    <span class="modal-label">Código</span>
+                    <span id="modalCodigo" class="modal-value">Código</span>
+                </div>
+                <div>
+                    <span class="modal-label">Edição</span>
+                    <span id="modalEdicao" class="modal-value">Edição</span>
+                </div>
+                <div>
+                    <span class="modal-label">Idioma</span>
+                    <span id="modalLanguage" class="modal-value">Idioma</span>
+                </div>
+                <div>
+                    <span class="modal-label">Páginas</span>
+                    <span id="modalPages" class="modal-value">Páginas</span>
+                </div>
+                <div>
+                    <span class="modal-label">Estoque</span>
+                    <span id="modalQuantity" class="modal-value">Estoque</span>
+                </div>
+                <div>
+                    <span class="modal-label">Data de publicação</span>
+                    <span id="modalDate" class="modal-value">Data</span>
+                </div>
+                <div>
+                    <span class="modal-label">Localização física</span>
+                    <span id="modalLocalization" class="modal-value">Localização</span>
+                </div>
             </div>
-            <div>
-                <span class="modal-label">Tipo</span>
-                <span id="modalType" class="modal-value">Tipo</span>
+
+            <p class="modal-section-label">Origem</p>
+            <div class="modal-grid">
+                <div>
+                    <span class="modal-label">Editora</span>
+                    <span id="modalEditora" class="modal-value">Editora</span>
+                </div>
+                <div>
+                    <span class="modal-label">Doador</span>
+                    <span id="modalDoador" class="modal-value">Doador</span>
+                </div>
             </div>
-            <div>
-                <span class="modal-label">Autor</span>
-                <span id="modalAutor" class="modal-value">Autor</span>
+
+            <div id="modalInfoWrapper">
+                <p class="modal-section-label">Detalhes específicos</p>
+                <div class="modal-grid">
+                    <div class="modal-item-full">
+                        <span id="modalInfo" class="modal-value">Info</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <span class="modal-label">Edição</span>
-                <span id="modalEdicao" class="modal-value">Edição</span>
+
+            <p class="modal-section-label">Descrição</p>
+            <p id="modalDescription" class="modal-value modal-description">Descrição</p>
+
+            <div id="modalAuditoriaWrapper" class="modal-auditoria" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                <p class="modal-section-label">Auditoria</p>
+                <div class="modal-auditoria-grid">
+                    <div class="modal-auditoria-item">
+                        <span class="modal-auditoria-label">Criado por</span>
+                        <span id="modalCriadoPor" class="modal-auditoria-value">-</span>
+                    </div>
+                    <div class="modal-auditoria-item">
+                        <span class="modal-auditoria-label">em</span>
+                        <span id="modalCriadoEm" class="modal-auditoria-value-plain">-</span>
+                    </div>
+                    <div class="modal-auditoria-item">
+                        <span class="modal-auditoria-label">Editado por</span>
+                        <span id="modalModificadoPor" class="modal-auditoria-value">-</span>
+                    </div>
+                    <div class="modal-auditoria-item">
+                        <span class="modal-auditoria-label">em</span>
+                        <span id="modalModificadoEm" class="modal-auditoria-value-plain">-</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <span class="modal-label">Idioma</span>
-                <span id="modalLanguage" class="modal-value">Idioma</span>
-            </div>
-            <div>
-                <span class="modal-label">Páginas</span>
-                <span id="modalPages" class="modal-value">Páginas</span>
-            </div>
-            <div>
-                <span class="modal-label">Data de Publicação</span>
-                <span id="modalDate" class="modal-value">Data</span>
-            </div>
-            <div>
-                <span class="modal-label">Localização Física</span>
-                <span id="modalLocalization" class="modal-value">Localização</span>
-            </div>
-            <div>
-                <span class="modal-label">Estoque</span>
-                <span id="modalQuantity" class="modal-value">Quantidade</span>
-            </div>
-            <div>
-                <span class="modal-label">Doador</span>
-                <span id="modalDoador" class="modal-value">Doador</span>
-            </div>
-            <div>
-                <span class="modal-label">Editora</span>
-                <span id="modalEditora" class="modal-value">Editora</span>
-            </div>
-            <div id="modalInfoWrapper" class="modal-item-full">
-                <span class="modal-label">Campos Específicos</span>
-                <span id="modalInfo" class="modal-value">Info</span>
-            </div>
-            <div class="modal-item-full">
-                <span class="modal-label">Descrição</span>
-                <span id="modalDescription" class="modal-value">Descrição</span>
-            </div>
+
         </div>
     </div>
 </div>
 
 <script>
     function openDetailModal(btn) {
-        document.getElementById("modalTitle").textContent = btn.getAttribute("data-title") || 'Sem título';
-        document.getElementById("modalSubtitle").textContent = btn.getAttribute("data-subtitle") || 'Não informado';
-        document.getElementById("modalCodigo").textContent = btn.getAttribute("data-codigo") || 'Não gerado';
+        var imgSrc = btn.getAttribute("data-imagem");
+        document.getElementById("modalImg").src = imgSrc || "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=300";
+
         document.getElementById("modalType").textContent = btn.getAttribute("data-type") || '-';
+        document.getElementById("modalTitle").textContent = btn.getAttribute("data-title") || 'Sem título';
+
+        var subtitle = btn.getAttribute("data-subtitle");
+        var subtitleEl = document.getElementById("modalSubtitle");
+        if (subtitle && subtitle.trim() !== "") {
+            subtitleEl.textContent = subtitle;
+            subtitleEl.style.display = "block";
+        } else {
+            subtitleEl.style.display = "none";
+        }
+
         document.getElementById("modalAutor").textContent = btn.getAttribute("data-autor") || 'Não informado';
+        document.getElementById("modalCodigo").textContent = btn.getAttribute("data-codigo") || 'Não gerado';
         document.getElementById("modalEdicao").textContent = btn.getAttribute("data-edicao") || 'Não informado';
         document.getElementById("modalLanguage").textContent = btn.getAttribute("data-language") || 'Não informado';
         document.getElementById("modalPages").textContent = btn.getAttribute("data-pages") || '0';
+        document.getElementById("modalQuantity").textContent = btn.getAttribute("data-quantity") || '0';
         document.getElementById("modalDate").textContent = btn.getAttribute("data-date") || 'Não informada';
         document.getElementById("modalLocalization").textContent = btn.getAttribute("data-localization") || 'Não informada';
-        document.getElementById("modalQuantity").textContent = btn.getAttribute("data-quantity") || '0';
-        document.getElementById("modalDoador").textContent = btn.getAttribute("data-doador") || 'Nenhum';
         document.getElementById("modalEditora").textContent = btn.getAttribute("data-editora") || 'Nenhuma';
+        document.getElementById("modalDoador").textContent = btn.getAttribute("data-doador") || 'Nenhum';
         document.getElementById("modalDescription").textContent = btn.getAttribute("data-description") || 'Sem descrição.';
-        
+
         var info = btn.getAttribute("data-info");
+        var infoWrapper = document.getElementById("modalInfoWrapper");
         if (info && info.trim() !== "") {
             document.getElementById("modalInfo").textContent = info;
-            document.getElementById("modalInfoWrapper").style.display = "block";
+            infoWrapper.style.display = "block";
         } else {
-            document.getElementById("modalInfoWrapper").style.display = "none";
+            infoWrapper.style.display = "none";
         }
-        
+
+        var auditoriaWrapper = document.getElementById("modalAuditoriaWrapper");
+        if (auditoriaWrapper) {
+            document.getElementById("modalCriadoPor").textContent = btn.getAttribute("data-criadopor") || 'não informado';
+            document.getElementById("modalCriadoEm").textContent = btn.getAttribute("data-criadoem") || 'não informado';
+            document.getElementById("modalModificadoPor").textContent = btn.getAttribute("data-modificadopor") || 'ainda não editado';
+            document.getElementById("modalModificadoEm").textContent = btn.getAttribute("data-modificadoem") || 'ainda não editado';
+        }
+
         document.getElementById("detailModal").classList.add("active");
     }
-    
+
     function closeDetailModal() {
         document.getElementById("detailModal").classList.remove("active");
     }
