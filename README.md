@@ -21,7 +21,7 @@ AUDITORIA NAS CLASSES
     - [x] listar itens
         - [x] card do item
             - [x] ver mais (pop up)
-            - [ ] visível/não visível
+            - [x] visível/não visível
             - [X] icone excluir e editar (pop up para editar e confirmação de exclusão)
         - [x] paginação
 - [X] sobre
