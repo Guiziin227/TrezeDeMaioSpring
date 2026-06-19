@@ -35,10 +35,10 @@ AUDITORIA NAS CLASSES
     - [X] criação de novos usuários 
         - [X] botao e popup (form)
 - [ ] dashboard? estatisticas? (adm e biblio)
-    - [ ] exibir infos de acesso geral do site e de itens especificos
+    - [ ] exibir infos de acesso geral do site
   
 # 14/06/2024
-- [ ] Visualização do ver mais (Melhorar UI)
+- [x] Visualização do ver mais (Melhorar UI)
 - [ ] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
 - [x] Melhorar a responsividade do acervo (visualização em celular)
 - [x] Imagens no cadastro de itens (input de upload)
