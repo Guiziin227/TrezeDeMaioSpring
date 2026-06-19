@@ -58,7 +58,7 @@
                     <span class="card-badge" th:text="${item.type}">Tipo</span>
 
                     <!-- Menu de Opções visível apenas para ADMINISTRADOR ou BIBLIOTECARIOS -->
-                    <div class="dropdown position-absolute top-0 end-0 m-2" style="z-index: 10;">
+                    <div class="dropdown position-absolute top-0 end-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
                         <button class="btn btn-light btn-sm rounded-circle opacity-75" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px; padding: 0;">
                             ⋮
                         </button>
