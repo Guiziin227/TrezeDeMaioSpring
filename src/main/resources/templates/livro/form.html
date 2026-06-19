@@ -21,6 +21,7 @@
         <h1 class="cadastro-titulo">Cadastro de Acervo</h1>
 
         <form th:action="@{/livro/create}" th:object="${item}" method="post" class="form-container">
+            <input type="hidden" th:field="*{id}" />
 
             <div class="input-group-custom full-width">
                 <label for="type">Tipo de Item</label>

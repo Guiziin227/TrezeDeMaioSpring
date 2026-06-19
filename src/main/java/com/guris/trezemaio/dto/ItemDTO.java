@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class ItemDTO {
+    // Adicione esta linha para suportar a edição:
+    private Long id;
 
     private TipoItem type;
 

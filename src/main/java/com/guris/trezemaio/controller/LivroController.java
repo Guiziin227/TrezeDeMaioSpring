@@ -31,7 +31,7 @@ public class LivroController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("item") ItemDTO dto) {
+    public String create(@ModelAttribute("item") ItemDTO dto, RedirectAttributes attributes) {
         Item item;
         if (dto.getType() == TipoItem.JORNAL) {
             Jornal jornal = new Jornal();
@@ -50,6 +50,10 @@ public class LivroController {
             livro.setAssuntos(dto.getAssuntos());
             livro.setCodigo(dto.getCodigo());
             item = livro;
+        }
+        // IMPORTANTE: Se o DTO já veio com ID, repasse para o objeto para que o JPA entenda como UPDATE e não INSERT
+        if (dto.getId() != null) {
+            item.setId(dto.getId());
         }
 
         item.setTitle(dto.getTitle());
@@ -73,7 +77,12 @@ public class LivroController {
             item.setEditora(itemService.findEditoraById(dto.getEditoraId()));
         }
 
-        itemService.cadastrarItem(item);
+        try {
+            itemService.cadastrarItem(item);
+            attributes.addFlashAttribute("mensagemSucesso", dto.getId() != null ? "Item atualizado com sucesso!" : "Item cadastrado com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro ao salvar o item: " + e.getMessage());
+        }
         return "redirect:/livro";
     }
 
@@ -129,4 +138,57 @@ public class LivroController {
         // Redireciona o usuário de volta para a página de listagem de itens
         return "redirect:/livro";
     }
+
+    @GetMapping("/editar/{id}")
+    public String editarForm(@PathVariable("id") Long id, Model model, RedirectAttributes attributes) {
+        try {
+            Item item = itemService.buscarPorId(id); // Certifique-se de que esse método existe no seu ItemService
+            if (item == null) {
+                attributes.addFlashAttribute("mensagemErro", "Item não encontrado!");
+                return "redirect:/livro";
+            }
+
+            // Converte o Item salvo no banco para o ItemDTO que sua tela espera
+            ItemDTO dto = new ItemDTO();
+            dto.setId(item.getId()); // Adicione o ID no seu ItemDTO se ainda não tiver
+            dto.setTitle(item.getTitle());
+            dto.setSubtitle(item.getSubtitle());
+            dto.setPagesCount(item.getPagesCount());
+            dto.setPublicationDate(item.getPublicationDate());
+            dto.setLanguage(item.getLanguage());
+            dto.setQuantity(item.getQuantity());
+            dto.setObservation(item.getObservation());
+            dto.setAutor(item.getAutor());
+            dto.setEdicao(item.getEdicao());
+            dto.setLocalization(item.getLocalization());
+            dto.setDescription(item.getDescription());
+            dto.setCodigo(item.getCodigo());
+            dto.setType(item.getType());
+
+            if (item.getDoador() != null) dto.setDoadorId(item.getDoador().getId());
+            if (item.getEditora() != null) dto.setEditoraId(item.getEditora().getId());
+
+            // Carrega os campos específicos de cada herança
+            if (item instanceof Jornal) {
+                dto.setSecao(((Jornal) item).getSecao());
+                dto.setCidade(((Jornal) item).getCidade());
+            } else if (item instanceof Revista) {
+                dto.setIssn(((Revista) item).getIssn());
+            } else if (item instanceof Livro) {
+                dto.setIsbn(((Livro) item).getIsbn());
+                dto.setAssuntos(((Livro) item).getAssuntos());
+            }
+
+            model.addAttribute("item", dto);
+            model.addAttribute("tipos", TipoItem.values());
+            model.addAttribute("doadores", itemService.listarDoadores());
+            model.addAttribute("editoras", itemService.listarEditoras());
+
+            return FORM_VIEW; // Reutiliza a mesma página de cadastro
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro ao carregar item para edição: " + e.getMessage());
+            return "redirect:/livro";
+        }
+    }
+
 }

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 
 @Service
@@ -130,6 +131,11 @@ public class ItemService {
         return itemRepository.searchAcervo(type, query, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Item buscarPorId(Long id) {
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item não encontrado com o ID: " + id));
+    }
 
     @Transactional
     public void excluirPorId(Long id) {
