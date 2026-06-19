@@ -42,4 +42,6 @@ public class ItemDTO {
     private String codigo;     // Livro / Jornal / Revista
 
     private String imagemUrl;
+
+    private boolean isActive = true;
 }

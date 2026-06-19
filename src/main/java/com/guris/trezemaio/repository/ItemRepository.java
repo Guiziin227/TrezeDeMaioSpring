@@ -16,9 +16,16 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findFirstByTypeOrderByIdDesc(TipoItem type);
 
     @Query("SELECT i FROM Item i WHERE " +
-           "(:type IS NULL OR i.type = :type) AND " +
-           "(:query IS NULL OR LOWER(i.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
-           "OR LOWER(i.autor) LIKE LOWER(CONCAT('%', :query, '%')) " +
-           "OR LOWER(i.description) LIKE LOWER(CONCAT('%', :query, '%')))")
-    Page<Item> searchAcervo(@Param("type") TipoItem type, @Param("query") String query, Pageable pageable);
+            "(:type IS NULL OR i.type = :type) AND " +
+            "(:isAdminOrBibliotecario = true OR i.isActive = true) AND " +
+            "(:query IS NULL OR LOWER(i.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(i.autor) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(i.description) LIKE LOWER(CONCAT('%', :query, '%')))")
+    Page<Item> searchAcervo(
+            @Param("type") TipoItem type,
+            @Param("query") String query,
+            @Param("isAdminOrBibliotecario") boolean isAdminOrBibliotecario,
+            Pageable pageable
+    );
 }
+
