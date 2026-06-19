@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDate;
 
 @Getter
@@ -45,6 +44,13 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private TipoItem type;
 
+    // ALTERAÇÃO: Atributo movido para junto dos outros campos.
+    // Como a tabela usa o padrão snake_case ("image_url" que você mencionou antes),
+    // certifique-se de que o name corresponda exatamente ao que está no banco de dados.
+    @Column(name = "image_url")
+    private String imagemUrl;
+
+    // MÉTODOS MANUAIS (Sempre ficam no final da classe, abaixo de todos os atributos)
     public String getCodigo() {
         return null;
     }

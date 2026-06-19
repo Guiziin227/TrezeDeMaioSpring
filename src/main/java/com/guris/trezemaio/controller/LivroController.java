@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Controller
 @RequestMapping("/livro")
 public class LivroController {
@@ -31,8 +38,17 @@ public class LivroController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("item") ItemDTO dto, RedirectAttributes attributes) {
+    public String create(@ModelAttribute("item") ItemDTO dto,
+                         @RequestParam(value = "imagem", required = false) MultipartFile arquivo,
+                         RedirectAttributes attributes) {
         Item item;
+
+        // 1. Busca o item existente se for uma edição para não perder dados antigos
+        Item itemAntigo = null;
+        if (dto.getId() != null) {
+            itemAntigo = itemService.buscarPorId(dto.getId());
+        }
+
         if (dto.getType() == TipoItem.JORNAL) {
             Jornal jornal = new Jornal();
             jornal.setSecao(dto.getSecao());
@@ -51,11 +67,12 @@ public class LivroController {
             livro.setCodigo(dto.getCodigo());
             item = livro;
         }
-        // IMPORTANTE: Se o DTO já veio com ID, repasse para o objeto para que o JPA entenda como UPDATE e não INSERT
+
         if (dto.getId() != null) {
             item.setId(dto.getId());
         }
 
+        // Configuração dos campos padrão
         item.setTitle(dto.getTitle());
         item.setSubtitle(dto.getSubtitle());
         item.setPagesCount(dto.getPagesCount());
@@ -76,6 +93,37 @@ public class LivroController {
         if (dto.getEditoraId() != null) {
             item.setEditora(itemService.findEditoraById(dto.getEditoraId()));
         }
+
+        // ================= TRATAMENTO DA IMAGEM =================
+        if (arquivo != null && !arquivo.isEmpty()) {
+            try {
+                // Defina onde os arquivos serão salvos fisicamente
+                String pastaUploads = System.getProperty("user.home") + "/projeto_uploads/";
+                Path diretorio = Paths.get(pastaUploads);
+
+                if (!Files.exists(diretorio)) {
+                    Files.createDirectories(diretorio);
+                }
+
+                // Cria um nome único para o arquivo usando o timestamp atual
+                String nomeArquivoUnique = System.currentTimeMillis() + "_" + arquivo.getOriginalFilename();
+                Path caminhoCompleto = diretorio.resolve(nomeArquivoUnique);
+
+                // Salva o arquivo no disco rígido
+                Files.write(caminhoCompleto, arquivo.getBytes());
+
+                // Define o nome único gerado no objeto que vai para o banco
+                item.setImagemUrl(nomeArquivoUnique);
+
+            } catch (IOException e) {
+                attributes.addFlashAttribute("mensagemErro", "Erro ao fazer upload da imagem: " + e.getMessage());
+                return "redirect:/livro";
+            }
+        } else if (itemAntigo != null) {
+            // Se for edição e o usuário não enviou uma nova foto, preserva a foto antiga do banco
+            item.setImagemUrl(itemAntigo.getImagemUrl());
+        }
+        // ========================================================
 
         try {
             itemService.cadastrarItem(item);
@@ -142,15 +190,14 @@ public class LivroController {
     @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable("id") Long id, Model model, RedirectAttributes attributes) {
         try {
-            Item item = itemService.buscarPorId(id); // Certifique-se de que esse método existe no seu ItemService
+            Item item = itemService.buscarPorId(id);
             if (item == null) {
                 attributes.addFlashAttribute("mensagemErro", "Item não encontrado!");
                 return "redirect:/livro";
             }
 
-            // Converte o Item salvo no banco para o ItemDTO que sua tela espera
             ItemDTO dto = new ItemDTO();
-            dto.setId(item.getId()); // Adicione o ID no seu ItemDTO se ainda não tiver
+            dto.setId(item.getId());
             dto.setTitle(item.getTitle());
             dto.setSubtitle(item.getSubtitle());
             dto.setPagesCount(item.getPagesCount());
@@ -165,10 +212,12 @@ public class LivroController {
             dto.setCodigo(item.getCodigo());
             dto.setType(item.getType());
 
+            // ALTERAÇÃO: Repassa o valor da imagem salva do banco para o DTO da tela
+            dto.setImagemUrl(item.getImagemUrl());
+
             if (item.getDoador() != null) dto.setDoadorId(item.getDoador().getId());
             if (item.getEditora() != null) dto.setEditoraId(item.getEditora().getId());
 
-            // Carrega os campos específicos de cada herança
             if (item instanceof Jornal) {
                 dto.setSecao(((Jornal) item).getSecao());
                 dto.setCidade(((Jornal) item).getCidade());
@@ -184,7 +233,7 @@ public class LivroController {
             model.addAttribute("doadores", itemService.listarDoadores());
             model.addAttribute("editoras", itemService.listarEditoras());
 
-            return FORM_VIEW; // Reutiliza a mesma página de cadastro
+            return FORM_VIEW;
         } catch (Exception e) {
             attributes.addFlashAttribute("mensagemErro", "Erro ao carregar item para edição: " + e.getMessage());
             return "redirect:/livro";

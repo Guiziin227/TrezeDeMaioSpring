@@ -20,7 +20,7 @@
     <div class="cadastro-card card-grande">
         <h1 class="cadastro-titulo">Cadastro de Acervo</h1>
 
-        <form th:action="@{/livro/create}" th:object="${item}" method="post" class="form-container">
+        <form th:action="@{/livro/create}" th:object="${item}" method="post" enctype="multipart/form-data" class="form-container">
             <input type="hidden" th:field="*{id}" />
 
             <div class="input-group-custom full-width">
@@ -146,9 +146,16 @@
                     <label for="observation">Observações</label>
                     <textarea id="observation" th:field="*{observation}" class="custom-input" rows="2" placeholder="Observações gerais..."></textarea>
                 </div>
+
+                <div class="input-group-custom full-width">
+                    <label for="imagem">Capa / Imagem do Item</label>
+                    <input id="imagem" type="file" name="imagem" accept="image/*" class="custom-input">
+                    <!-- Mostra uma dica se o item já possuir uma imagem salva (Edição) -->
+                    <small th:if="${item.imagemUrl != null}" style="color: #666;">
+                        Já existe uma imagem cadastrada (${item.imagemUrl}). Selecione um novo arquivo apenas se desejar alterá-la.
+                    </small>
+                </div>
             </div>
-
-
 
             <div class="actions" style="margin-top: 10px;">
                 <button type="submit" class="btn-salvar">Salvar Acervo</button>

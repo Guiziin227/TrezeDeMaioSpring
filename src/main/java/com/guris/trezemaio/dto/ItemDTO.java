@@ -40,4 +40,6 @@ public class ItemDTO {
     private String cidade;     // Jornal
     private String issn;       // Revista
     private String codigo;     // Livro / Jornal / Revista
+
+    private String imagemUrl;
 }
