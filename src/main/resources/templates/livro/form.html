@@ -31,6 +31,7 @@
                 </select>
             </div>
 
+            <!-- Seções dinâmicas de subtipos -->
             <div id="sec-livro" class="subtype-section" style="display:none;">
                 <h3 class="subtype-titulo">Campos do Livro</h3>
                 <div class="form-grid">
@@ -69,7 +70,7 @@
                 </div>
             </div>
 
-
+            <!-- Grade de informações gerais -->
             <div class="form-grid">
                 <div class="input-group-custom">
                     <label for="title">Título</label>
@@ -150,18 +151,26 @@
                 <div class="input-group-custom full-width">
                     <label for="imagem">Capa / Imagem do Item</label>
                     <input id="imagem" type="file" name="imagem" accept="image/*" class="custom-input">
-                    <!-- Mostra uma dica se o item já possuir uma imagem salva (Edição) -->
-                    <small th:if="${item.imagemUrl != null}" style="color: #666;">
-                        Já existe uma imagem cadastrada (${item.imagemUrl}). Selecione um novo arquivo apenas se desejar alterá-la.
+                    <small th:if="*{imagemUrl != null}" style="color: #666; display: block; margin-top: 4px;">
+                        Já existe uma imagem cadastrada. Selecione um novo arquivo apenas se desejar alterá-la.
                     </small>
                 </div>
-            </div>
 
-            <div class="actions" style="margin-top: 10px;">
+                <!-- Checkbox de visibilidade reestruturado e validado para evitar erros de sintaxe -->
+                <div class="input-group-custom full-width" style="margin-top: 15px;">
+                    <label for="visivel" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;">
+                        <input id="visivel" type="checkbox" th:field="*{active}" style="width: 18px; height: 18px; cursor: pointer;" />
+                        <span>Disponível / Visível no acervo público</span>
+                    </label>
+                </div>
+            </div> <!-- Fim da div form-grid -->
+
+            <div class="actions" style="margin-top: 20px;">
                 <button type="submit" class="btn-salvar">Salvar Acervo</button>
                 <a th:href="@{/livro}" class="link-voltar">Voltar para a lista</a>
             </div>
         </form>
+
     </div>
 </div>
 

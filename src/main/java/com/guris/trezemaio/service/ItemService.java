@@ -125,10 +125,11 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public org.springframework.data.domain.Page<Item> buscarItensComPaginacao(TipoItem type, String query, int page, int size) {
+    public org.springframework.data.domain.Page<Item> buscarItensComPaginacao(TipoItem type, String query, boolean isAdminOrBibliotecario, int page, int size) {
         logger.info("Buscando itens com paginação: tipo={}, query={}, pagina={}, tamanho={}", type, query, page, size);
         org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
-        return itemRepository.searchAcervo(type, query, pageable);
+        // Repassa o booleano para a Query
+        return itemRepository.searchAcervo(type, query, isAdminOrBibliotecario, pageable);
     }
 
     @Transactional(readOnly = true)

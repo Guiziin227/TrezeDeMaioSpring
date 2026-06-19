@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/header.css}" rel="stylesheet">
     <link th:href="@{/css/catalogoacervo.css}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
 
@@ -50,51 +50,61 @@
         </div>
 
         <!-- Grade de Cards de Itens -->
-        <div class="acervo-grid">
-            <div class="acervo-card" th:each="item : ${itens}">
-                <!-- Adicionada a classe Bootstrap 'position-relative' para ancorar o menu na imagem -->
-                <div class="card-img-wrapper position-relative">
-                    <!-- Badge de Tipo de Acervo -->
-                    <span class="card-badge" th:text="${item.type}">Tipo</span>
-
-                    <!-- Menu de Opções visível apenas para ADMINISTRADOR ou BIBLIOTECARIOS -->
-                    <div class="dropstart position-absolute top-0 end-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
-                        <button class="btn btn-light btn-sm rounded-circle opacity-75 d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px; padding: 0;">
-                            ⋮
-                        </button>
-
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center px-3 py-2 text-dark text-decoration-none" th:href="@{/livro/editar/{id}(id=${item.id})}">
-                                    <i class="bi bi-pencil me-2"></i> Editar
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center px-3 py-2 text-danger text-decoration-none" th:href="@{/livro/excluir/{id}(id=${item.id})}" onclick="return confirm('Tem certeza que deseja excluir este item?');">
-                                    <i class="bi bi-trash me-2"></i> Excluir
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-
-
-                    <!-- 1. Se o item TIVER uma imagem cadastrada pelo usuário, mostra ela -->
-                    <img th:if="${item.imagemUrl != null}"
-                         th:src="@{/img/acervo/{nome}(nome=${item.imagemUrl})}"
-                         alt="Capa do Acervo"
-                         class="card-img">
-
-                    <!-- 2. Se o item NÃO TIVER imagem cadastrada, usa as imagens padrão do Unsplash que você já tinha -->
-                    <th:block th:if="${item.imagemUrl == null}">
-                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}" src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
-                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
-                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}" src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
-                    </th:block>
+        <div class="acervo-grid">            <div class="acervo-card" th:each="item : ${itens}">
+            <!-- Adicionada a classe Bootstrap 'position-relative' para ancorar o menu na imagem -->
+            <div class="card-img-wrapper position-relative">
+                <!-- Badge de Tipo de Acervo -->
+                <span class="card-badge" th:text="${item.type}">Tipo</span>
+                <!-- Ícone Visível/Não Visível usando Google Material Symbols -->
+                <div class="position-absolute top-0 start-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                    <!-- Caso isActive seja TRUE: Olho aberto (visibility) -->
+                    <span th:if="${item.isActive}" class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" title="Item Visível">
+                            <span class="material-symbols-outlined text-white" style="font-size: 18px;">visibility</span>
+                        </span>
+                    <!-- Caso isActive seja FALSE: Olho cortado (visibility_off) -->
+                    <span th:if="${!item.isActive}" class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" title="Item Oculto">
+                            <span class="material-symbols-outlined text-white" style="font-size: 18px;">visibility_off</span>
+                        </span>
                 </div>
 
-                <div class="card-content">
+
+                <!-- Menu de Opções visível apenas para ADMINISTRADOR ou BIBLIOTECARIOS -->
+                <div class="dropstart position-absolute top-0 end-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                    <button class="btn btn-light btn-sm rounded-circle opacity-75 d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px; padding: 0;">
+                        ⋮
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center px-3 py-2 text-dark text-decoration-none" th:href="@{/livro/editar/{id}(id=${item.id})}">
+                                <i class="bi bi-pencil me-2"></i> Editar
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center px-3 py-2 text-danger text-decoration-none" th:href="@{/livro/excluir/{id}(id=${item.id})}" onclick="return confirm('Tem certeza que deseja excluir este item?');">
+                                <i class="bi bi-trash me-2"></i> Excluir
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 1. Se o item TIVER uma imagem cadastrada pelo usuário, mostra ela -->
+                <img th:if="${item.imagemUrl != null}"
+                     th:src="@{/img/acervo/{nome}(nome=${item.imagemUrl})}"
+                     alt="Capa do Acervo"
+                     class="card-img">
+
+                <!-- 2. Se o item NÃO TIVER imagem cadastrada, usa as imagens padrão do Unsplash que você já tinha -->
+                <th:block th:if="${item.imagemUrl == null}">
+                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}" src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
+                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
+                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}" src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
+                </th:block>
+            </div>
+
+
+            <div class="card-content">
                     <div class="card-info">
                         <h3 class="card-title" th:text="${item.title}">Título</h3>
                         <p class="card-subtitle" th:text="${item.autor != null ? item.autor : 'Autor Desconhecido'}">Autor</p>
