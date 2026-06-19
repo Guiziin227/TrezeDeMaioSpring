@@ -40,6 +40,6 @@ AUDITORIA NAS CLASSES
 - [ ] Melhorar a responsividade do acervo (visualização em celular)
 - [ ] Visualização do ver mais (Melhorar UI)
 - [ ] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
-- [ ] Imagens no cadastro de itens (input de upload)
+- [x] Imagens no cadastro de itens (input de upload)
 - [x] Arrumar a tela de login (imagem)
 ## 
