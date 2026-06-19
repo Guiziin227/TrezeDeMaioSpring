@@ -129,33 +129,49 @@
             </div>
         </div>
 
-        <!-- Rodapé de Paginação Dinâmica (Thymeleaf) -->
-        <div class="pagination-wrapper" th:if="${totalPages > 1}">
+        <!-- Rodapé de Paginação Dinâmica (Thymeleaf + Classes Customizadas + Utilidades Bootstrap 5) -->
+        <div class="pagination-wrapper d-flex justify-content-center align-items-center flex-wrap gap-2" th:if="${totalPages > 1}">
+
             <!-- Botão Anterior -->
             <a th:href="@{/livro(type=${selectedType}, query=${query}, page=${currentPage - 1})}"
-               class="page-link-custom"
+               class="page-link-custom d-flex align-items-center"
                th:classappend="${currentPage == 0} ? 'disabled'">
-                <i class="material-icons">chevron_left</i>
-                <span>Anterior</span>
+                <i class="material-icons me-1">chevron_left</i>
+                <span class="d-none d-sm-inline">Anterior</span>
             </a>
 
-            <!-- Números sequenciais das páginas -->
-            <a th:each="pageNum : ${totalPages > 1 ? #numbers.sequence(0, totalPages - 1) : {0}}"
-               th:href="@{/livro(type=${selectedType}, query=${query}, page=${pageNum})}"
-               class="page-link-custom"
-               th:classappend="${pageNum == currentPage} ? 'active'"
-               th:text="${pageNum + 1}">
-                1
-            </a>
+            <!-- Bloco Lógico para limitar os números centrais -->
+            <th:block th:with="startPage=${T(java.lang.Math).max(0, currentPage - 1)},
+                       endPage=${T(java.lang.Math).min(totalPages - 1, currentPage + 1)}">
+
+                <!-- Primeira Página + Reticências (Somem no Mobile) -->
+                <a th:if="${startPage > 0}" th:href="@{/livro(type=${selectedType}, query=${query}, page=0)}" class="page-link-custom d-none d-sm-inline-flex">1</a>
+                <span th:if="${startPage > 1}" class="px-2 text-muted d-none d-sm-inline">...</span>
+
+                <!-- Números ao redor da página atual -->
+                <a th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
+                   th:href="@{/livro(type=${selectedType}, query=${query}, page=${pageNum})}"
+                   class="page-link-custom d-flex align-items-center justify-content-center"
+                   th:classappend="${pageNum == currentPage} ? 'active'"
+                   th:text="${pageNum + 1}">
+                    1
+                </a>
+
+                <!-- Reticências + Última Página (Somem no Mobile) -->
+                <span th:if="${endPage < totalPages - 2}" class="px-2 text-muted d-none d-sm-inline">...</span>
+                <a th:if="${endPage < totalPages - 1}" th:href="@{/livro(type=${selectedType}, query=${query}, page=${totalPages - 1})}" class="page-link-custom d-none d-sm-inline-flex" th:text="${totalPages}">N</a>
+            </th:block>
 
             <!-- Botão Próximo -->
             <a th:href="@{/livro(type=${selectedType}, query=${query}, page=${currentPage + 1})}"
-               class="page-link-custom"
+               class="page-link-custom d-flex align-items-center"
                th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
-                <span>Próximo</span>
-                <i class="material-icons">chevron_right</i>
+                <span class="d-none d-sm-inline">Próximo</span>
+                <i class="material-icons ms-1">chevron_right</i>
             </a>
         </div>
+
+
     </div>
 </div>
 
