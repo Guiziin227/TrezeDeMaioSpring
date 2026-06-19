@@ -58,27 +58,27 @@
                     <span class="card-badge" th:text="${item.type}">Tipo</span>
 
                     <!-- Menu de Opções visível apenas para ADMINISTRADOR ou BIBLIOTECARIOS -->
-                    <div class="dropdown position-absolute top-0 end-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
-                        <button class="btn btn-light btn-sm rounded-circle opacity-75" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px; padding: 0;">
+                    <div class="dropstart position-absolute top-0 end-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                        <button class="btn btn-light btn-sm rounded-circle opacity-75 d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px; padding: 0;">
                             ⋮
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
+
+                        <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-menu-item d-flex align-items-center px-3 py-2 text-dark text-decoration-none"
-                                   th:href="@{/livro/editar/{id}(id=${item.id})}">
+                                <a class="dropdown-item d-flex align-items-center px-3 py-2 text-dark text-decoration-none" th:href="@{/livro/editar/{id}(id=${item.id})}">
                                     <i class="bi bi-pencil me-2"></i> Editar
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-menu-item d-flex align-items-center px-3 py-2 text-danger text-decoration-none"
-                                   th:href="@{/livro/excluir/{id}(id=${item.id})}"
-                                   onclick="return confirm('Tem certeza que deseja excluir este item?');">
+                                <a class="dropdown-item d-flex align-items-center px-3 py-2 text-danger text-decoration-none" th:href="@{/livro/excluir/{id}(id=${item.id})}" onclick="return confirm('Tem certeza que deseja excluir este item?');">
                                     <i class="bi bi-trash me-2"></i> Excluir
                                 </a>
                             </li>
                         </ul>
                     </div>
+
+
 
                     <!-- 1. Se o item TIVER uma imagem cadastrada pelo usuário, mostra ela -->
                     <img th:if="${item.imagemUrl != null}"
