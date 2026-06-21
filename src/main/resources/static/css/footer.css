@@ -28,3 +28,34 @@
     color: #ffffff;
     transform: translateY(-2px);
 }
+
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+@media (min-width: 768px) {
+    .footer-info {
+        align-items: flex-start;
+    }
+}
+
+.footer-link {
+    color: #bfa68a;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-link:hover {
+    color: #ffffff;
+}
+
+.footer-link i {
+    font-size: 0.9rem;
+}

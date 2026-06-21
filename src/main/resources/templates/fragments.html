@@ -69,10 +69,17 @@
 </nav>
 
 <footer th:fragment="rodape" class="custom-footer py-1.5 mt-auto footer-container">
-    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
 
-        <div>
-            Acessos: <span th:text="${acessos}">0</span>
+        <div class="footer-info">
+            <span class="footer-text mb-3 mb-md-0">Acessos: <span th:text="${acessos}">0</span></span>
+            <a href="https://maps.google.com/?q=R.+Silva+Jardim,+1405+-+Nossa+Sra.+do+Rosario,+Santa+Maria+-+RS,+97010-492" target="_blank" class="footer-link"
+               title="Nossa localização">
+                <i class="bi bi-geo-alt"></i> R. Silva Jardim, 1405 - Santa Maria, RS
+            </a>
+            <a href="tel:+555532266082" class="footer-link" title="Entre em contato conosco">
+                <i class="bi bi-telephone"></i> (55) 3226-6082
+            </a>
         </div>
 
         <div class="footer-text mb-3 mb-md-0">
