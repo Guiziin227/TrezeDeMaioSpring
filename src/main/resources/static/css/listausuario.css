@@ -223,10 +223,13 @@ body, html {
 }
 
 .actions-cell {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap; /
+}
+
+.actions-cell .btn-action {
+    margin: 0 6px;
 }
 
 .btn-action {
@@ -445,4 +448,35 @@ body, html {
         text-align: center;
         padding: 12px;
     }
+}
+
+/* ==========================================================================
+   COLUNAS DE AUDITORIA
+   ========================================================================== */
+
+.audit-cell {
+    font-size: 0.82rem;
+    color: #6b5c4e;
+    white-space: nowrap;
+}
+
+.audit-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #9c8878;
+    margin-bottom: 2px;
+}
+
+.audit-value {
+    display: block;
+    color: #4e3c2e;
+    font-weight: 500;
+}
+
+/* Card extra largo para tabelas com auditoria */
+.cadastro-card.card-auditoria {
+    max-width: 950px;
 }
