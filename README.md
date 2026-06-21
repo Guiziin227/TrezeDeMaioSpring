@@ -48,6 +48,7 @@ ARRUMAR A CRIACAO DE CODIGOS
 
 
 # 21/06/2026
-- [] Arrumar upload de imagens (salvar no banco ou em pasta? e exibir no site)
-- [] Modal de edicao de item (preencher com os dados do item e permitir edicao)
-- [] Footer com informacoes de contato e redes sociais (opcional) e contagem de acessos
+- [ ] Arrumar upload de imagens (salvar no banco ou em pasta? e exibir no site)
+- [ ] Modal de edicao de item (preencher com os dados do item e permitir edicao)
+- [x] Footer com informacoes de contato e redes sociais (opcional)
+    - [ ] e contagem de acessos
