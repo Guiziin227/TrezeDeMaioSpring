@@ -41,21 +41,28 @@
                   th:text="${usuario.type}">Perfil</span>
                     </td>
 
-                    <!-- Coluna de Auditoria: Criação -->
                     <td class="audit-cell">
-                        <span class="audit-label">Por</span>
-                        <span class="audit-value" th:text="${usuario.criadoPor != null ? usuario.criadoPor : '-'}">-</span>
-                        <span class="audit-label" style="margin-top:4px;">Em</span>
-                        <span class="audit-value"
-                              th:text="${usuario.dataCriacao != null ? #temporals.format(usuario.dataCriacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                        <div class="audit-row">
+                            <span class="audit-label">Por</span>
+                            <span class="audit-value" th:text="${usuario.criadoPor != null ? usuario.criadoPor : '-'}">-</span>
+                        </div>
+
+                        <div class="audit-row">
+                            <span class="audit-label">Em</span>
+                            <span class="audit-value" th:text="${usuario.dataCriacao != null ? #temporals.format(usuario.dataCriacao, 'dd/MM/yyyy') : '-'}">-</span>
+                        </div>
                     </td>
-                    <!-- Coluna de Auditoria: Última edição -->
+
                     <td class="audit-cell">
-                        <span class="audit-label">Por</span>
-                        <span class="audit-value" th:text="${usuario.modificadoPor != null ? usuario.modificadoPor : '-'}">-</span>
-                        <span class="audit-label" style="margin-top:4px;">Em</span>
-                        <span class="audit-value"
-                              th:text="${usuario.dataModificacao != null ? #temporals.format(usuario.dataModificacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                        <div class="audit-row">
+                            <span class="audit-label">Por</span>
+                            <span class="audit-value" th:text="${usuario.modificadoPor != null ? usuario.modificadoPor : '-'}">-</span>
+                        </div>
+
+                        <div class="audit-row">
+                            <span class="audit-label">Em</span>
+                            <span class="audit-value" th:text="${usuario.dataModificacao != null ? #temporals.format(usuario.dataModificacao, 'dd/MM/yyyy') : '-'}">-</span>
+                        </div>
                     </td>
 
                     <td class="text-center actions-cell">

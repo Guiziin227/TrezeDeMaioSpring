@@ -64,19 +64,27 @@
                         </td>
 
                         <td class="audit-cell">
-                            <span class="audit-label">Por</span>
-                            <span class="audit-value" th:text="${item.criadoPor != null ? item.criadoPor : '-'}">-</span>
-                            <span class="audit-label" style="margin-top:4px;">Em</span>
-                            <span class="audit-value"
-                                  th:text="${item.dataCriacao != null ? #temporals.format(item.dataCriacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                            <div class="audit-row">
+                                <span class="audit-label">Por</span>
+                                <span class="audit-value" th:text="${item.criadoPor != null ? item.criadoPor : '-'}">-</span>
+                            </div>
+                            <div class="audit-row">
+                                <span class="audit-label">Em</span>
+                                <span class="audit-value"
+                                      th:text="${item.dataCriacao != null ? #temporals.format(item.dataCriacao, 'dd/MM/yyyy') : '-'}">-</span>
+                            </div>
                         </td>
 
                         <td class="audit-cell">
-                            <span class="audit-label">Por</span>
-                            <span class="audit-value" th:text="${item.modificadoPor != null ? item.modificadoPor : '-'}">-</span>
-                            <span class="audit-label" style="margin-top:4px;">Em</span>
-                            <span class="audit-value"
-                                  th:text="${item.dataModificacao != null ? #temporals.format(item.dataModificacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                            <div class="audit-row">
+                                <span class="audit-label">Por</span>
+                                <span class="audit-value" th:text="${item.modificadoPor != null ? item.modificadoPor : '-'}">-</span>
+                            </div>
+                            <div class="audit-row">
+                                <span class="audit-label">Em</span>
+                                <span class="audit-value"
+                                      th:text="${item.dataModificacao != null ? #temporals.format(item.dataModificacao, 'dd/MM/yyyy') : '-'}">-</span>
+                            </div>
                         </td>
                         <td sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
                             <div style="display:flex; gap:6px; flex-wrap:wrap;">

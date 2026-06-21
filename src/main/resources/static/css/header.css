@@ -4,7 +4,7 @@
 
 .custom-navbar {
     background-color: #352c23;
-    border-radius: 15px 15px 0 0;
+    border-radius: 0 0 0 0;
     width: 100%;
 }
 
@@ -168,4 +168,4 @@
         left: 0 !important;
         right: 0 !important;
     }
-}
+}

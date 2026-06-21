@@ -457,21 +457,25 @@ body, html {
 .audit-cell {
     font-size: 0.82rem;
     color: #6b5c4e;
-    white-space: nowrap;
+}
+
+.audit-row {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    column-gap: 8px;
+    align-items: baseline;
+    margin-bottom: 4px;
 }
 
 .audit-label {
-    display: block;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.4px;
     color: #9c8878;
-    margin-bottom: 2px;
 }
 
 .audit-value {
-    display: block;
     color: #4e3c2e;
     font-weight: 500;
 }

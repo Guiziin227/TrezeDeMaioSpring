@@ -151,9 +151,9 @@
                             th:data-codigo="${item.codigo}"
                             th:data-info="${item.infoEspecifica}"
                             th:data-criadopor="${item.criadoPor}"
-                            th:data-criadoem="${item.dataCriacao != null ? #temporals.format(item.dataCriacao, 'dd/MM/yyyy HH:mm') : null}"
+                            th:data-criadoem="${item.dataCriacao != null ? #temporals.format(item.dataCriacao, 'dd/MM/yyyy') : null}"
                             th:data-modificadopor="${item.modificadoPor}"
-                            th:data-modificadoem="${item.dataModificacao != null ? #temporals.format(item.dataModificacao, 'dd/MM/yyyy HH:mm') : null}"
+                            th:data-modificadoem="${item.dataModificacao != null ? #temporals.format(item.dataModificacao, 'dd/MM/yyyy') : null}"
                             onclick="openDetailModal(this)">
                         Ver mais
                     </button>
