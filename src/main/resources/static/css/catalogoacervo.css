@@ -28,7 +28,7 @@ body, html {
     background-color: #DBCDBE; /* Fundo do card principal */
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
 }
 
@@ -163,7 +163,7 @@ body, html {
     background-color: #ffffff; /* Fundo branco para a base do card */
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     display: flex;
     flex-direction: column;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -197,8 +197,9 @@ body, html {
 /* Badge de tipo flutuando na imagem */
 .card-badge {
     position: absolute;
-    top: 15px;
+    bottom: 15px;
     right: 15px;
+    z-index: 10;
     background-color: rgba(53, 44, 35, 0.85);
     color: #ffffff;
     padding: 4px 10px;

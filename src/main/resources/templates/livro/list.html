@@ -11,6 +11,8 @@
     <link th:href="@{/css/header.css}" rel="stylesheet">
     <link th:href="@{/css/catalogoacervo.css}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
 </head>
 <body>
 
@@ -26,88 +28,110 @@
             <form th:action="@{/livro}" method="get" class="search-box">
                 <input type="hidden" name="type" th:value="${selectedType}">
                 <i class="material-icons search-icon">search</i>
-                <input type="text" name="query" th:value="${query}" placeholder="Procurar no acervo..." class="search-input">
+                <input type="text" name="query" th:value="${query}" placeholder="Procurar no acervo..."
+                       class="search-input">
             </form>
 
             <!-- Abas/Filtros por Tipo (Preserva a busca ativa) -->
             <div class="filter-group">
-                <a th:href="@{/livro(query=${query})}" class="filter-btn" th:classappend="${selectedType == null} ? 'active'">
+                <a th:href="@{/livro(query=${query})}" class="filter-btn"
+                   th:classappend="${selectedType == null} ? 'active'">
                     <span>Todos</span>
                 </a>
-                <a th:href="@{/livro(type='LIVRO', query=${query})}" class="filter-btn" th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO} ? 'active'">
+                <a th:href="@{/livro(type='LIVRO', query=${query})}" class="filter-btn"
+                   th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO} ? 'active'">
                     <i class="material-icons">menu_book</i>
                     <span>Livros</span>
                 </a>
-                <a th:href="@{/livro(type='REVISTA', query=${query})}" class="filter-btn" th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA} ? 'active'">
+                <a th:href="@{/livro(type='REVISTA', query=${query})}" class="filter-btn"
+                   th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA} ? 'active'">
                     <i class="material-icons">auto_stories</i>
                     <span>Revistas</span>
                 </a>
-                <a th:href="@{/livro(type='JORNAL', query=${query})}" class="filter-btn" th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL} ? 'active'">
+                <a th:href="@{/livro(type='JORNAL', query=${query})}" class="filter-btn"
+                   th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL} ? 'active'">
                     <i class="material-icons">newspaper</i>
                     <span>Jornais</span>
                 </a>
             </div>
         </div>
 
-        <!-- Grade de Cards de Itens -->
-        <div class="acervo-grid">            <div class="acervo-card" th:each="item : ${itens}">
-            <!-- Adicionada a classe Bootstrap 'position-relative' para ancorar o menu na imagem -->
-            <div class="card-img-wrapper position-relative">
-                <!-- Badge de Tipo de Acervo -->
-                <span class="card-badge" th:text="${item.type}">Tipo</span>
-                <!-- Ícone Visível/Não Visível usando Google Material Symbols -->
-                <div class="position-absolute top-0 start-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
-                    <!-- Caso isActive seja TRUE: Olho aberto (visibility) -->
-                    <span th:if="${item.isActive}" class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" title="Item Visível">
-                            <span class="material-symbols-outlined text-white" style="font-size: 18px;">visibility</span>
+
+        <div class="acervo-grid">
+            <div class="acervo-card" th:each="item : ${itens}">
+
+                <div class="card-img-wrapper position-relative">
+                    <span class="card-badge" th:text="${item.type}">Tipo</span>
+                    <div class="position-absolute top-0 start-0 m-2" style="z-index: 10;"
+                         sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                    <span th:if="${item.isActive}"
+                          class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center"
+                          style="width: 30px; height: 30px;" title="Item Visível">
+                            <span class="material-symbols-outlined text-white"
+                                  style="font-size: 18px;">visibility</span>
                         </span>
-                    <!-- Caso isActive seja FALSE: Olho cortado (visibility_off) -->
-                    <span th:if="${!item.isActive}" class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" title="Item Oculto">
-                            <span class="material-symbols-outlined text-white" style="font-size: 18px;">visibility_off</span>
+                        <span th:if="${!item.isActive}"
+                              class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center"
+                              style="width: 30px; height: 30px;" title="Item Oculto">
+                            <span class="material-symbols-outlined text-white"
+                                  style="font-size: 18px;">visibility_off</span>
                         </span>
+                    </div>
+
+
+                    <div class="dropstart position-absolute top-0 end-0 m-2" style="z-index: 10;"
+                         sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                        <button class="btn btn-light btn-sm rounded-circle opacity-75 d-flex align-items-center justify-content-center"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                style="width: 30px; height: 30px; padding: 0;">
+                            ⋮
+                        </button>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center px-3 py-2 text-dark text-decoration-none"
+                                   th:href="@{/livro/editar/{id}(id=${item.id})}">
+                                    <i class="bi bi-pencil me-2"></i> Editar
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center px-3 py-2 text-danger text-decoration-none"
+                                   th:href="@{/livro/excluir/{id}(id=${item.id})}"
+                                   onclick="return confirm('Tem certeza que deseja excluir este item?');">
+                                    <i class="bi bi-trash me-2"></i> Excluir
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <img th:if="${item.imagemUrl != null}"
+                         th:src="@{/img/acervo/{nome}(nome=${item.imagemUrl})}"
+                         alt="Capa do Acervo"
+                         class="card-img">
+
+                    <th:block th:if="${item.imagemUrl == null}">
+                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}"
+                             src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600"
+                             alt="Capa" class="card-img">
+                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}"
+                             src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600"
+                             alt="Capa" class="card-img">
+                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}"
+                             src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=600"
+                             alt="Capa" class="card-img">
+                    </th:block>
                 </div>
 
 
-                <!-- Menu de Opções visível apenas para ADMINISTRADOR ou BIBLIOTECARIOS -->
-                <div class="dropstart position-absolute top-0 end-0 m-2" style="z-index: 10;" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
-                    <button class="btn btn-light btn-sm rounded-circle opacity-75 d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px; padding: 0;">
-                        ⋮
-                    </button>
-
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center px-3 py-2 text-dark text-decoration-none" th:href="@{/livro/editar/{id}(id=${item.id})}">
-                                <i class="bi bi-pencil me-2"></i> Editar
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center px-3 py-2 text-danger text-decoration-none" th:href="@{/livro/excluir/{id}(id=${item.id})}" onclick="return confirm('Tem certeza que deseja excluir este item?');">
-                                <i class="bi bi-trash me-2"></i> Excluir
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- 1. Se o item TIVER uma imagem cadastrada pelo usuário, mostra ela -->
-                <img th:if="${item.imagemUrl != null}"
-                     th:src="@{/img/acervo/{nome}(nome=${item.imagemUrl})}"
-                     alt="Capa do Acervo"
-                     class="card-img">
-
-                <!-- 2. Se o item NÃO TIVER imagem cadastrada, usa as imagens padrão do Unsplash que você já tinha -->
-                <th:block th:if="${item.imagemUrl == null}">
-                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}" src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
-                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
-                    <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}" src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=600" alt="Capa" class="card-img">
-                </th:block>
-            </div>
-
-
-            <div class="card-content">
+                <div class="card-content">
                     <div class="card-info">
                         <h3 class="card-title" th:text="${item.title}">Título</h3>
-                        <p class="card-subtitle" th:text="${item.autor != null ? item.autor : 'Autor Desconhecido'}">Autor</p>
+                        <p class="card-subtitle" th:text="${item.autor != null ? item.autor : 'Autor Desconhecido'}">
+                            Autor</p>
                     </div>
                     <button type="button" class="btn-ver-mais"
                             th:data-imagem="${item.imagemExibicao}"
@@ -136,15 +160,14 @@
                 </div>
             </div>
 
-            <!-- Caso não encontre itens com a pesquisa -->
             <div class="no-results" th:if="${#lists.isEmpty(itens)}">
                 <i class="material-icons">info_outline</i>
                 Nenhum item do acervo encontrado.
             </div>
         </div>
 
-        <!-- Rodapé de Paginação Dinâmica (Thymeleaf + Classes Customizadas + Utilidades Bootstrap 5) -->
-        <div class="pagination-wrapper d-flex justify-content-center align-items-center flex-wrap gap-2" th:if="${totalPages > 1}">
+        <div class="pagination-wrapper d-flex justify-content-center align-items-center flex-wrap gap-2"
+             th:if="${totalPages > 1}">
 
             <!-- Botão Anterior -->
             <a th:href="@{/livro(type=${selectedType}, query=${query}, page=${currentPage - 1})}"
@@ -159,7 +182,8 @@
                        endPage=${T(java.lang.Math).min(totalPages - 1, currentPage + 1)}">
 
                 <!-- Primeira Página + Reticências (Somem no Mobile) -->
-                <a th:if="${startPage > 0}" th:href="@{/livro(type=${selectedType}, query=${query}, page=0)}" class="page-link-custom d-none d-sm-inline-flex">1</a>
+                <a th:if="${startPage > 0}" th:href="@{/livro(type=${selectedType}, query=${query}, page=0)}"
+                   class="page-link-custom d-none d-sm-inline-flex">1</a>
                 <span th:if="${startPage > 1}" class="px-2 text-muted d-none d-sm-inline">...</span>
 
                 <!-- Números ao redor da página atual -->
@@ -171,9 +195,11 @@
                     1
                 </a>
 
-                <!-- Reticências + Última Página (Somem no Mobile) -->
+
                 <span th:if="${endPage < totalPages - 2}" class="px-2 text-muted d-none d-sm-inline">...</span>
-                <a th:if="${endPage < totalPages - 1}" th:href="@{/livro(type=${selectedType}, query=${query}, page=${totalPages - 1})}" class="page-link-custom d-none d-sm-inline-flex" th:text="${totalPages}">N</a>
+                <a th:if="${endPage < totalPages - 1}"
+                   th:href="@{/livro(type=${selectedType}, query=${query}, page=${totalPages - 1})}"
+                   class="page-link-custom d-none d-sm-inline-flex" th:text="${totalPages}">N</a>
             </th:block>
 
             <!-- Botão Próximo -->
@@ -268,7 +294,8 @@
             <p class="modal-section-label">Descrição</p>
             <p id="modalDescription" class="modal-value modal-description">Descrição</p>
 
-            <div id="modalAuditoriaWrapper" class="modal-auditoria" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+            <div id="modalAuditoriaWrapper" class="modal-auditoria"
+                 sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
                 <p class="modal-section-label">Auditoria</p>
                 <div class="modal-auditoria-grid">
                     <div class="modal-auditoria-item">
