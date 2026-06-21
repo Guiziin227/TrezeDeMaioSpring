@@ -93,7 +93,7 @@ public class LivroController {
         item.setEdicao(dto.getEdicao());
         item.setLocalization(dto.getLocalization());
         item.setDescription(dto.getDescription());
-        item.setIsActive(true);
+        item.setIsActive(dto.isActive());
         item.setType(dto.getType());
 
         if (dto.getDoadorId() != null) {
@@ -175,8 +175,16 @@ public class LivroController {
     }
 
     @GetMapping("/gerenciar")
-    public String gerenciar(Model model) {
-        model.addAttribute("itens", itemService.listarItens());
+    public String gerenciar(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "12") int size,
+            Model model) {
+        org.springframework.data.domain.Page<Item> itemPage =
+                itemService.listarItensComPaginacao(page, size);
+        model.addAttribute("itens", itemPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", itemPage.getTotalPages());
+        model.addAttribute("totalItems", itemPage.getTotalElements());
         return "livro/gerenciar";
     }
 
@@ -215,6 +223,7 @@ public class LivroController {
             dto.setDescription(item.getDescription());
             dto.setCodigo(item.getCodigo());
             dto.setType(item.getType());
+            dto.setActive(item.getIsActive() != null && item.getIsActive());
 
             dto.setImagemUrl(item.getImagemUrl());
 

@@ -14,11 +14,15 @@ import com.guris.trezemaio.repository.DoadorRepository;
 import com.guris.trezemaio.repository.EditoraRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class ItemService {
@@ -107,6 +111,17 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
+    public long contarItens() {
+        return itemRepository.count();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> listarItensComPaginacao(int page, int size) {
+        logger.info("Listando itens com paginação: pagina={}, tamanho={}", page, size);
+        return itemRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    @Transactional(readOnly = true)
     public List<Doador> listarDoadores() {
         return doadorRepository.findAll();
     }
@@ -129,7 +144,7 @@ public class ItemService {
     @Transactional(readOnly = true)
     public org.springframework.data.domain.Page<Item> buscarItensComPaginacao(TipoItem type, String query, boolean isAdminOrBibliotecario, int page, int size) {
         logger.info("Buscando itens com paginação: tipo={}, query={}, pagina={}, tamanho={}", type, query, page, size);
-        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         // Repassa o booleano para a Query
         return itemRepository.searchAcervo(type, query, isAdminOrBibliotecario, pageable);
     }
