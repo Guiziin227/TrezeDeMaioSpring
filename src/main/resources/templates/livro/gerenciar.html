@@ -10,7 +10,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/header.css}" rel="stylesheet">
     <link th:href="@{/css/listausuario.css}" rel="stylesheet">
+    <link th:href="@{/css/gerenciar.css}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 <body>
 
@@ -32,22 +34,116 @@
                         <th>Título</th>
                         <th>Autor</th>
                         <th>Código</th>
-                        <th>Detalhes Específicos</th>
+                        <th>Visível</th>
+                        <th>Criado por</th>
+                        <th>Editado por</th>
+                        <th sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="item : ${itens}">
                         <td>
-                            <!-- Usando o tipo para aplicar uma classe de badge dinâmica (livro, jornal, revista) -->
-                            <span class="badge-perfil" th:classappend="${#strings.toLowerCase(item.type)}" th:text="${item.type}">Tipo</span>
+                            <span class="badge-perfil"
+                                  th:classappend="${#strings.toLowerCase(item.type)}"
+                                  th:text="${item.type}">Tipo</span>
                         </td>
                         <td th:text="${item.title}">Título</td>
                         <td th:text="${item.autor}">Autor</td>
                         <td th:text="${item.codigo}">Código</td>
-                        <td th:text="${item.infoEspecifica}">Info Especifica</td>
+                        <td>
+                            <span th:if="${item.isActive}"
+                                  class="badge-visivel ativo">
+                                <span class="material-symbols-outlined" style="font-size:15px;">visibility</span>
+                                Visível
+                            </span>
+                            <span th:if="${!item.isActive}"
+                                  class="badge-visivel inativo">
+                                <span class="material-symbols-outlined" style="font-size:15px;">visibility_off</span>
+                                Oculto
+                            </span>
+                        </td>
+
+                        <td class="audit-cell">
+                            <span class="audit-label">Por</span>
+                            <span class="audit-value" th:text="${item.criadoPor != null ? item.criadoPor : '-'}">-</span>
+                            <span class="audit-label" style="margin-top:4px;">Em</span>
+                            <span class="audit-value"
+                                  th:text="${item.dataCriacao != null ? #temporals.format(item.dataCriacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                        </td>
+
+                        <td class="audit-cell">
+                            <span class="audit-label">Por</span>
+                            <span class="audit-value" th:text="${item.modificadoPor != null ? item.modificadoPor : '-'}">-</span>
+                            <span class="audit-label" style="margin-top:4px;">Em</span>
+                            <span class="audit-value"
+                                  th:text="${item.dataModificacao != null ? #temporals.format(item.dataModificacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                        </td>
+                        <td sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <a th:href="@{/livro/editar/{id}(id=${item.id})}"
+                                   class="btn-action-gerenciar btn-editar-item">
+                                    <i class="material-icons" style="font-size:15px;">edit</i> Editar
+                                </a>
+                                <a th:href="@{/livro/excluir/{id}(id=${item.id})}"
+                                   class="btn-action-gerenciar btn-excluir-item"
+                                   onclick="return confirm('Tem certeza que deseja excluir este item?');">
+                                    <i class="material-icons" style="font-size:15px;">delete</i> Excluir
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(itens)}">
+                        <td colspan="8" style="text-align:center; color:#9c8878; padding: 30px;">
+                            Nenhum item cadastrado no acervo.
+                        </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+
+        <div class="pagination-wrapper d-flex justify-content-center align-items-center flex-wrap gap-2"
+             th:if="${totalPages > 1}">
+
+
+            <a th:href="@{/livro/gerenciar(page=${currentPage - 1})}"
+               class="page-link-custom d-flex align-items-center"
+               th:classappend="${currentPage == 0} ? 'disabled'">
+                <i class="material-icons me-1">chevron_left</i>
+                <span class="d-none d-sm-inline">Anterior</span>
+            </a>
+
+
+            <th:block th:with="startPage=${T(java.lang.Math).max(0, currentPage - 1)},
+                               endPage=${T(java.lang.Math).min(totalPages - 1, currentPage + 1)}">
+
+
+                <a th:if="${startPage > 0}" th:href="@{/livro/gerenciar(page=0)}"
+                   class="page-link-custom d-none d-sm-inline-flex">1</a>
+                <span th:if="${startPage > 1}" class="px-2 text-muted d-none d-sm-inline">...</span>
+
+                <a th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
+                   th:href="@{/livro/gerenciar(page=${pageNum})}"
+                   class="page-link-custom d-flex align-items-center justify-content-center"
+                   th:classappend="${pageNum == currentPage} ? 'active'"
+                   th:text="${pageNum + 1}">1</a>
+
+                <span th:if="${endPage < totalPages - 2}" class="px-2 text-muted d-none d-sm-inline">...</span>
+                <a th:if="${endPage < totalPages - 1}"
+                   th:href="@{/livro/gerenciar(page=${totalPages - 1})}"
+                   class="page-link-custom d-none d-sm-inline-flex" th:text="${totalPages}">N</a>
+            </th:block>
+
+            <a th:href="@{/livro/gerenciar(page=${currentPage + 1})}"
+               class="page-link-custom d-flex align-items-center"
+               th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                <span class="d-none d-sm-inline">Próximo</span>
+                <i class="material-icons ms-1">chevron_right</i>
+            </a>
+        </div>
+
+        <div style="text-align:center; margin-top:10px; font-size:0.85rem; color:#9c8878;">
+            <span th:text="${totalItems}">0</span> item(s) no total
         </div>
 
         <div class="actions">

@@ -1,0 +1,140 @@
+/* ==========================================================================
+   GERENCIAMENTO DE ACERVO - CSS
+   Estilos específicos da página /livro/gerenciar
+   ========================================================================== */
+
+/* Card extra largo para acomodar a tabela de auditoria */
+.cadastro-card.card-grande {
+    max-width: 1100px;
+}
+
+/* ==========================================================================
+   COLUNAS DE AUDITORIA
+   ========================================================================== */
+
+.audit-cell {
+    font-size: 0.82rem;
+    color: #6b5c4e;
+    white-space: nowrap;
+}
+
+.audit-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #9c8878;
+    margin-bottom: 2px;
+}
+
+.audit-value {
+    display: block;
+    color: #4e3c2e;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   BADGE DE VISIBILIDADE
+   ========================================================================== */
+
+.badge-visivel {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-visivel.ativo {
+    background-color: rgba(39, 174, 96, 0.12);
+    color: #1e8449;
+}
+
+.badge-visivel.inativo {
+    background-color: rgba(189, 66, 66, 0.1);
+    color: #a93226;
+}
+
+/* ==========================================================================
+   PAGINAÇÃO (mesmo padrão do /livro mas com as cores do tema de tabela)
+   ========================================================================== */
+
+.pagination-wrapper {
+    margin-top: 20px;
+}
+
+.page-link-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(53, 44, 35, 0.2);
+    background-color: #ffffff;
+    color: #352c23;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.page-link-custom:hover:not(.disabled):not(.active) {
+    background-color: #352c23;
+    color: #ffffff;
+    border-color: #352c23;
+    transform: translateY(-1px);
+}
+
+.page-link-custom.active {
+    background-color: #352c23;
+    color: #ffffff;
+    border-color: #352c23;
+    pointer-events: none;
+}
+
+.page-link-custom.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   BOTÕES DE AÇÃO DA TABELA
+   ========================================================================== */
+
+.btn-action-gerenciar {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.btn-editar-item {
+    background-color: rgba(53, 44, 35, 0.08);
+    color: #352c23;
+}
+
+.btn-editar-item:hover {
+    background-color: #352c23;
+    color: #ffffff;
+}
+
+.btn-excluir-item {
+    background-color: rgba(189, 66, 66, 0.08);
+    color: #bd4242;
+}
+
+.btn-excluir-item:hover {
+    background-color: #bd4242;
+    color: #ffffff;
+}
