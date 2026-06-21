@@ -106,18 +106,17 @@ public class LivroController {
         // Tratamento da imagem
         if (arquivo != null && !arquivo.isEmpty()) {
             try {
-                String pastaUploads = System.getProperty("user.home") + "/projeto_uploads/";
+                String pastaUploads =  "src/main/resources/static/uploads/";
                 Path diretorio = Paths.get(pastaUploads);
 
                 if (!Files.exists(diretorio)) {
                     Files.createDirectories(diretorio);
                 }
 
-                String nomeArquivoUnique = System.currentTimeMillis() + "_" + arquivo.getOriginalFilename();
+                String nomeArquivoUnique = System.currentTimeMillis() + "_" + item.getTitle().replaceAll("\\s+", "_") + ".png";
                 Path caminhoCompleto = diretorio.resolve(nomeArquivoUnique);
 
                 Files.write(caminhoCompleto, arquivo.getBytes());
-
                 item.setImagemUrl(nomeArquivoUnique);
 
             } catch (IOException e) {
