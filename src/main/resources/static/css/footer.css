@@ -1,0 +1,30 @@
+* {
+    font-family: 'Baloo 2', sans-serif;
+}
+
+.footer-container {
+    background-color: #352c23;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+}
+
+
+.footer-text {
+    font-size: 0.9rem;
+}
+
+.instagram-btn {
+    display: inline-block;
+    color: #bfa68a;
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+
+.instagram-btn:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
