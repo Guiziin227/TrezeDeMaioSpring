@@ -2,10 +2,10 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuários</title>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/header.css}" rel="stylesheet">
     <link th:href="@{/css/listausuario.css}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -14,7 +14,7 @@
 <header th:replace="~{fragments :: cabecalho}"></header>
 
 <div class="main-container">
-    <div class="cadastro-card card-grande">
+    <div class="cadastro-card card-grande card-auditoria">
         <h1 class="cadastro-titulo">Lista de Usuários</h1>
 
         <div class="actions-top">
@@ -27,28 +27,52 @@
                     <tr>
                         <th>Nome</th>
                         <th>Perfil</th>
+                        <th>Criado por</th>
+                        <th>Editado por</th>
                         <th class="text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="usuario : ${usuarios}">
-                        <td th:text="${usuario.name}">Nome</td>
-                        <td>
-                            <span class="badge-perfil" th:classappend="${#strings.toLowerCase(usuario.type)}" th:text="${usuario.type}">Perfil</span>
-                        </td>
-                        <td class="text-center actions-cell">
-                            <a th:href="@{/usuario/edit/{id}(id=${usuario.id})}" class="btn-action btn-edit" title="Editar Usuário">
-                                <i class="material-icons">edit</i>
-                            </a>
-                            <a href="#" class="btn-action btn-delete" title="Excluir Usuário"
-                               th:data-id="${usuario.id}"
-                               th:data-name="${usuario.name}"
-                               onclick="openDeleteModal(this)">
-                                <i class="material-icons">delete</i>
-                            </a>
-                        </td>
-                    </tr>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.name}">Nome</td>
+                    <td>
+            <span class="badge-perfil"
+                  th:classappend="${#strings.toLowerCase(usuario.type)}"
+                  th:text="${usuario.type}">Perfil</span>
+                    </td>
+
+                    <!-- Coluna de Auditoria: Criação -->
+                    <td class="audit-cell">
+                        <span class="audit-label">Por</span>
+                        <span class="audit-value" th:text="${usuario.criadoPor != null ? usuario.criadoPor : '-'}">-</span>
+                        <span class="audit-label" style="margin-top:4px;">Em</span>
+                        <span class="audit-value"
+                              th:text="${usuario.dataCriacao != null ? #temporals.format(usuario.dataCriacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                    </td>
+                    <!-- Coluna de Auditoria: Última edição -->
+                    <td class="audit-cell">
+                        <span class="audit-label">Por</span>
+                        <span class="audit-value" th:text="${usuario.modificadoPor != null ? usuario.modificadoPor : '-'}">-</span>
+                        <span class="audit-label" style="margin-top:4px;">Em</span>
+                        <span class="audit-value"
+                              th:text="${usuario.dataModificacao != null ? #temporals.format(usuario.dataModificacao, 'dd/MM/yyyy HH:mm') : '-'}">-</span>
+                    </td>
+
+                    <td class="text-center actions-cell">
+                        <a th:href="@{/usuario/edit/{id}(id=${usuario.id})}"
+                           class="btn-action btn-edit" title="Editar Usuário">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        <a href="#" class="btn-action btn-delete" title="Excluir Usuário"
+                           th:data-id="${usuario.id}"
+                           th:data-name="${usuario.name}"
+                           onclick="openDeleteModal(this)">
+                            <i class="material-icons">delete</i>
+                        </a>
+                    </td>
+                </tr>
                 </tbody>
+
             </table>
         </div>
 
@@ -75,7 +99,7 @@
     function openDeleteModal(element) {
         var id = element.getAttribute("data-id");
         var name = element.getAttribute("data-name");
-        
+
         document.getElementById("deleteUserName").textContent = name;
         document.getElementById("confirmDeleteBtn").setAttribute("href", "/usuario/delete/" + id);
         document.getElementById("deleteModal").classList.add("active");
