@@ -82,12 +82,8 @@ public class Item {
         return "";
     }
 
-    // ALTERAÇÃO: Atributo movido para junto dos outros campos.
-    // Como a tabela usa o padrão snake_case ("image_url" que você mencionou antes),
-    // certifique-se de que o name corresponda exatamente ao que está no banco de dados.
     @Column(name = "image_url")
     private String imagemUrl;
-
 
     public String getCodigo() {
         return null;

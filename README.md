@@ -38,10 +38,16 @@ ARRUMAR A CRIACAO DE CODIGOS
 - [ ] dashboard? estatisticas? (adm e biblio)
     - [ ] exibir infos de acesso geral do site
   
-# 14/06/2024
+# 14/06/2026
 - [x] Visualização do ver mais (Melhorar UI)
 - [ ] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
 - [x] Melhorar a responsividade do acervo (visualização em celular)
 - [x] Imagens no cadastro de itens (input de upload)
 - [x] Arrumar a tela de login (imagem)
 ## 
+
+
+# 21/06/2026
+- [] Arrumar upload de imagens (salvar no banco ou em pasta? e exibir no site)
+- [] Modal de edicao de item (preencher com os dados do item e permitir edicao)
+- [] Footer com informacoes de contato e redes sociais (opcional) e contagem de acessos
