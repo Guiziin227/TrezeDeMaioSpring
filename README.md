@@ -53,3 +53,8 @@ ARRUMAR A CRIACAO DE CODIGOS
 - [ ] Modal de edicao de item (preencher com os dados do item e permitir edicao)
 - [x] Footer com informacoes de contato e redes sociais (opcional)
     - [ ] e contagem de acessos
+
+# 22/06/2026
+- [x] Footer na tela sobre
+    - [x] Restringir visualização de acessos no footer somenta para biblio. e admin.
+- [x] Busca no Gerenciar acervo
