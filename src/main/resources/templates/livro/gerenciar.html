@@ -25,8 +25,15 @@
     <div class="cadastro-card card-grande">
         <h1 class="cadastro-titulo">Itens cadastrados no Acervo</h1>
 
-        <div class="actions-top" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
-            <a th:href="@{/livro/form}" class="btn-novo">Novo Item de Acervo</a>
+        <div class="toolbar-gerenciar">
+            <form th:action="@{/livro/gerenciar}" method="get" class="search-box-gerenciar">
+                <i class="material-icons search-icon">search</i>
+                <input type="text" name="query" th:value="${query}" placeholder="Buscar por título, autor ou código..." class="search-input">
+            </form>
+
+            <div class="actions-top" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                <a th:href="@{/livro/form}" class="btn-novo">Novo Item de Acervo</a>
+            </div>
         </div>
 
         <div class="table-responsive">
@@ -116,36 +123,33 @@
         <div class="pagination-wrapper d-flex justify-content-center align-items-center flex-wrap gap-2"
              th:if="${totalPages > 1}">
 
-
-            <a th:href="@{/livro/gerenciar(page=${currentPage - 1})}"
+            <a th:href="@{/livro/gerenciar(query=${query}, page=${currentPage - 1})}"
                class="page-link-custom d-flex align-items-center"
                th:classappend="${currentPage == 0} ? 'disabled'">
                 <i class="material-icons me-1">chevron_left</i>
                 <span class="d-none d-sm-inline">Anterior</span>
             </a>
 
-
             <th:block th:with="startPage=${T(java.lang.Math).max(0, currentPage - 1)},
-                               endPage=${T(java.lang.Math).min(totalPages - 1, currentPage + 1)}">
+                       endPage=${T(java.lang.Math).min(totalPages - 1, currentPage + 1)}">
 
-
-                <a th:if="${startPage > 0}" th:href="@{/livro/gerenciar(page=0)}"
+                <a th:if="${startPage > 0}" th:href="@{/livro/gerenciar(query=${query}, page=0)}"
                    class="page-link-custom d-none d-sm-inline-flex">1</a>
                 <span th:if="${startPage > 1}" class="px-2 text-muted d-none d-sm-inline">...</span>
 
                 <a th:each="pageNum : ${#numbers.sequence(startPage, endPage)}"
-                   th:href="@{/livro/gerenciar(page=${pageNum})}"
+                   th:href="@{/livro/gerenciar(query=${query}, page=${pageNum})}"
                    class="page-link-custom d-flex align-items-center justify-content-center"
                    th:classappend="${pageNum == currentPage} ? 'active'"
                    th:text="${pageNum + 1}">1</a>
 
                 <span th:if="${endPage < totalPages - 2}" class="px-2 text-muted d-none d-sm-inline">...</span>
                 <a th:if="${endPage < totalPages - 1}"
-                   th:href="@{/livro/gerenciar(page=${totalPages - 1})}"
+                   th:href="@{/livro/gerenciar(query=${query}, page=${totalPages - 1})}"
                    class="page-link-custom d-none d-sm-inline-flex" th:text="${totalPages}">N</a>
             </th:block>
 
-            <a th:href="@{/livro/gerenciar(page=${currentPage + 1})}"
+            <a th:href="@{/livro/gerenciar(query=${query}, page=${currentPage + 1})}"
                class="page-link-custom d-flex align-items-center"
                th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
                 <span class="d-none d-sm-inline">Próximo</span>
