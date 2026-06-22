@@ -29,5 +29,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             @Param("isAdminOrBibliotecario") boolean isAdminOrBibliotecario,
             Pageable pageable
     );
+
+
+    @Query("SELECT i FROM Item i WHERE " +
+            "(:query IS NULL OR LOWER(i.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(i.autor) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(i.codigo) LIKE LOWER(CONCAT('%', :query, '%')))")
+    Page<Item> searchGerenciar(
+            @Param("query") String query,
+            Pageable pageable
+    );
 }
 

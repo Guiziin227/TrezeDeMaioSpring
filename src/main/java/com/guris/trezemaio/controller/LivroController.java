@@ -175,15 +175,21 @@ public class LivroController {
 
     @GetMapping("/gerenciar")
     public String gerenciar(
+            @RequestParam(value = "query", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "12") int size,
             Model model) {
+
+        String searchQuery = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
+
         org.springframework.data.domain.Page<Item> itemPage =
-                itemService.listarItensComPaginacao(page, size);
+                itemService.listarItensComPaginacao(searchQuery, page, size);
         model.addAttribute("itens", itemPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", itemPage.getTotalPages());
         model.addAttribute("totalItems", itemPage.getTotalElements());
+        model.addAttribute("query", query);
+
         return "livro/gerenciar";
     }
 

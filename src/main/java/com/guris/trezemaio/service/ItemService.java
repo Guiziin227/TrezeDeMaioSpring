@@ -15,6 +15,8 @@ import com.guris.trezemaio.repository.EditoraRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,6 +149,13 @@ public class ItemService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         // Repassa o booleano para a Query
         return itemRepository.searchAcervo(type, query, isAdminOrBibliotecario, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> listarItensComPaginacao(String query, int page, int size) {
+        logger.info("Listando itens para gerenciamento: query={}, pagina={}, tamanho={}", query, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        return itemRepository.searchGerenciar(query, pageable);
     }
 
     @Transactional(readOnly = true)
