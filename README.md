@@ -40,7 +40,8 @@ ARRUMAR A CRIACAO DE CODIGOS
   
 # 14/06/2026
 - [x] Visualização do ver mais (Melhorar UI)
-- [ ] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
+- [x] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
+    - [x] tela crucial p/ admin/biblio, mantida com paginação + busca
 - [x] Melhorar a responsividade do acervo (visualização em celular)
 - [x] Imagens no cadastro de itens (input de upload)
 - [x] Arrumar a tela de login (imagem)
