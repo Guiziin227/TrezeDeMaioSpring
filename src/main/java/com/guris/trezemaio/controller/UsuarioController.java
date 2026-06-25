@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -45,9 +46,17 @@ public class UsuarioController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Usuario usuario) {
-        usuarioService.criarUsuario(usuario);
-        return "redirect:/usuario/list";
+    public String create(@ModelAttribute Usuario usuario, RedirectAttributes attributes) {
+        try{
+            usuarioService.criarUsuario(usuario);
+            attributes.addFlashAttribute("mensagemSucesso", "Usuario criado com sucesso!");
+            return "redirect:/usuario/list";
+        }catch(IllegalArgumentException e){
+            attributes.addFlashAttribute("mensagemErro", e.getMessage());
+            return "redirect:/usuario/form";
+        }
+
+
     }
 
     @GetMapping("/list")
