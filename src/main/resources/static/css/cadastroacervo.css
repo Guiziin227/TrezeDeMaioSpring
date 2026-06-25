@@ -264,3 +264,10 @@ textarea.custom-input {
         font-size: 1rem;
     }
 }
+
+.field-error {
+    color: #d63b4f;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: block;
+}
