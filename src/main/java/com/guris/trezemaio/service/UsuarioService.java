@@ -24,6 +24,11 @@ public class UsuarioService {
     @Transactional
     public void criarUsuario(Usuario usuario){
         logger.info("Criando usuário: {}", usuario.getName());
+
+        if (usuarioRepository.existsByName(usuario.getName())) {
+            throw new IllegalArgumentException("Já existe um usuário com este nome.");
+        }
+
         usuarioRepository.save(usuario);
     }
 
