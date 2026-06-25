@@ -7,11 +7,13 @@ import com.guris.trezemaio.model.Jornal;
 import com.guris.trezemaio.model.Revista;
 import com.guris.trezemaio.model.enums.TipoItem;
 import com.guris.trezemaio.service.ItemService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,9 +43,17 @@ public class LivroController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("item") ItemDTO dto,
+    public String create(@Valid @ModelAttribute("item") ItemDTO dto, BindingResult bindingResult,
                          @RequestParam(value = "imagem", required = false) MultipartFile arquivo,
-                         RedirectAttributes attributes) {
+                         RedirectAttributes attributes, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("tipos", TipoItem.values());
+            model.addAttribute("doadores", itemService.listarDoadores());
+            model.addAttribute("editoras", itemService.listarEditoras());
+            return FORM_VIEW;
+        }
+
         Item item;
 
         // Busca o item existente se for uma edição (para não perder dados antigos, como auditoria)
