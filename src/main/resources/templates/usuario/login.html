@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Use Thymeleaf absolute path for static resources -->
     <link th:href="@{/css/login.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 <div class="main-container">
@@ -18,16 +19,38 @@
 
         <form th:action="@{/login}" method="post" class="form-container">
 
+            <p th:if="${param.error}" class="login-error-message">
+                Usuário ou senha incorretos. Tente novamente.
+            </p>
+
             <input id="username" type="text" name="username" placeholder="Usuário" class="input-field" required>
 
             <input id="password" type="password" name="password" placeholder="Senha" class="input-field" required>
 
-            <a th:href="@{/}" class="forgot-password">Esqueci a senha</a>
+            <a href="#" class="forgot-password" onclick="document.getElementById('forgotPasswordModal').classList.add('active'); return false;">Esqueci a senha</a>
 
             <button type="submit" class="login-button">Entrar</button>
         </form>
 
     </div>
 </div>
+
+<div id="forgotPasswordModal" class="custom-modal">
+    <div class="modal-overlay" onclick="document.getElementById('forgotPasswordModal').classList.remove('active')"></div>
+    <div class="modal-card-small">
+        <button class="modal-close-btn" onclick="document.getElementById('forgotPasswordModal').classList.remove('active')">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <h2 class="modal-title-small">Esqueceu sua senha?</h2>
+        <p class="modal-text-small">
+            Para redefinir sua senha, entre em contato com o administrador do sistema,
+            informando seu nome de usuário.
+        </p>
+        <button type="button" class="btn-fechar-modal" onclick="document.getElementById('forgotPasswordModal').classList.remove('active')">
+            Entendi
+        </button>
+    </div>
+</div>
+
 </body>
 </html>
