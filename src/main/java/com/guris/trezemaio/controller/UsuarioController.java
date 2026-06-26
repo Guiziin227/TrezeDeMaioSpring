@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
-@RequestMapping("/usuario")
 @Controller
 public class UsuarioController {
 
@@ -34,18 +33,18 @@ public class UsuarioController {
     @GetMapping({"/", "/index"})
     public String index() { return INDEX_VIEW; }
 
-    @GetMapping("/login")
+    @GetMapping("/usuario/login")
     public String login() {
         return LOGIN_VIEW;
     }
 
-    @GetMapping("/form")
+    @GetMapping("/usuario/form")
     public String form(Model model) {
         model.addAttribute("usuario", new Usuario());
         return FORM_VIEW;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/usuario/create")
     public String create(@ModelAttribute Usuario usuario, RedirectAttributes attributes) {
         try{
             usuarioService.criarUsuario(usuario);
@@ -59,20 +58,20 @@ public class UsuarioController {
 
     }
 
-    @GetMapping("/list")
+    @GetMapping("/usuario/list")
     public String list(Model model) {
         model.addAttribute("usuarios", usuarioService.listarUsuarios());
         return LIST_VIEW;
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/usuario/edit/{id}")
     public String edit(@PathVariable UUID id, Model model) {
         Usuario usuario = usuarioService.buscarPorId(id);
         model.addAttribute("usuario", usuario);
         return FORM_VIEW;
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/usuario/delete/{id}")
     public String delete(@PathVariable UUID id) {
         usuarioService.deletarUsuario(id);
         return "redirect:/usuario/list";
