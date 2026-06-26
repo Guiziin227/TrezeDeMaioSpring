@@ -38,9 +38,7 @@ public class Item {
     private String autor;
     private String edicao;
 
-    @ManyToOne
-    @JoinColumn(name = "doador_id")
-    private Doador doador;
+    private String doador;
 
     @ManyToOne
     @JoinColumn(name = "editora_id")

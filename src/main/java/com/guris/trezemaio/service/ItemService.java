@@ -1,36 +1,30 @@
 package com.guris.trezemaio.service;
 
-import com.guris.trezemaio.dto.ItemDTO;
-import com.guris.trezemaio.model.Livro;
-import com.guris.trezemaio.model.enums.TipoItem;
-import com.guris.trezemaio.repository.LivroRepository;
-
-import com.guris.trezemaio.model.Item;
-import com.guris.trezemaio.model.Jornal;
-import com.guris.trezemaio.model.Revista;
-import com.guris.trezemaio.model.Doador;
-import com.guris.trezemaio.model.Editora;
-import com.guris.trezemaio.repository.ItemRepository;
-import com.guris.trezemaio.repository.DoadorRepository;
-import com.guris.trezemaio.repository.EditoraRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.guris.trezemaio.dto.ItemDTO;
+import com.guris.trezemaio.model.Editora;
+import com.guris.trezemaio.model.Item;
+import com.guris.trezemaio.model.Jornal;
+import com.guris.trezemaio.model.Livro;
+import com.guris.trezemaio.model.Revista;
+import com.guris.trezemaio.model.enums.TipoItem;
+import com.guris.trezemaio.repository.EditoraRepository;
+import com.guris.trezemaio.repository.ItemRepository;
 
 @Service
 public class ItemService {
@@ -38,15 +32,12 @@ public class ItemService {
     private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
 
     private final ItemRepository itemRepository;
-    private final DoadorRepository doadorRepository;
     private final EditoraRepository editoraRepository;
 
     public ItemService(
             ItemRepository itemRepository,
-            DoadorRepository doadorRepository,
             EditoraRepository editoraRepository) {
         this.itemRepository = itemRepository;
-        this.doadorRepository = doadorRepository;
         this.editoraRepository = editoraRepository;
     }
 
@@ -120,6 +111,7 @@ public class ItemService {
         item.setDescription(dto.getDescription());
         item.setIsActive(dto.isActive());
         item.setType(dto.getType());
+        item.setDoador(dto.getDoador());
     }
 
     private void preencherCamposEspecificos(Item item, ItemDTO dto) {
@@ -147,11 +139,6 @@ public class ItemService {
     }
 
     private void configurarRelacionamentos(Item item, ItemDTO dto) {
-        if (dto.getDoadorId() != null) {
-            item.setDoador(findDoadorById(dto.getDoadorId()));
-        } else {
-            item.setDoador(null);
-        }
         if (dto.getEditoraId() != null) {
             item.setEditora(findEditoraById(dto.getEditoraId()));
         } else {
@@ -169,7 +156,8 @@ public class ItemService {
                     Files.createDirectories(diretorio);
                 }
 
-                String nomeArquivoUnico = System.currentTimeMillis() + "_" + item.getTitle().replaceAll("\\s+", "_") + ".png";
+                String nomeArquivoUnico = System.currentTimeMillis() + "_" + item.getTitle().replaceAll("\\s+", "_")
+                        + ".png";
                 Path caminhoCompleto = diretorio.resolve(nomeArquivoUnico);
 
                 Files.write(caminhoCompleto, arquivo.getBytes());
@@ -226,18 +214,8 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<Doador> listarDoadores() {
-        return doadorRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
     public List<Editora> listarEditoras() {
         return editoraRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public Doador findDoadorById(Long id) {
-        return doadorRepository.findById(id).orElse(null);
     }
 
     @Transactional(readOnly = true)
@@ -246,7 +224,8 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Item> buscarItensComPaginacao(TipoItem type, String query, boolean isAdminOrBibliotecario, int page, int size) {
+    public Page<Item> buscarItensComPaginacao(TipoItem type, String query, boolean isAdminOrBibliotecario, int page,
+            int size) {
         logger.info("Buscando itens com paginação: tipo={}, query={}, pagina={}, tamanho={}", type, query, page, size);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         return itemRepository.searchAcervo(type, query, isAdminOrBibliotecario, pageable);
@@ -271,5 +250,55 @@ public class ItemService {
             throw new IllegalArgumentException("Item não encontrado com o ID: " + id);
         }
         itemRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public ItemDTO editarItem(Long id) {
+        Item item = buscarPorId(id);
+
+        ItemDTO dto = new ItemDTO();
+        preencherDtoComum(dto, item);
+        preencherDtoEspecifico(dto, item);
+        configurarRelacionamentosDto(dto, item);
+
+        return dto;
+    }
+
+    private void preencherDtoComum(ItemDTO dto, Item item) {
+        dto.setId(item.getId());
+        dto.setTitle(item.getTitle());
+        dto.setSubtitle(item.getSubtitle());
+        dto.setPagesCount(item.getPagesCount());
+        dto.setPublicationDate(item.getPublicationDate());
+        dto.setLanguage(item.getLanguage());
+        dto.setQuantity(item.getQuantity());
+        dto.setObservation(item.getObservation());
+        dto.setAutor(item.getAutor());
+        dto.setEdicao(item.getEdicao());
+        dto.setLocalization(item.getLocalization());
+        dto.setDescription(item.getDescription());
+        dto.setCodigo(item.getCodigo());
+        dto.setType(item.getType());
+        dto.setActive(item.getIsActive() != null && item.getIsActive());
+        dto.setImagemUrl(item.getImagemUrl());
+        dto.setDoador(item.getDoador());
+    }
+
+    private void preencherDtoEspecifico(ItemDTO dto, Item item) {
+        if (item instanceof Jornal) {
+            dto.setSecao(((Jornal) item).getSecao());
+            dto.setCidade(((Jornal) item).getCidade());
+        } else if (item instanceof Revista) {
+            dto.setIssn(((Revista) item).getIssn());
+        } else if (item instanceof Livro) {
+            dto.setIsbn(((Livro) item).getIsbn());
+            dto.setAssuntos(((Livro) item).getAssuntos());
+        }
+    }
+
+    private void configurarRelacionamentosDto(ItemDTO dto, Item item) {
+        if (item.getEditora() != null) {
+            dto.setEditoraId(item.getEditora().getId());
+        }
     }
 }

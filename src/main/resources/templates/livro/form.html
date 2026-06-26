@@ -119,11 +119,8 @@
                 </div>
 
                 <div class="input-group-custom">
-                    <label for="doadorId">Doador</label>
-                    <select id="doadorId" th:field="*{doadorId}" class="custom-input">
-                        <option value="">Nenhum</option>
-                        <option th:each="d : ${doadores}" th:value="${d.id}" th:text="${d.name}"></option>
-                    </select>
+                    <label for="doador">Doador</label>
+                    <input id="doador" type="text" th:field="*{doador}" class="custom-input" placeholder="Nome do doador (opcional)">
                 </div>
 
                 <div class="input-group-custom">

@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.guris.trezemaio.dto.ItemDTO;
-import com.guris.trezemaio.model.Doador;
 import com.guris.trezemaio.model.Editora;
 import com.guris.trezemaio.model.Item;
 import com.guris.trezemaio.model.Jornal;
@@ -46,11 +45,6 @@ public class ItemController {
     @ModelAttribute("tipos")
     public TipoItem[] getTipos() {
         return TipoItem.values();
-    }
-
-    @ModelAttribute("doadores")
-    public List<Doador> getDoadores() {
-        return itemService.listarDoadores();
     }
 
     @ModelAttribute("editoras")
@@ -121,7 +115,7 @@ public class ItemController {
 
         String searchQuery = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
 
-        org.springframework.data.domain.Page<Item> itemPage = itemService.listarItensComPaginacao(searchQuery, page,
+        Page<Item> itemPage = itemService.listarItensComPaginacao(searchQuery, page,
                 size);
         model.addAttribute("itens", itemPage.getContent());
         model.addAttribute("currentPage", page);
@@ -146,48 +140,8 @@ public class ItemController {
     @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable("id") Long id, Model model, RedirectAttributes attributes) {
         try {
-            Item item = itemService.buscarPorId(id);
-            if (item == null) {
-                attributes.addFlashAttribute("mensagemErro", "Item não encontrado!");
-                return "redirect:/livro";
-            }
-
-            ItemDTO dto = new ItemDTO();
-            dto.setId(item.getId());
-            dto.setTitle(item.getTitle());
-            dto.setSubtitle(item.getSubtitle());
-            dto.setPagesCount(item.getPagesCount());
-            dto.setPublicationDate(item.getPublicationDate());
-            dto.setLanguage(item.getLanguage());
-            dto.setQuantity(item.getQuantity());
-            dto.setObservation(item.getObservation());
-            dto.setAutor(item.getAutor());
-            dto.setEdicao(item.getEdicao());
-            dto.setLocalization(item.getLocalization());
-            dto.setDescription(item.getDescription());
-            dto.setCodigo(item.getCodigo());
-            dto.setType(item.getType());
-            dto.setActive(item.getIsActive() != null && item.getIsActive());
-
-            dto.setImagemUrl(item.getImagemUrl());
-
-            if (item.getDoador() != null)
-                dto.setDoadorId(item.getDoador().getId());
-            if (item.getEditora() != null)
-                dto.setEditoraId(item.getEditora().getId());
-
-            if (item instanceof Jornal) {
-                dto.setSecao(((Jornal) item).getSecao());
-                dto.setCidade(((Jornal) item).getCidade());
-            } else if (item instanceof Revista) {
-                dto.setIssn(((Revista) item).getIssn());
-            } else if (item instanceof Livro) {
-                dto.setIsbn(((Livro) item).getIsbn());
-                dto.setAssuntos(((Livro) item).getAssuntos());
-            }
-
+            ItemDTO dto = itemService.editarItem(id);
             model.addAttribute("item", dto);
-
             return FORM_VIEW;
         } catch (Exception e) {
             attributes.addFlashAttribute("mensagemErro", "Erro ao carregar item para edição: " + e.getMessage());

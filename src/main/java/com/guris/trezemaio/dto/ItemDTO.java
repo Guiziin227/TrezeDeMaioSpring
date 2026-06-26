@@ -39,7 +39,7 @@ public class ItemDTO {
     private String localization;
     private String description;
 
-    private Long doadorId;
+    private String doador;
     private Long editoraId;
 
 

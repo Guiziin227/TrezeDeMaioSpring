@@ -4,7 +4,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.guris.trezemaio.model.Doador;
 import com.guris.trezemaio.model.Editora;
 import com.guris.trezemaio.model.Jornal;
 import com.guris.trezemaio.model.Livro;
@@ -12,7 +11,6 @@ import com.guris.trezemaio.model.Revista;
 import com.guris.trezemaio.model.Usuario;
 import com.guris.trezemaio.model.enums.TipoItem;
 import com.guris.trezemaio.model.enums.TipoUsuario;
-import com.guris.trezemaio.repository.DoadorRepository;
 import com.guris.trezemaio.repository.EditoraRepository;
 import com.guris.trezemaio.repository.ItemRepository;
 import com.guris.trezemaio.repository.UsuarioRepository;
@@ -23,20 +21,17 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UsuarioRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final DoadorRepository doadorRepository;
     private final EditoraRepository editoraRepository;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
 
     public DataInitializer(UsuarioRepository userRepository,
             PasswordEncoder passwordEncoder,
-            DoadorRepository doadorRepository,
             EditoraRepository editoraRepository,
             ItemRepository itemRepository,
             ItemService itemService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.doadorRepository = doadorRepository;
         this.editoraRepository = editoraRepository;
         this.itemRepository = itemRepository;
         this.itemService = itemService;
@@ -78,26 +73,9 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Editoras iniciadas.");
         }
 
-        if (doadorRepository.count() == 0) {
-            Doador d1 = new Doador();
-            d1.setName("Maria Silva");
-            d1.setDescription("Doação pessoal de romances");
-            doadorRepository.save(d1);
-
-            Doador d2 = new Doador();
-            d2.setName("Biblioteca Central");
-            d2.setDescription("Doação institucional");
-            doadorRepository.save(d2);
-            System.out.println("Doadores iniciados.");
-        }
-
         Editora rocco = editoraRepository.findAll().stream().filter(e -> e.getName().contains("Rocco")).findFirst()
                 .orElse(null);
         Editora sextante = editoraRepository.findAll().stream().filter(e -> e.getName().contains("Sextante"))
-                .findFirst().orElse(null);
-        Doador maria = doadorRepository.findAll().stream().filter(d -> d.getName().contains("Maria")).findFirst()
-                .orElse(null);
-        Doador biblioteca = doadorRepository.findAll().stream().filter(d -> d.getName().contains("Biblioteca"))
                 .findFirst().orElse(null);
 
 //        if (!itemRepository.existsByTitle("Dom Casmurro")) {
