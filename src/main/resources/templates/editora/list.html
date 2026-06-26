@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Editoras - Museu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link th:href="@{/css/header.css}" rel="stylesheet">
+    <link th:href="@{/css/footer.css}" rel="stylesheet">
+    <link th:href="@{/css/listausuario.css}" rel="stylesheet">
+    <link th:href="@{/css/gerenciar.css}" rel="stylesheet">
+</head>
+<body>
+
+<header th:replace="~{fragments :: cabecalho}"></header>
+
+<div class="main-container">
+    <div class="cadastro-card card-grande">
+        <h1 class="cadastro-titulo">Editoras Cadastradas</h1>
+
+        <!-- Alertas de Mensagens -->
+        <div th:if="${mensagemSucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${mensagemSucesso}">Sucesso</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${mensagemErro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${mensagemErro}">Erro</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="toolbar-gerenciar">
+            <form th:action="@{/editora}" method="get" class="search-box-gerenciar">
+                <i class="material-icons search-icon">search</i>
+                <input type="text" name="query" th:value="${query}" placeholder="Buscar por nome ou CNPJ..." class="search-input">
+            </form>
+
+            <div class="actions-top" sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
+                <a th:href="@{/editora/form}" class="btn-novo">Nova Editora</a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="custom-table" id="editorasTable">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>CNPJ</th>
+                        <th>Endereço / Cidade</th>
+                        <th sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="editora : ${editoras}">
+                        <td th:text="${editora.name}" style="font-weight: 500;">Nome</td>
+                        <td th:text="${editora.cnpj != null && !editora.cnpj.isEmpty() ? editora.cnpj : 'Não informado'}">CNPJ</td>
+                        <td th:text="${editora.address != null ? editora.address.cidade + ' - ' + editora.address.estado : 'Não informado'}">Endereço</td>
+                        <td sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')" class="text-center actions-cell">
+                            <a th:href="@{/editora/editar/{id}(id=${editora.id})}"
+                               class="btn-action btn-edit" title="Editar Editora">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <a href="#" class="btn-action btn-delete" title="Excluir Editora"
+                               th:data-id="${editora.id}"
+                               th:data-name="${editora.name}"
+                               onclick="openDeleteModal(this)">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(editoras)}">
+                        <td colspan="4" style="text-align:center; color:#9c8878; padding: 30px;">
+                            Nenhuma editora cadastrada.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="actions" style="margin-top: 20px;">
+            <a th:href="@{/acervo/gerenciar}" class="link-voltar">Gerenciar Acervo</a>
+            <span class="mx-2" style="color: #ccc;">|</span>
+            <a th:href="@{/}" class="link-voltar">Página Inicial</a>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal de Confirmação de Exclusão Customizado -->
+<div id="deleteModal" class="custom-modal">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-card">
+        <h3 class="modal-title">Confirmar Exclusão</h3>
+        <p class="modal-message">Deseja realmente excluir a editora <strong id="deleteEditoraName"></strong>?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn-cancelar" onclick="closeModal()">Cancelar</button>
+            <a id="confirmDeleteBtn" href="#" class="btn-confirmar">Excluir</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal(element) {
+        var id = element.getAttribute("data-id");
+        var name = element.getAttribute("data-name");
+
+        document.getElementById("deleteEditoraName").textContent = name;
+        document.getElementById("confirmDeleteBtn").setAttribute("href", "/editora/excluir/" + id);
+        document.getElementById("deleteModal").classList.add("active");
+    }
+
+    function closeModal() {
+        document.getElementById("deleteModal").classList.remove("active");
+    }
+</script>
+
+<footer th:replace="~{fragments :: rodape}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
