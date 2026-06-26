@@ -1,13 +1,8 @@
 package com.guris.trezemaio.controller;
 
-import com.guris.trezemaio.dto.ItemDTO;
-import com.guris.trezemaio.model.Item;
-import com.guris.trezemaio.model.Livro;
-import com.guris.trezemaio.model.Jornal;
-import com.guris.trezemaio.model.Revista;
-import com.guris.trezemaio.model.enums.TipoItem;
-import com.guris.trezemaio.service.ItemService;
-import jakarta.validation.Valid;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,132 +11,68 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.guris.trezemaio.dto.ItemDTO;
+import com.guris.trezemaio.model.Doador;
+import com.guris.trezemaio.model.Editora;
+import com.guris.trezemaio.model.Item;
+import com.guris.trezemaio.model.Jornal;
+import com.guris.trezemaio.model.Livro;
+import com.guris.trezemaio.model.Revista;
+import com.guris.trezemaio.model.enums.TipoItem;
+import com.guris.trezemaio.service.ItemService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/livro")
-public class LivroController {
+public class ItemController {
 
     private static final String FORM_VIEW = "livro/form";
     private static final String LIST_VIEW = "livro/list";
 
     private final ItemService itemService;
 
-    public LivroController(ItemService itemService) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
+    }
+
+    @ModelAttribute("tipos")
+    public TipoItem[] getTipos() {
+        return TipoItem.values();
+    }
+
+    @ModelAttribute("doadores")
+    public List<Doador> getDoadores() {
+        return itemService.listarDoadores();
+    }
+
+    @ModelAttribute("editoras")
+    public List<Editora> getEditoras() {
+        return itemService.listarEditoras();
     }
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("item") ItemDTO dto, BindingResult bindingResult,
-                         @RequestParam(value = "imagem", required = false) MultipartFile arquivo,
-                         RedirectAttributes attributes, Model model) {
+            @RequestParam(value = "imagem", required = false) MultipartFile arquivo,
+            RedirectAttributes attributes) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("tipos", TipoItem.values());
-            model.addAttribute("doadores", itemService.listarDoadores());
-            model.addAttribute("editoras", itemService.listarEditoras());
             return FORM_VIEW;
         }
 
-        Item item;
-
-        // Busca o item existente se for uma edição (para não perder dados antigos, como auditoria)
-        Item itemAntigo = null;
-        if (dto.getId() != null) {
-            itemAntigo = itemService.buscarPorId(dto.getId());
-        }
-
-        if (dto.getType() == TipoItem.JORNAL) {
-            Jornal jornal = (itemAntigo instanceof Jornal) ? (Jornal) itemAntigo : new Jornal();
-            jornal.setSecao(dto.getSecao());
-            jornal.setCidade(dto.getCidade());
-            if (dto.getId() == null) {
-                jornal.setCodigo(dto.getCodigo());
-            }
-            item = jornal;
-        } else if (dto.getType() == TipoItem.REVISTA) {
-            Revista revista = (itemAntigo instanceof Revista) ? (Revista) itemAntigo : new Revista();
-            revista.setIssn(dto.getIssn());
-            if (dto.getId() == null) {
-                revista.setCodigo(dto.getCodigo());
-            }
-            item = revista;
-        } else {
-            Livro livro = (itemAntigo instanceof Livro) ? (Livro) itemAntigo : new Livro();
-            livro.setIsbn(dto.getIsbn());
-            livro.setAssuntos(dto.getAssuntos());
-            if (dto.getId() == null) {
-                livro.setCodigo(dto.getCodigo());
-            }
-            item = livro;
-        }
-
-        if (dto.getId() != null) {
-            item.setId(dto.getId());
-        }
-
-        // Configuração dos campos padrão
-        item.setTitle(dto.getTitle());
-        item.setSubtitle(dto.getSubtitle());
-        item.setPagesCount(dto.getPagesCount());
-        item.setPublicationDate(dto.getPublicationDate());
-        item.setLanguage(dto.getLanguage());
-        item.setQuantity(dto.getQuantity());
-        item.setObservation(dto.getObservation());
-        item.setAutor(dto.getAutor());
-        item.setEdicao(dto.getEdicao());
-        item.setLocalization(dto.getLocalization());
-        item.setDescription(dto.getDescription());
-        item.setIsActive(dto.isActive());
-        item.setType(dto.getType());
-
-        if (dto.getDoadorId() != null) {
-            item.setDoador(itemService.findDoadorById(dto.getDoadorId()));
-        }
-        if (dto.getEditoraId() != null) {
-            item.setEditora(itemService.findEditoraById(dto.getEditoraId()));
-        }
-
-        // Tratamento da imagem
-        if (arquivo != null && !arquivo.isEmpty()) {
-            try {
-                String pastaUploads =  "src/main/resources/static/uploads/";
-                Path diretorio = Paths.get(pastaUploads);
-
-                if (!Files.exists(diretorio)) {
-                    Files.createDirectories(diretorio);
-                }
-
-                String nomeArquivoUnique = System.currentTimeMillis() + "_" + item.getTitle().replaceAll("\\s+", "_") + ".png";
-                Path caminhoCompleto = diretorio.resolve(nomeArquivoUnique);
-
-                Files.write(caminhoCompleto, arquivo.getBytes());
-                item.setImagemUrl(nomeArquivoUnique);
-
-            } catch (IOException e) {
-                attributes.addFlashAttribute("mensagemErro", "Erro ao fazer upload da imagem: " + e.getMessage());
-                return "redirect:/livro";
-            }
-        } else if (itemAntigo != null) {
-            item.setImagemUrl(itemAntigo.getImagemUrl());
-        }
-
         try {
-            itemService.cadastrarItem(item);
-            attributes.addFlashAttribute("mensagemSucesso", dto.getId() != null ? "Item atualizado com sucesso!" : "Item cadastrado com sucesso!");
+            itemService.salvar(dto, arquivo);
+            attributes.addFlashAttribute("mensagemSucesso",
+                    dto.getId() != null ? "Item atualizado com sucesso!" : "Item cadastrado com sucesso!");
         } catch (Exception e) {
-            attributes.addFlashAttribute("mensagemErro", "Erro ao salvar o item: " + e.getMessage());
+            attributes.addFlashAttribute("mensagemErro", e.getMessage());
         }
         return "redirect:/livro";
     }
@@ -149,9 +80,6 @@ public class LivroController {
     @GetMapping("/form")
     public String form(Model model) {
         model.addAttribute("item", new ItemDTO());
-        model.addAttribute("tipos", TipoItem.values());
-        model.addAttribute("doadores", itemService.listarDoadores());
-        model.addAttribute("editoras", itemService.listarEditoras());
         return FORM_VIEW;
     }
 
@@ -171,7 +99,8 @@ public class LivroController {
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(role -> role.equals("ADMINISTRADOR") || role.equals("BIBLIOTECARIO"));
 
-        Page<Item> itemPage = itemService.buscarItensComPaginacao(type, searchQuery, isAdminOrBibliotecario, page, size);
+        Page<Item> itemPage = itemService.buscarItensComPaginacao(type, searchQuery, isAdminOrBibliotecario, page,
+                size);
 
         model.addAttribute("itens", itemPage.getContent());
         model.addAttribute("currentPage", page);
@@ -192,8 +121,8 @@ public class LivroController {
 
         String searchQuery = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
 
-        org.springframework.data.domain.Page<Item> itemPage =
-                itemService.listarItensComPaginacao(searchQuery, page, size);
+        org.springframework.data.domain.Page<Item> itemPage = itemService.listarItensComPaginacao(searchQuery, page,
+                size);
         model.addAttribute("itens", itemPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", itemPage.getTotalPages());
@@ -242,8 +171,10 @@ public class LivroController {
 
             dto.setImagemUrl(item.getImagemUrl());
 
-            if (item.getDoador() != null) dto.setDoadorId(item.getDoador().getId());
-            if (item.getEditora() != null) dto.setEditoraId(item.getEditora().getId());
+            if (item.getDoador() != null)
+                dto.setDoadorId(item.getDoador().getId());
+            if (item.getEditora() != null)
+                dto.setEditoraId(item.getEditora().getId());
 
             if (item instanceof Jornal) {
                 dto.setSecao(((Jornal) item).getSecao());
@@ -256,9 +187,6 @@ public class LivroController {
             }
 
             model.addAttribute("item", dto);
-            model.addAttribute("tipos", TipoItem.values());
-            model.addAttribute("doadores", itemService.listarDoadores());
-            model.addAttribute("editoras", itemService.listarEditoras());
 
             return FORM_VIEW;
         } catch (Exception e) {

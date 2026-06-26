@@ -1,5 +1,6 @@
 package com.guris.trezemaio.service;
 
+import com.guris.trezemaio.dto.ItemDTO;
 import com.guris.trezemaio.model.Livro;
 import com.guris.trezemaio.model.enums.TipoItem;
 import com.guris.trezemaio.repository.LivroRepository;
@@ -16,12 +17,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -31,38 +37,153 @@ public class ItemService {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
 
-    private final LivroRepository livroRepository;
     private final ItemRepository itemRepository;
     private final DoadorRepository doadorRepository;
     private final EditoraRepository editoraRepository;
 
-    public ItemService(LivroRepository livroRepository,
-                        ItemRepository itemRepository,
-                        DoadorRepository doadorRepository,
-                        EditoraRepository editoraRepository) {
-        this.livroRepository = livroRepository;
+    public ItemService(
+            ItemRepository itemRepository,
+            DoadorRepository doadorRepository,
+            EditoraRepository editoraRepository) {
         this.itemRepository = itemRepository;
         this.doadorRepository = doadorRepository;
         this.editoraRepository = editoraRepository;
     }
 
     @Transactional
-    public void cadastrarLivro(Livro livro) {
-        logger.info("Cadastrando livro");
-        livroRepository.save(livro);
+    public void salvar(ItemDTO dto, MultipartFile imagem) {
+        Item itemAntigo = null;
+        if (dto.getId() != null) {
+            itemAntigo = buscarPorId(dto.getId());
+        }
+
+        Item item = criarOuBuscarItem(dto, itemAntigo);
+        preencherCamposComuns(item, dto);
+        preencherCamposEspecificos(item, dto);
+        configurarRelacionamentos(item, dto);
+
+        try {
+            processarImagem(item, itemAntigo, imagem);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage(), e);
+        }
+
+        gerarCodigoSeNecessario(item);
+
+        try {
+            itemRepository.save(item);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar o item: " + e.getMessage(), e);
+        }
     }
 
-    @Transactional(readOnly = true)
-    public List<Livro> listarLivros() {
-        logger.info("Listando livros");
-        return livroRepository.findAll();
+    private Item criarOuBuscarItem(ItemDTO dto, Item itemAntigo) {
+        if (dto.getId() != null && itemAntigo != null) {
+            boolean tipoCorreto = false;
+            if (dto.getType() == TipoItem.JORNAL && itemAntigo instanceof Jornal) {
+                tipoCorreto = true;
+            } else if (dto.getType() == TipoItem.REVISTA && itemAntigo instanceof Revista) {
+                tipoCorreto = true;
+            } else if (dto.getType() == TipoItem.LIVRO && itemAntigo instanceof Livro) {
+                tipoCorreto = true;
+            }
+            if (tipoCorreto) {
+                return itemAntigo;
+            }
+        }
+
+        switch (dto.getType()) {
+            case JORNAL:
+                return new Jornal();
+            case REVISTA:
+                return new Revista();
+            case LIVRO:
+            default:
+                return new Livro();
+        }
     }
 
-    @Transactional
-    public void cadastrarItem(Item item) {
-        logger.info("Cadastrando item: {}", item.getClass().getSimpleName());
+    private void preencherCamposComuns(Item item, ItemDTO dto) {
+        if (dto.getId() != null) {
+            item.setId(dto.getId());
+        }
+        item.setTitle(dto.getTitle());
+        item.setSubtitle(dto.getSubtitle());
+        item.setPagesCount(dto.getPagesCount());
+        item.setPublicationDate(dto.getPublicationDate());
+        item.setLanguage(dto.getLanguage());
+        item.setQuantity(dto.getQuantity());
+        item.setObservation(dto.getObservation());
+        item.setAutor(dto.getAutor());
+        item.setEdicao(dto.getEdicao());
+        item.setLocalization(dto.getLocalization());
+        item.setDescription(dto.getDescription());
+        item.setIsActive(dto.isActive());
+        item.setType(dto.getType());
+    }
 
-        // Só gera código novo se for um item NOVO (sem ID ainda)
+    private void preencherCamposEspecificos(Item item, ItemDTO dto) {
+        if (item instanceof Jornal) {
+            Jornal jornal = (Jornal) item;
+            jornal.setSecao(dto.getSecao());
+            jornal.setCidade(dto.getCidade());
+            if (dto.getId() == null) {
+                jornal.setCodigo(dto.getCodigo());
+            }
+        } else if (item instanceof Revista) {
+            Revista revista = (Revista) item;
+            revista.setIssn(dto.getIssn());
+            if (dto.getId() == null) {
+                revista.setCodigo(dto.getCodigo());
+            }
+        } else if (item instanceof Livro) {
+            Livro livro = (Livro) item;
+            livro.setIsbn(dto.getIsbn());
+            livro.setAssuntos(dto.getAssuntos());
+            if (dto.getId() == null) {
+                livro.setCodigo(dto.getCodigo());
+            }
+        }
+    }
+
+    private void configurarRelacionamentos(Item item, ItemDTO dto) {
+        if (dto.getDoadorId() != null) {
+            item.setDoador(findDoadorById(dto.getDoadorId()));
+        } else {
+            item.setDoador(null);
+        }
+        if (dto.getEditoraId() != null) {
+            item.setEditora(findEditoraById(dto.getEditoraId()));
+        } else {
+            item.setEditora(null);
+        }
+    }
+
+    private void processarImagem(Item item, Item itemAntigo, MultipartFile arquivo) {
+        if (arquivo != null && !arquivo.isEmpty()) {
+            try {
+                String pastaUploads = "src/main/resources/static/uploads/";
+                Path diretorio = Paths.get(pastaUploads);
+
+                if (!Files.exists(diretorio)) {
+                    Files.createDirectories(diretorio);
+                }
+
+                String nomeArquivoUnico = System.currentTimeMillis() + "_" + item.getTitle().replaceAll("\\s+", "_") + ".png";
+                Path caminhoCompleto = diretorio.resolve(nomeArquivoUnico);
+
+                Files.write(caminhoCompleto, arquivo.getBytes());
+                item.setImagemUrl(nomeArquivoUnico);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        } else if (itemAntigo != null) {
+            item.setImagemUrl(itemAntigo.getImagemUrl());
+        }
+    }
+
+    private void gerarCodigoSeNecessario(Item item) {
         if (item.getId() == null) {
             String codigoGerado = gerarProximoCodigo(item.getType());
 
@@ -74,8 +195,6 @@ public class ItemService {
                 ((Revista) item).setCodigo(codigoGerado);
             }
         }
-
-        itemRepository.save(item);
     }
 
     private String gerarProximoCodigo(com.guris.trezemaio.model.enums.TipoItem tipo) {
@@ -107,23 +226,6 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<Item> listarItens() {
-        logger.info("Listando todos os itens");
-        return itemRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public long contarItens() {
-        return itemRepository.count();
-    }
-
-    @Transactional(readOnly = true)
-    public Page<Item> listarItensComPaginacao(int page, int size) {
-        logger.info("Listando itens com paginação: pagina={}, tamanho={}", page, size);
-        return itemRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
-    }
-
-    @Transactional(readOnly = true)
     public List<Doador> listarDoadores() {
         return doadorRepository.findAll();
     }
@@ -147,7 +249,6 @@ public class ItemService {
     public Page<Item> buscarItensComPaginacao(TipoItem type, String query, boolean isAdminOrBibliotecario, int page, int size) {
         logger.info("Buscando itens com paginação: tipo={}, query={}, pagina={}, tamanho={}", type, query, page, size);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        // Repassa o booleano para a Query
         return itemRepository.searchAcervo(type, query, isAdminOrBibliotecario, pageable);
     }
 
@@ -166,7 +267,6 @@ public class ItemService {
 
     @Transactional
     public void excluirPorId(Long id) {
-        // Verifica se o item existe antes de tentar deletar para evitar exceções vazias
         if (!itemRepository.existsById(id)) {
             throw new IllegalArgumentException("Item não encontrado com o ID: " + id);
         }
