@@ -30,6 +30,7 @@
                     Gerenciar
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li><a class="dropdown-item" th:href="@{/livro/form}">Novo Item de acervo</a></li>
                     <li><a class="dropdown-item" th:href="@{/livro/gerenciar}">Acervo (CRUD)</a></li>
                     <li sec:authorize="hasAuthority('ADMINISTRADOR')"><hr class="dropdown-divider"></li>
                     <li sec:authorize="hasAuthority('ADMINISTRADOR')"><a class="dropdown-item" th:href="@{/usuario/form}">Novo Usuário</a></li>
