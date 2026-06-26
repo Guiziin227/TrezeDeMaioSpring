@@ -197,7 +197,7 @@ public class ItemService {
         }
     }
 
-    private String gerarProximoCodigo(com.guris.trezemaio.model.enums.TipoItem tipo) {
+    private String gerarProximoCodigo(TipoItem tipo) {
         String prefixo;
         if (tipo == TipoItem.LIVRO) {
             prefixo = "L";
