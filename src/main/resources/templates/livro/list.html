@@ -147,7 +147,7 @@
                             th:data-quantity="${item.quantity}"
                             th:data-localization="${item.localization}"
                             th:data-description="${item.description}"
-                            th:data-doador="${item.doador != null ? item.doador.name : 'Nenhum'}"
+                            th:data-doador="${item.doador != null ? item.doador : 'Nenhum'}"
                             th:data-editora="${item.editora != null ? item.editora.name : 'Nenhuma'}"
                             th:data-codigo="${item.codigo}"
                             th:data-info="${item.infoEspecifica}"
