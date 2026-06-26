@@ -3,6 +3,7 @@ package com.guris.trezemaio.configuration;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.guris.trezemaio.model.Editora;
 import com.guris.trezemaio.model.Jornal;
@@ -24,21 +25,36 @@ public class DataInitializer implements CommandLineRunner {
     private final EditoraRepository editoraRepository;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final JdbcTemplate jdbcTemplate;
 
     public DataInitializer(UsuarioRepository userRepository,
             PasswordEncoder passwordEncoder,
             EditoraRepository editoraRepository,
             ItemRepository itemRepository,
-            ItemService itemService) {
+            ItemService itemService,
+            JdbcTemplate jdbcTemplate) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.editoraRepository = editoraRepository;
         this.itemRepository = itemRepository;
         this.itemService = itemService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public void run(String... args) {
+        try {
+            System.out.println("Garantindo auto-incremento nas tabelas de editora e endereço...");
+            jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0;");
+            jdbcTemplate.execute("ALTER TABLE tb_endereco MODIFY id BIGINT AUTO_INCREMENT;");
+            jdbcTemplate.execute("ALTER TABLE tb_editora MODIFY id BIGINT AUTO_INCREMENT;");
+            jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1;");
+            System.out.println("Auto-incremento garantido com sucesso!");
+        } catch (Exception e) {
+            System.err.println("Aviso sobre auto-incremento (pode ser esperado em testes unitários): " + e.getMessage());
+            try { jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1;"); } catch (Exception ignored) {}
+        }
+
         if (userRepository.findByName("admin").isEmpty()) {
             Usuario admin = new Usuario();
             admin.setName("admin");

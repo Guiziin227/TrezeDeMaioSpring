@@ -22,7 +22,7 @@
     <div class="cadastro-card card-grande">
         <h1 class="cadastro-titulo">Cadastro de Acervo</h1>
 
-        <form th:action="@{/livro/create}" th:object="${item}" method="post" enctype="multipart/form-data" class="form-container">
+        <form th:action="@{/acervo/create}" th:object="${item}" method="post" enctype="multipart/form-data" class="form-container">
             <input type="hidden" th:field="*{id}" />
 
             <div class="input-group-custom full-width">
@@ -125,10 +125,15 @@
 
                 <div class="input-group-custom">
                     <label for="editoraId">Editora</label>
-                    <select id="editoraId" th:field="*{editoraId}" class="custom-input">
-                        <option value="">Nenhuma</option>
-                        <option th:each="e : ${editoras}" th:value="${e.id}" th:text="${e.name}"></option>
-                    </select>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <select id="editoraId" th:field="*{editoraId}" class="custom-input" style="flex: 1;">
+                            <option value="">Nenhuma</option>
+                            <option th:each="e : ${editoras}" th:value="${e.id}" th:text="${e.name}"></option>
+                        </select>
+                        <button type="button" class="btn btn-outline-secondary" onclick="abrirModalEditora()" style="border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: white;" title="Adicionar Nova Editora">
+                            <i class="bi bi-plus-lg" style="font-size: 20px; color: #4e3629;"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="input-group-custom">
@@ -170,7 +175,7 @@
 
             <div class="actions" style="margin-top: 20px;">
                 <button type="submit" class="btn-salvar">Salvar Acervo</button>
-                <a th:href="@{/livro}" class="link-voltar">Voltar para a lista</a>
+                <a th:href="@{/acervo/gerenciar}" class="link-voltar">Voltar para a lista</a>
             </div>
         </form>
 
@@ -222,6 +227,158 @@
             primeiroErro.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     });
+</script>
+
+<!-- Modal para Cadastro Rápido de Editora -->
+<div id="modalEditoraRapida" class="custom-modal">
+    <div class="modal-overlay" onclick="fecharModalEditora()"></div>
+    <div class="modal-card" style="text-align: left; max-width: 450px; max-height: 90vh; overflow-y: auto;">
+        <h3 class="modal-title" style="text-align: center; margin-bottom: 20px; font-family: 'Baloo 2', sans-serif; font-weight: 600; color: #352c23;">Adicionar Nova Editora</h3>
+
+        <div style="margin-bottom: 15px;">
+            <label for="rapidoNome" style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.95rem; color: #352c23;">Nome da Editora *</label>
+            <input type="text" id="rapidoNome" class="custom-input" placeholder="Ex: Editora Rocco" required>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="rapidoCnpj" style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.95rem; color: #352c23;">CNPJ (opcional)</label>
+            <input type="text" id="rapidoCnpj" class="custom-input" placeholder="00.000.000/0000-00">
+        </div>
+
+        <!-- Campos opcionais de endereço -->
+        <details style="margin-bottom: 20px; cursor: pointer; border: 1px solid rgba(53, 44, 35, 0.15); padding: 12px; border-radius: 12px; background-color: rgba(255,255,255,0.45);">
+            <summary style="font-weight: 600; font-size: 0.95rem; color: #352c23; outline: none; margin-bottom: 5px;">
+                Adicionar Endereço (Opcional)
+            </summary>
+            <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+                <div>
+                    <label for="rapidoCep" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; color: #4e3c2e;">CEP</label>
+                    <input type="text" id="rapidoCep" class="custom-input" style="padding: 10px 14px;" placeholder="00000-000">
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <div style="flex: 2;">
+                        <label for="rapidoLogradouro" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; color: #4e3c2e;">Logradouro</label>
+                        <input type="text" id="rapidoLogradouro" class="custom-input" style="padding: 10px 14px;" placeholder="Rua, Av, etc.">
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="rapidoNumero" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; color: #4e3c2e;">Número</label>
+                        <input type="text" id="rapidoNumero" class="custom-input" style="padding: 10px 14px;" placeholder="123">
+                    </div>
+                </div>
+                <div>
+                    <label for="rapidoBairro" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; color: #4e3c2e;">Bairro</label>
+                    <input type="text" id="rapidoBairro" class="custom-input" style="padding: 10px 14px;" placeholder="Bairro">
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <div style="flex: 1;">
+                        <label for="rapidoCidade" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; color: #4e3c2e;">Cidade</label>
+                        <input type="text" id="rapidoCidade" class="custom-input" style="padding: 10px 14px;" placeholder="Cidade">
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="rapidoEstado" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; color: #4e3c2e;">Estado</label>
+                        <input type="text" id="rapidoEstado" class="custom-input" style="padding: 10px 14px;" placeholder="UF">
+                    </div>
+                </div>
+                <div>
+                    <label for="rapidoPais" style="display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.85rem; color: #4e3c2e;">País</label>
+                    <input type="text" id="rapidoPais" class="custom-input" style="padding: 10px 14px;" placeholder="Brasil" value="Brasil">
+                </div>
+            </div>
+        </details>
+
+        <div class="modal-actions" style="gap: 15px; justify-content: flex-end;">
+            <button type="button" class="btn-cancelar" onclick="fecharModalEditora()">Cancelar</button>
+            <button type="button" class="btn-confirmar" onclick="salvarEditoraRapida()" style="background-color: #352c23; box-shadow: 0 4px 10px rgba(53, 44, 35, 0.2);">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirModalEditora() {
+        document.getElementById("modalEditoraRapida").classList.add("active");
+        document.getElementById("rapidoNome").value = "";
+        document.getElementById("rapidoCnpj").value = "";
+        document.getElementById("rapidoCep").value = "";
+        document.getElementById("rapidoLogradouro").value = "";
+        document.getElementById("rapidoNumero").value = "";
+        document.getElementById("rapidoBairro").value = "";
+        document.getElementById("rapidoCidade").value = "";
+        document.getElementById("rapidoEstado").value = "";
+        document.getElementById("rapidoPais").value = "";
+
+        // Se houver um details, garante que ele inicie fechado
+        const details = document.querySelector("#modalEditoraRapida details");
+        if (details) {
+            details.open = false;
+        }
+    }
+
+    function fecharModalEditora() {
+        document.getElementById("modalEditoraRapida").classList.remove("active");
+    }
+
+    function salvarEditoraRapida() {
+        const nome = document.getElementById("rapidoNome").value;
+        const cnpj = document.getElementById("rapidoCnpj").value;
+        const cep = document.getElementById("rapidoCep").value;
+        const logradouro = document.getElementById("rapidoLogradouro").value;
+        const numero = document.getElementById("rapidoNumero").value;
+        const bairro = document.getElementById("rapidoBairro").value;
+        const cidade = document.getElementById("rapidoCidade").value;
+        const estado = document.getElementById("rapidoEstado").value;
+        const pais = document.getElementById("rapidoPais").value;
+
+        if (!nome || nome.trim() === "") {
+            alert("O nome da editora é obrigatório.");
+            return;
+        }
+
+        const csrfInput = document.querySelector("input[name='_csrf']");
+        const csrfToken = csrfInput ? csrfInput.value : "";
+
+        const params = new URLSearchParams();
+        params.append("name", nome.trim());
+        params.append("cnpj", cnpj.trim());
+        params.append("cep", cep.trim());
+        params.append("logradouro", logradouro.trim());
+        params.append("numero", numero.trim());
+        params.append("bairro", bairro.trim());
+        params.append("cidade", cidade.trim());
+        params.append("estado", estado.trim());
+        params.append("pais", pais.trim());
+        if (csrfToken) {
+            params.append("_csrf", csrfToken);
+        }
+
+        fetch("/editora/api/rapido", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRF-TOKEN": csrfToken
+            },
+            body: params.toString()
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(text || "Erro desconhecido no servidor.");
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const select = document.getElementById("editoraId");
+            const opt = document.createElement("option");
+            opt.value = data.id;
+            opt.text = data.name;
+            select.add(opt);
+            select.value = data.id;
+            fecharModalEditora();
+        })
+        .catch(err => {
+            alert("Erro ao cadastrar editora: " + err.message);
+        });
+    }
 </script>
 
 <footer th:replace="~{fragments :: rodape}"></footer>

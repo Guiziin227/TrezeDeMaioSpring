@@ -30,11 +30,11 @@ import com.guris.trezemaio.service.ItemService;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/livro")
+@RequestMapping("/acervo")
 public class ItemController {
 
-    private static final String FORM_VIEW = "livro/form";
-    private static final String LIST_VIEW = "livro/list";
+    private static final String FORM_VIEW = "acervo/form";
+    private static final String LIST_VIEW = "acervo/list";
 
     private final ItemService itemService;
 
@@ -68,7 +68,7 @@ public class ItemController {
         } catch (Exception e) {
             attributes.addFlashAttribute("mensagemErro", e.getMessage());
         }
-        return "redirect:/livro";
+        return "redirect:/acervo";
     }
 
     @GetMapping("/form")
@@ -123,7 +123,7 @@ public class ItemController {
         model.addAttribute("totalItems", itemPage.getTotalElements());
         model.addAttribute("query", query);
 
-        return "livro/gerenciar";
+        return "acervo/gerenciar";
     }
 
     @GetMapping("/excluir/{id}")
@@ -134,7 +134,7 @@ public class ItemController {
         } catch (Exception e) {
             attributes.addFlashAttribute("mensagemErro", "Erro ao excluir o item: " + e.getMessage());
         }
-        return "redirect:/livro";
+        return "redirect:/acervo";
     }
 
     @GetMapping("/editar/{id}")
@@ -145,7 +145,7 @@ public class ItemController {
             return FORM_VIEW;
         } catch (Exception e) {
             attributes.addFlashAttribute("mensagemErro", "Erro ao carregar item para edição: " + e.getMessage());
-            return "redirect:/livro";
+            return "redirect:/acervo";
         }
     }
 }

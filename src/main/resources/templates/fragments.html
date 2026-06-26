@@ -23,15 +23,16 @@
         <div class="navbar-nav align-items-center gap-3 mt-3 mt-md-0">
 
             <a th:href="@{/}" class="nav-btn">Sobre</a>
-            <a th:href="@{/livro}" class="nav-btn">Acervo</a>
+            <a th:href="@{/acervo}" class="nav-btn">Acervo</a>
 
             <div class="dropdown" sec:authorize="hasAnyAuthority('BIBLIOTECARIO', 'ADMINISTRADOR')">
                 <button class="nav-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     Gerenciar
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><a class="dropdown-item" th:href="@{/livro/form}">Novo Item de acervo</a></li>
-                    <li><a class="dropdown-item" th:href="@{/livro/gerenciar}">Acervo (CRUD)</a></li>
+                    <li><a class="dropdown-item" th:href="@{/acervo/form}">Novo Item de acervo</a></li>
+                    <li><a class="dropdown-item" th:href="@{/acervo/gerenciar}">Acervo (CRUD)</a></li>
+                    <li><a class="dropdown-item" th:href="@{/editora}">Editoras (CRUD)</a></li>
                     <li sec:authorize="hasAuthority('ADMINISTRADOR')"><hr class="dropdown-divider"></li>
                     <li sec:authorize="hasAuthority('ADMINISTRADOR')"><a class="dropdown-item" th:href="@{/usuario/form}">Novo Usuário</a></li>
                     <li sec:authorize="hasAuthority('ADMINISTRADOR')"><a class="dropdown-item" th:href="@{/usuario/list}">Lista de Usuários</a></li>
