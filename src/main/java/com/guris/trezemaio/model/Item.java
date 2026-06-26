@@ -72,11 +72,11 @@ public class Item {
         if (this.imagemUrl != null) {
             return "/img/acervo/" + this.imagemUrl;
         }
-        if (this.type == com.guris.trezemaio.model.enums.TipoItem.LIVRO) {
+        if (this.type == TipoItem.LIVRO) {
             return "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=300";
-        } else if (this.type == com.guris.trezemaio.model.enums.TipoItem.JORNAL) {
+        } else if (this.type == TipoItem.JORNAL) {
             return "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=300";
-        } else if (this.type == com.guris.trezemaio.model.enums.TipoItem.REVISTA) {
+        } else if (this.type == TipoItem.REVISTA) {
             return "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=300";
         }
         return "";

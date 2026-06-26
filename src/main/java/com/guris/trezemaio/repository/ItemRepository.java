@@ -15,8 +15,6 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findFirstByTypeOrderByIdDesc(TipoItem type);
 
-    boolean existsByTitle(String title);
-
     @Query("SELECT i FROM Item i WHERE " +
             "(:type IS NULL OR i.type = :type) AND " +
             "(:isAdminOrBibliotecario = true OR i.isActive = true) AND " +
