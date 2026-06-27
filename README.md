@@ -1,60 +1,141 @@
-# TrezeDeMaioSpring
+# Sistema de Gerenciamento de Acervo do Museu Treze de Maio
 
+## Descrição do Projeto
 
-# PENDENCIAS
+O Sistema de Gerenciamento de Acervo do Museu Treze de Maio é uma aplicação web desenvolvida com o objetivo de auxiliar na organização, consulta e administração do acervo bibliográfico da instituição.
 
-ARRUMAR A CRIACAO DE CODIGOS
+---
 
-- [x] AUDITORIA NAS CLASSES
+# Problema
 
-## Formulários/Forms
-- [X] cabeçalho
-    - [X] sobre
-    - [X] acervo
-    - [X] usuarios
-    - [X] botao logout
-- [X] acervo (home)
-    - [x] filtro
-        - [x] input
-        - [x] slidebar
-    - [x] adicionar item
-    - [x] listar itens
-        - [x] card do item
-            - [x] ver mais (pop up)
-            - [x] visível/não visível
-            - [X] icone excluir e editar (pop up para editar e confirmação de exclusão)
-        - [x] paginação
-- [X] sobre
-- [X] Tela de login
-    - [X] inputs
-    - [X] esqueci senha (pop up "pedir para adm trocar")
-    - [X] botao entrar
-- [X] Tela Gerenciar Usuários (bibliotecarios) (if adm)
-    - [X] listagem de usuários
-        - [x] icone editar (nome, senha) e excluir (com confirmação de exclusão)
-    - [X] criação de novos usuários 
-        - [X] botao e popup (form)
+O gerenciamento manual do acervo dificultava a organização e a localização das obras, tornando o processo de administração mais lento e suscetível a inconsistências.
 
-  
-# 14/06/2026
-- [x] Visualização do ver mais (Melhorar UI)
-- [x] Ver isso "Itens cadastrados no Acervo" (pq existe? paginacao?)
-    - [x] tela crucial p/ admin/biblio, mantida com paginação + busca
-- [x] Melhorar a responsividade do acervo (visualização em celular)
-- [x] Imagens no cadastro de itens (input de upload)
-- [x] Arrumar a tela de login (imagem)
-## 
+Além disso, a ausência de um sistema centralizado comprometia o controle das informações dos itens, das editoras e da disponibilidade do acervo.
 
+---
 
-# 21/06/2026
-- [ ] Arrumar upload de imagens (salvar no banco ou em pasta? e exibir no site)
-- [ ] Modal de edicao de item (preencher com os dados do item e permitir edicao)
-- [x] Footer com informacoes de contato e redes sociais (opcional)
-    - [ ] e contagem de acessos
-##
+# Solução Proposta
 
-# 22/06/2026
-- [x] Footer na tela sobre
-    - [x] Restringir visualização de acessos no footer somenta para biblio. e admin.
-- [x] Busca no Gerenciar acervo
-##
+Foi desenvolvido um sistema web baseado na arquitetura MVC (Model-View-Controller) utilizando o ecossistema Spring.
+
+A solução centraliza todas as informações do acervo em um único sistema, permitindo que bibliotecários e administradores realizem o gerenciamento completo dos materiais de forma simples, organizada e segura.
+
+Entre as principais funcionalidades estão:
+
+* Cadastro de livros, jornais e revistas;
+* Consulta e pesquisa do acervo;
+* Edição de registros;
+* Exclusão de itens;
+* Upload de imagens;
+* Gerenciamento de editoras;
+* Controle de autenticação e autorização de usuários;
+* Paginação e filtros de pesquisa.
+
+---
+
+# Tecnologias Utilizadas
+
+* Java 21
+* Spring Boot
+* Spring MVC
+* Spring Security
+* Spring Data JPA
+* Hibernate
+* MySQL
+* Thymeleaf
+* HTML5
+* CSS3
+* JavaScript
+* Maven
+* Git
+* GitHub
+
+---
+
+# Arquitetura
+
+O projeto foi desenvolvido seguindo o padrão arquitetural **MVC (Model-View-Controller)**.
+
+A arquitetura está organizada nas seguintes camadas:
+
+* **Model:** representa as entidades do domínio, como Item, Livro, Jornal, Revista e Editora.
+* **DTO:** responsável pela transferência de dados entre Controller e Service.
+* **View:** desenvolvida utilizando Thymeleaf.
+* **Controller:** recebe as requisições HTTP e coordena o fluxo da aplicação.
+* **Service:** concentra as regras de negócio.
+* **Repository:** realiza o acesso ao banco de dados utilizando Spring Data JPA.
+
+---
+
+# Instalação e Execução
+
+## Pré-requisitos
+
+* Java JDK 21 ou superior
+* Maven 3.9 ou superior
+* MySQL 8.0 ou superior
+* Git
+
+## 1. Clone o repositório
+
+```bash
+git clone https://github.com/Guiziin227/TrezeDeMaioSpring.git
+cd TrezeDeMaioSpring
+```
+
+## 2. Configure o banco de dados
+
+Crie um banco de dados chamado:
+
+```sql
+CREATE DATABASE treze_maio;
+```
+
+Em seguida, configure o arquivo `src/main/resources/application.properties` com as credenciais do seu MySQL.
+
+Exemplo:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/treze_maio?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+
+spring.datasource.username=SEU_USUARIO
+spring.datasource.password=SUA_SENHA
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+```
+
+## 3. Execute o projeto
+
+Pelo Maven:
+
+```bash
+mvn spring-boot:run
+```
+
+Ou execute a classe principal `TrezeDeMaioApplication` diretamente pela IDE.
+
+Após iniciar a aplicação, acesse:
+
+```
+http://localhost:8080
+```
+---
+
+# Equipe de Desenvolvimento
+
+* Eduardo Fontoura
+* Guilherme Weber
+* Guilherme Scher
+* José Barros
+* José Otávio Baggio
+* 
+---
+
+# Demonstração
+
+Vídeo de demonstração do sistema:
+ ta quase
