@@ -138,4 +138,4 @@ http://localhost:8080
 # Demonstração
 
 Vídeo de demonstração do sistema:
- ta quase
+https://www.youtube.com/watch?v=GnGZ4wLCbYo
