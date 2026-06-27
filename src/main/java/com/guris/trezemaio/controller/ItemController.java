@@ -25,6 +25,7 @@ import com.guris.trezemaio.model.Jornal;
 import com.guris.trezemaio.model.Livro;
 import com.guris.trezemaio.model.Revista;
 import com.guris.trezemaio.model.enums.TipoItem;
+import com.guris.trezemaio.service.EditoraService;
 import com.guris.trezemaio.service.ItemService;
 
 import jakarta.validation.Valid;
@@ -37,9 +38,11 @@ public class ItemController {
     private static final String LIST_VIEW = "acervo/list";
 
     private final ItemService itemService;
+    private final EditoraService editoraService;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, EditoraService editoraService) {
         this.itemService = itemService;
+        this.editoraService = editoraService;
     }
 
     @ModelAttribute("tipos")
@@ -49,7 +52,7 @@ public class ItemController {
 
     @ModelAttribute("editoras")
     public List<Editora> getEditoras() {
-        return itemService.listarEditoras();
+        return editoraService.listarTodas();
     }
 
     @PostMapping("/create")
@@ -80,7 +83,7 @@ public class ItemController {
     @GetMapping
     public String list(
             @RequestParam(value = "query", required = false) String query,
-            @RequestParam(value = "type", required = false) TipoItem type,
+            @RequestParam(value = "tipo", required = false) TipoItem tipo,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "8") int size,
             Model model) {
@@ -93,14 +96,14 @@ public class ItemController {
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(role -> role.equals("ADMINISTRADOR") || role.equals("BIBLIOTECARIO"));
 
-        Page<Item> itemPage = itemService.buscarItensComPaginacao(type, searchQuery, isAdminOrBibliotecario, page,
+        Page<Item> itemPage = itemService.buscarItensComPaginacao(tipo, searchQuery, isAdminOrBibliotecario, page,
                 size);
 
         model.addAttribute("itens", itemPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", itemPage.getTotalPages());
         model.addAttribute("totalItems", itemPage.getTotalElements());
-        model.addAttribute("selectedType", type);
+        model.addAttribute("selectedType", tipo);
         model.addAttribute("query", query);
 
         return LIST_VIEW;

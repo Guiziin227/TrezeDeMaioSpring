@@ -45,7 +45,7 @@ public class EditoraController {
     @GetMapping("/form")
     public String form(Model model) {
         Editora editora = new Editora();
-        editora.setAddress(new Endereco());
+        editora.setEndereco(new Endereco());
         model.addAttribute("editora", editora);
         return FORM_VIEW;
     }
@@ -54,8 +54,8 @@ public class EditoraController {
     public String editar(@PathVariable("id") Long id, Model model, RedirectAttributes attributes) {
         try {
             Editora editora = editoraService.buscarPorId(id);
-            if (editora.getAddress() == null) {
-                editora.setAddress(new Endereco());
+            if (editora.getEndereco() == null) {
+                editora.setEndereco(new Endereco());
             }
             model.addAttribute("editora", editora);
             return FORM_VIEW;
@@ -96,7 +96,7 @@ public class EditoraController {
     @PostMapping("/api/rapido")
     @ResponseBody
     public ResponseEntity<?> cadastrarRapido(
-            @RequestParam("name") String name,
+            @RequestParam("nome") String nome,
             @RequestParam(value = "cnpj", required = false) String cnpj,
             @RequestParam(value = "cep", required = false) String cep,
             @RequestParam(value = "logradouro", required = false) String logradouro,
@@ -107,12 +107,12 @@ public class EditoraController {
             @RequestParam(value = "pais", required = false) String pais) {
 
         try {
-            if (name == null || name.trim().isEmpty()) {
+            if (nome == null || nome.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("O nome da editora é obrigatório.");
             }
 
             Editora nova = new Editora();
-            nova.setName(name.trim());
+            nova.setNome(nome.trim());
             nova.setCnpj(cnpj != null && !cnpj.trim().isEmpty() ? cnpj.trim() : null);
 
 
@@ -133,7 +133,7 @@ public class EditoraController {
                 end.setCidade(cidade != null && !cidade.trim().isEmpty() ? cidade.trim() : null);
                 end.setEstado(estado != null && !estado.trim().isEmpty() ? estado.trim() : null);
                 end.setPais(pais != null && !pais.trim().isEmpty() ? pais.trim() : null);
-                nova.setAddress(end);
+                nova.setEndereco(end);
             }
 
             Editora salva = editoraService.salvar(nova);

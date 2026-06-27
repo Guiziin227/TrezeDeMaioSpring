@@ -17,27 +17,27 @@ public class ItemDTO {
     private Long id;
 
     @NotNull(message = "O tipo do item é obrigatório.")
-    private TipoItem type;
+    private TipoItem tipo;
 
     @NotBlank(message = "O título é obrigatório.")
-    private String title;
-    private String subtitle;
-    private int pagesCount;
+    private String titulo;
+    private String subtitulo;
+    private int totalPaginas;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate publicationDate;
+    private LocalDate dataPublicacao;
 
-    private String language;
+    private String idioma;
 
     @Min(value = 0, message = "A quantidade não pode ser negativa.")
-    private int quantity;
-    private String observation;
+    private int quantidade;
+    private String observacao;
 
     @NotBlank(message = "O autor é obrigatório.")
     private String autor;
     private String edicao;
-    private String localization;
-    private String description;
+    private String localizacao;
+    private String descricao;
 
     private String doador;
     private Long editoraId;
@@ -52,5 +52,5 @@ public class ItemDTO {
 
     private String imagemUrl;
 
-    private boolean isActive = true;
+    private boolean ativo = true;
 }

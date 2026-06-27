@@ -26,14 +26,14 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String subtitle;
-    private int pagesCount;
-    private LocalDate publicationDate;
-    private String language;
-    private int quantity;
-    private String observation;
-    private Boolean isActive;
+    private String titulo;
+    private String subtitulo;
+    private int totalPaginas;
+    private LocalDate dataPublicacao;
+    private String idioma;
+    private int quantidade;
+    private String observacao;
+    private Boolean ativo;
 
     private String autor;
     private String edicao;
@@ -44,11 +44,11 @@ public class Item {
     @JoinColumn(name = "editora_id")
     private Editora editora;
 
-    private String localization;
-    private String description;
+    private String localizacao;
+    private String descricao;
 
     @Enumerated(EnumType.STRING)
-    private TipoItem type;
+    private TipoItem tipo;
 
     @CreatedDate
     @Column(name = "data_criacao")
@@ -70,11 +70,11 @@ public class Item {
         if (this.imagemUrl != null) {
             return "/img/acervo/" + this.imagemUrl;
         }
-        if (this.type == TipoItem.LIVRO) {
+        if (this.tipo == TipoItem.LIVRO) {
             return "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=300";
-        } else if (this.type == TipoItem.JORNAL) {
+        } else if (this.tipo == TipoItem.JORNAL) {
             return "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=300";
-        } else if (this.type == TipoItem.REVISTA) {
+        } else if (this.tipo == TipoItem.REVISTA) {
             return "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=300";
         }
         return "";

@@ -9,8 +9,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
-    @Query("select u from Usuario u where u.name = :name")
-    Optional<Usuario> findByName(@Param("name") String name);
+    @Query("select u from Usuario u where u.nome = :nome")
+    Optional<Usuario> findByNome(@Param("nome") String nome);
 
-    boolean existsByName(String name);
+    boolean existsByNome(String nome);
 }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ import com.guris.trezemaio.model.Jornal;
 import com.guris.trezemaio.model.Livro;
 import com.guris.trezemaio.model.Revista;
 import com.guris.trezemaio.model.enums.TipoItem;
-import com.guris.trezemaio.repository.EditoraRepository;
 import com.guris.trezemaio.repository.ItemRepository;
 
 @Service
@@ -32,13 +30,13 @@ public class ItemService {
     private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
 
     private final ItemRepository itemRepository;
-    private final EditoraRepository editoraRepository;
+    private final EditoraService editoraService;
 
     public ItemService(
             ItemRepository itemRepository,
-            EditoraRepository editoraRepository) {
+            EditoraService editoraService) {
         this.itemRepository = itemRepository;
-        this.editoraRepository = editoraRepository;
+        this.editoraService = editoraService;
     }
 
     @Transactional
@@ -71,11 +69,11 @@ public class ItemService {
     private Item criarOuBuscarItem(ItemDTO dto, Item itemAntigo) {
         if (dto.getId() != null && itemAntigo != null) {
             boolean tipoCorreto = false;
-            if (dto.getType() == TipoItem.JORNAL && itemAntigo instanceof Jornal) {
+            if (dto.getTipo() == TipoItem.JORNAL && itemAntigo instanceof Jornal) {
                 tipoCorreto = true;
-            } else if (dto.getType() == TipoItem.REVISTA && itemAntigo instanceof Revista) {
+            } else if (dto.getTipo() == TipoItem.REVISTA && itemAntigo instanceof Revista) {
                 tipoCorreto = true;
-            } else if (dto.getType() == TipoItem.LIVRO && itemAntigo instanceof Livro) {
+            } else if (dto.getTipo() == TipoItem.LIVRO && itemAntigo instanceof Livro) {
                 tipoCorreto = true;
             }
             if (tipoCorreto) {
@@ -83,7 +81,7 @@ public class ItemService {
             }
         }
 
-        switch (dto.getType()) {
+        switch (dto.getTipo()) {
             case JORNAL:
                 return new Jornal();
             case REVISTA:
@@ -98,19 +96,19 @@ public class ItemService {
         if (dto.getId() != null) {
             item.setId(dto.getId());
         }
-        item.setTitle(dto.getTitle());
-        item.setSubtitle(dto.getSubtitle());
-        item.setPagesCount(dto.getPagesCount());
-        item.setPublicationDate(dto.getPublicationDate());
-        item.setLanguage(dto.getLanguage());
-        item.setQuantity(dto.getQuantity());
-        item.setObservation(dto.getObservation());
+        item.setTitulo(dto.getTitulo());
+        item.setSubtitulo(dto.getSubtitulo());
+        item.setTotalPaginas(dto.getTotalPaginas());
+        item.setDataPublicacao(dto.getDataPublicacao());
+        item.setIdioma(dto.getIdioma());
+        item.setQuantidade(dto.getQuantidade());
+        item.setObservacao(dto.getObservacao());
         item.setAutor(dto.getAutor());
         item.setEdicao(dto.getEdicao());
-        item.setLocalization(dto.getLocalization());
-        item.setDescription(dto.getDescription());
-        item.setIsActive(dto.isActive());
-        item.setType(dto.getType());
+        item.setLocalizacao(dto.getLocalizacao());
+        item.setDescricao(dto.getDescricao());
+        item.setAtivo(dto.isAtivo());
+        item.setTipo(dto.getTipo());
         item.setDoador(dto.getDoador());
     }
 
@@ -141,6 +139,7 @@ public class ItemService {
     private void configurarRelacionamentos(Item item, ItemDTO dto) {
         if (dto.getEditoraId() != null) {
             item.setEditora(findEditoraById(dto.getEditoraId()));
+            item.setEditora(findEditoraById(dto.getEditoraId()));
         } else {
             item.setEditora(null);
         }
@@ -156,7 +155,7 @@ public class ItemService {
                     Files.createDirectories(diretorio);
                 }
 
-                String nomeArquivoUnico = System.currentTimeMillis() + "_" + item.getTitle().replaceAll("\\s+", "_")
+                String nomeArquivoUnico = System.currentTimeMillis() + "_" + item.getTitulo().replaceAll("\\s+", "_")
                         + ".png";
                 Path caminhoCompleto = diretorio.resolve(nomeArquivoUnico);
 
@@ -173,7 +172,7 @@ public class ItemService {
 
     private void gerarCodigoSeNecessario(Item item) {
         if (item.getId() == null) {
-            String codigoGerado = gerarProximoCodigo(item.getType());
+            String codigoGerado = gerarProximoCodigo(item.getTipo());
 
             if (item instanceof Livro) {
                 ((Livro) item).setCodigo(codigoGerado);
@@ -197,7 +196,7 @@ public class ItemService {
             prefixo = "I";
         }
 
-        Item ultimo = itemRepository.findFirstByTypeOrderByIdDesc(tipo).orElse(null);
+        Item ultimo = itemRepository.findFirstByTipoOrderByIdDesc(tipo).orElse(null);
 
         int proximoNumero = 1;
         if (ultimo != null && ultimo.getCodigo() != null) {
@@ -214,21 +213,20 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<Editora> listarEditoras() {
-        return editoraRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
     public Editora findEditoraById(Long id) {
-        return editoraRepository.findById(id).orElse(null);
+        try {
+            return editoraService.buscarPorId(id);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     @Transactional(readOnly = true)
-    public Page<Item> buscarItensComPaginacao(TipoItem type, String query, boolean isAdminOrBibliotecario, int page,
+    public Page<Item> buscarItensComPaginacao(TipoItem tipo, String query, boolean isAdminOrBibliotecario, int page,
             int size) {
-        logger.info("Buscando itens com paginação: tipo={}, query={}, pagina={}, tamanho={}", type, query, page, size);
+        logger.info("Buscando itens com paginação: tipo={}, query={}, pagina={}, tamanho={}", tipo, query, page, size);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        return itemRepository.searchAcervo(type, query, isAdminOrBibliotecario, pageable);
+        return itemRepository.searchAcervo(tipo, query, isAdminOrBibliotecario, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -266,20 +264,20 @@ public class ItemService {
 
     private void preencherDtoComum(ItemDTO dto, Item item) {
         dto.setId(item.getId());
-        dto.setTitle(item.getTitle());
-        dto.setSubtitle(item.getSubtitle());
-        dto.setPagesCount(item.getPagesCount());
-        dto.setPublicationDate(item.getPublicationDate());
-        dto.setLanguage(item.getLanguage());
-        dto.setQuantity(item.getQuantity());
-        dto.setObservation(item.getObservation());
+        dto.setTitulo(item.getTitulo());
+        dto.setSubtitulo(item.getSubtitulo());
+        dto.setTotalPaginas(item.getTotalPaginas());
+        dto.setDataPublicacao(item.getDataPublicacao());
+        dto.setIdioma(item.getIdioma());
+        dto.setQuantidade(item.getQuantidade());
+        dto.setObservacao(item.getObservacao());
         dto.setAutor(item.getAutor());
         dto.setEdicao(item.getEdicao());
-        dto.setLocalization(item.getLocalization());
-        dto.setDescription(item.getDescription());
+        dto.setLocalizacao(item.getLocalizacao());
+        dto.setDescricao(item.getDescricao());
         dto.setCodigo(item.getCodigo());
-        dto.setType(item.getType());
-        dto.setActive(item.getIsActive() != null && item.getIsActive());
+        dto.setTipo(item.getTipo());
+        dto.setAtivo(item.getAtivo() != null && item.getAtivo());
         dto.setImagemUrl(item.getImagemUrl());
         dto.setDoador(item.getDoador());
     }

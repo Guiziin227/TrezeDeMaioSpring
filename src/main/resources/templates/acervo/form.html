@@ -26,12 +26,12 @@
             <input type="hidden" th:field="*{id}" />
 
             <div class="input-group-custom full-width">
-                <label for="type">Tipo de Item</label>
-                <select id="type" th:field="*{type}" class="custom-input" onchange="toggleFields()">
+                <label for="tipo">Tipo de Item</label>
+                <select id="tipo" th:field="*{tipo}" class="custom-input" onchange="toggleFields()">
                     <option value="">Selecione o tipo de acervo...</option>
                     <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
                 </select>
-                <span th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="field-error"></span>
+                <span th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}" class="field-error"></span>
             </div>
 
             <!-- Seções dinâmicas de subtipos -->
@@ -76,14 +76,14 @@
             <!-- Grade de informações gerais -->
             <div class="form-grid">
                 <div class="input-group-custom">
-                    <label for="title">Título</label>
-                    <input id="title" type="text" th:field="*{title}" class="custom-input" placeholder="Título principal">
-                    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="field-error"></span>
+                    <label for="titulo">Título</label>
+                    <input id="titulo" type="text" th:field="*{titulo}" class="custom-input" placeholder="Título principal">
+                    <span th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}" class="field-error"></span>
                 </div>
 
                 <div class="input-group-custom">
-                    <label for="subtitle">Subtítulo</label>
-                    <input id="subtitle" type="text" th:field="*{subtitle}" class="custom-input" placeholder="Subtítulo (opcional)">
+                    <label for="subtitulo">Subtítulo</label>
+                    <input id="subtitulo" type="text" th:field="*{subtitulo}" class="custom-input" placeholder="Subtítulo (opcional)">
                 </div>
 
                 <div class="input-group-custom">
@@ -98,24 +98,24 @@
                 </div>
 
                 <div class="input-group-custom">
-                    <label for="pagesCount">Qtd. de Páginas</label>
-                    <input id="pagesCount" type="number" th:field="*{pagesCount}" class="custom-input" min="0">
+                    <label for="totalPaginas">Qtd. de Páginas</label>
+                    <input id="totalPaginas" type="number" th:field="*{totalPaginas}" class="custom-input" min="0">
                 </div>
 
                 <div class="input-group-custom">
-                    <label for="publicationDate">Data de Publicação</label>
-                    <input id="publicationDate" type="date" th:field="*{publicationDate}" class="custom-input">
+                    <label for="dataPublicacao">Data de Publicação</label>
+                    <input id="dataPublicacao" type="date" th:field="*{dataPublicacao}" class="custom-input">
                 </div>
 
                 <div class="input-group-custom">
-                    <label for="language">Idioma</label>
-                    <input id="language" type="text" th:field="*{language}" class="custom-input" placeholder="Ex: Português">
+                    <label for="idioma">Idioma</label>
+                    <input id="idioma" type="text" th:field="*{idioma}" class="custom-input" placeholder="Ex: Português">
                 </div>
 
                 <div class="input-group-custom">
-                    <label for="quantity">Qtd. em Estoque</label>
-                    <input id="quantity" type="number" th:field="*{quantity}" class="custom-input" min="0">
-                    <span th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="field-error"></span>
+                    <label for="quantidade">Qtd. em Estoque</label>
+                    <input id="quantidade" type="number" th:field="*{quantidade}" class="custom-input" min="0">
+                    <span th:if="${#fields.hasErrors('quantidade')}" th:errors="*{quantidade}" class="field-error"></span>
                 </div>
 
                 <div class="input-group-custom">
@@ -128,7 +128,7 @@
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <select id="editoraId" th:field="*{editoraId}" class="custom-input" style="flex: 1;">
                             <option value="">Nenhuma</option>
-                            <option th:each="e : ${editoras}" th:value="${e.id}" th:text="${e.name}"></option>
+                            <option th:each="e : ${editoras}" th:value="${e.id}" th:text="${e.nome}"></option>
                         </select>
                         <button type="button" class="btn btn-outline-secondary" onclick="abrirModalEditora()" style="border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: white;" title="Adicionar Nova Editora">
                             <i class="bi bi-plus-lg" style="font-size: 20px; color: #4e3629;"></i>
@@ -137,8 +137,8 @@
                 </div>
 
                 <div class="input-group-custom">
-                    <label for="localization">Localização física</label>
-                    <input id="localization" type="text" th:field="*{localization}" class="custom-input" placeholder="Corredor A, Prateleira 2">
+                    <label for="localizacao">Localização física</label>
+                    <input id="localizacao" type="text" th:field="*{localizacao}" class="custom-input" placeholder="Corredor A, Prateleira 2">
                 </div>
 
                 <div class="input-group-custom">
@@ -147,13 +147,13 @@
                 </div>
 
                 <div class="input-group-custom full-width">
-                    <label for="description">Descrição</label>
-                    <textarea id="description" th:field="*{description}" class="custom-input" rows="3" placeholder="Descrição resumida..."></textarea>
+                    <label for="descricao">Descrição</label>
+                    <textarea id="descricao" th:field="*{descricao}" class="custom-input" rows="3" placeholder="Descrição resumida..."></textarea>
                 </div>
 
                 <div class="input-group-custom full-width">
-                    <label for="observation">Observações</label>
-                    <textarea id="observation" th:field="*{observation}" class="custom-input" rows="2" placeholder="Observações gerais..."></textarea>
+                    <label for="observacao">Observações</label>
+                    <textarea id="observacao" th:field="*{observacao}" class="custom-input" rows="2" placeholder="Observações gerais..."></textarea>
                 </div>
 
                 <div class="input-group-custom full-width">
@@ -167,7 +167,7 @@
                 <!-- Checkbox de visibilidade reestruturado e validado para evitar erros de sintaxe -->
                 <div class="input-group-custom full-width" style="margin-top: 15px;">
                     <label for="visivel" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;">
-                        <input id="visivel" type="checkbox" th:field="*{active}" style="width: 18px; height: 18px; cursor: pointer;" />
+                        <input id="visivel" type="checkbox" th:field="*{ativo}" style="width: 18px; height: 18px; cursor: pointer;" />
                         <span>Disponível / Visível no acervo público</span>
                     </label>
                 </div>
@@ -184,7 +184,7 @@
 
 <script>
     function toggleFields() {
-        var type = document.getElementById("type").value;
+        var type = document.getElementById("tipo").value;
 
         // Esconder todas as seções com animação/display
         document.getElementById("sec-livro").style.display = "none";
@@ -337,7 +337,7 @@
         const csrfToken = csrfInput ? csrfInput.value : "";
 
         const params = new URLSearchParams();
-        params.append("name", nome.trim());
+        params.append("nome", nome.trim());
         params.append("cnpj", cnpj.trim());
         params.append("cep", cep.trim());
         params.append("logradouro", logradouro.trim());
@@ -370,7 +370,7 @@
             const select = document.getElementById("editoraId");
             const opt = document.createElement("option");
             opt.value = data.id;
-            opt.text = data.name;
+            opt.text = data.nome;
             select.add(opt);
             select.value = data.id;
             fecharModalEditora();

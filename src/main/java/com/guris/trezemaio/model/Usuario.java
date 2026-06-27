@@ -24,11 +24,11 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
-    private String password;
+    private String nome;
+    private String senha;
 
     @Enumerated(EnumType.STRING)
-    private TipoUsuario type;
+    private TipoUsuario tipo;
 
     @CreatedDate
     @Column(name = "data_criacao", updatable = false)

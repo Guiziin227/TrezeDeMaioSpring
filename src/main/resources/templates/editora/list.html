@@ -59,9 +59,9 @@
                 </thead>
                 <tbody>
                     <tr th:each="editora : ${editoras}">
-                        <td th:text="${editora.name}" style="font-weight: 500;">Nome</td>
+                        <td th:text="${editora.nome}" style="font-weight: 500;">Nome</td>
                         <td th:text="${editora.cnpj != null && !editora.cnpj.isEmpty() ? editora.cnpj : 'Não informado'}">CNPJ</td>
-                        <td th:text="${editora.address != null ? editora.address.cidade + ' - ' + editora.address.estado : 'Não informado'}">Endereço</td>
+                        <td th:text="${editora.endereco != null ? editora.endereco.cidade + ' - ' + editora.endereco.estado : 'Não informado'}">Endereço</td>
 
                         <td class="audit-cell">
                             <div class="audit-row">
@@ -94,7 +94,7 @@
                             </a>
                             <a href="#" class="btn-action btn-delete" title="Excluir Editora"
                                th:data-id="${editora.id}"
-                               th:data-name="${editora.name}"
+                               th:data-name="${editora.nome}"
                                onclick="openDeleteModal(this)">
                                 <i class="material-icons">delete</i>
                             </a>

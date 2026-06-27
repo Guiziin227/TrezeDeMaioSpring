@@ -55,21 +55,21 @@ public class DataInitializer implements CommandLineRunner {
             try { jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1;"); } catch (Exception ignored) {}
         }
 
-        if (userRepository.findByName("admin").isEmpty()) {
+        if (userRepository.findByNome("admin").isEmpty()) {
             Usuario admin = new Usuario();
-            admin.setName("admin");
-            admin.setPassword(passwordEncoder.encode("123123"));
-            admin.setType(TipoUsuario.ADMINISTRADOR);
+            admin.setNome("admin");
+            admin.setSenha(passwordEncoder.encode("123123"));
+            admin.setTipo(TipoUsuario.ADMINISTRADOR);
             userRepository.save(admin);
             System.out.println("Usuário admin criado.");
         }
 
-        if (userRepository.findByName("user").isEmpty()) {
+        if (userRepository.findByNome("user").isEmpty()) {
             // Cria um novo usuário com a role USER.
             Usuario user = new Usuario();
-            user.setName("user");
-            user.setPassword(passwordEncoder.encode("123123"));
-            user.setType(TipoUsuario.BIBLIOTECARIO);
+            user.setNome("user");
+            user.setSenha(passwordEncoder.encode("123123"));
+            user.setTipo(TipoUsuario.BIBLIOTECARIO);
             userRepository.save(user);
             System.out.println("Bibliotecário user criado.");
         }
@@ -77,21 +77,21 @@ public class DataInitializer implements CommandLineRunner {
         if (editoraRepository.count() == 0) {
             Editora ed1 = new Editora();
             ed1.setId(1L);
-            ed1.setName("Editora Rocco");
+            ed1.setNome("Editora Rocco");
             ed1.setCnpj("12.345.678/0001-90");
             editoraRepository.save(ed1);
 
             Editora ed2 = new Editora();
             ed2.setId(2L);
-            ed2.setName("Editora Sextante");
+            ed2.setNome("Editora Sextante");
             ed2.setCnpj("98.765.432/0001-21");
             editoraRepository.save(ed2);
             System.out.println("Editoras iniciadas.");
         }
 
-        Editora rocco = editoraRepository.findAll().stream().filter(e -> e.getName().contains("Rocco")).findFirst()
+        Editora rocco = editoraRepository.findAll().stream().filter(e -> e.getNome().contains("Rocco")).findFirst()
                 .orElse(null);
-        Editora sextante = editoraRepository.findAll().stream().filter(e -> e.getName().contains("Sextante"))
+        Editora sextante = editoraRepository.findAll().stream().filter(e -> e.getNome().contains("Sextante"))
                 .findFirst().orElse(null);
 
 //        if (!itemRepository.existsByTitle("Dom Casmurro")) {

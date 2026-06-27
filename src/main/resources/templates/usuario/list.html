@@ -37,11 +37,11 @@
                 </thead>
                 <tbody>
                 <tr th:each="usuario : ${usuarios}">
-                    <td th:text="${usuario.name}">Nome</td>
+                    <td th:text="${usuario.nome}">Nome</td>
                     <td>
             <span class="badge-perfil"
-                  th:classappend="${#strings.toLowerCase(usuario.type)}"
-                  th:text="${usuario.type}">Perfil</span>
+                  th:classappend="${#strings.toLowerCase(usuario.tipo)}"
+                  th:text="${usuario.tipo}">Perfil</span>
                     </td>
 
                     <td class="audit-cell">
@@ -75,7 +75,7 @@
                         </a>
                         <a href="#" class="btn-action btn-delete" title="Excluir Usuário"
                            th:data-id="${usuario.id}"
-                           th:data-name="${usuario.name}"
+                           th:data-name="${usuario.nome}"
                            onclick="openDeleteModal(this)">
                             <i class="material-icons">delete</i>
                         </a>

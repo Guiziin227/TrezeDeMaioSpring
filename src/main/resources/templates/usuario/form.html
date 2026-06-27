@@ -33,17 +33,17 @@
 
             <div class="input-group-custom">
                 <label for="name">Nome</label>
-                <input id="name" type="text" th:field="*{name}" placeholder="Digite o nome completo" class="custom-input" required>
+                <input id="name" type="text" th:field="*{nome}" placeholder="Digite o nome completo" class="custom-input" required>
             </div>
 
             <div class="input-group-custom">
                 <label for="password">Senha</label>
-                <input id="password" type="password" th:field="*{password}" placeholder="Digite a senha" class="custom-input" required>
+                <input id="password" type="password" th:field="*{senha}" placeholder="Digite a senha" class="custom-input" required>
             </div>
 
             <div class="input-group-custom">
                 <label for="type">Tipo de Perfil</label>
-                <select id="type" th:field="*{type}" class="custom-input" required>
+                <select id="type" th:field="*{tipo}" class="custom-input" required>
                     <option value="">Selecione um perfil...</option>
                     <option th:each="tipo : ${T(com.guris.trezemaio.model.enums.TipoUsuario).values()}"
                             th:value="${tipo}"

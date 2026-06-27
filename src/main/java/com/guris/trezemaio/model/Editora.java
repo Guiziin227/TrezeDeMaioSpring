@@ -22,13 +22,13 @@ public class Editora {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String nome;
 
     private String cnpj;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
-    private Endereco address;
+    private Endereco endereco;
 
     @CreatedDate
     @Column(name = "data_criacao")

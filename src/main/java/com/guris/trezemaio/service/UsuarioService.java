@@ -23,9 +23,9 @@ public class UsuarioService {
 
     @Transactional
     public void criarUsuario(Usuario usuario){
-        logger.info("Criando usuário: {}", usuario.getName());
+        logger.info("Criando usuário: {}", usuario.getNome());
 
-        if (usuarioRepository.existsByName(usuario.getName())) {
+        if (usuarioRepository.existsByNome(usuario.getNome())) {
             throw new IllegalArgumentException("Já existe um usuário com este nome.");
         }
 

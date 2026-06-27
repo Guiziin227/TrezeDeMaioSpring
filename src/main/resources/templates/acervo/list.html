@@ -27,7 +27,7 @@
         <div class="search-filter-bar">
             <!-- Form de Busca Livre (Preserva o tipo ativo) -->
             <form th:action="@{/acervo}" method="get" class="search-box">
-                <input type="hidden" name="type" th:value="${selectedType}">
+                <input type="hidden" name="tipo" th:value="${selectedType}">
                 <i class="material-icons search-icon">search</i>
                 <input type="text" name="query" th:value="${query}" placeholder="Procurar no acervo..."
                        class="search-input">
@@ -39,17 +39,17 @@
                    th:classappend="${selectedType == null} ? 'active'">
                     <span>Todos</span>
                 </a>
-                <a th:href="@{/acervo(type='LIVRO', query=${query})}" class="filter-btn"
+                <a th:href="@{/acervo(tipo='LIVRO', query=${query})}" class="filter-btn"
                    th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO} ? 'active'">
                     <i class="material-icons">menu_book</i>
                     <span>Livros</span>
                 </a>
-                <a th:href="@{/acervo(type='REVISTA', query=${query})}" class="filter-btn"
+                <a th:href="@{/acervo(tipo='REVISTA', query=${query})}" class="filter-btn"
                    th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA} ? 'active'">
                     <i class="material-icons">auto_stories</i>
                     <span>Revistas</span>
                 </a>
-                <a th:href="@{/acervo(type='JORNAL', query=${query})}" class="filter-btn"
+                <a th:href="@{/acervo(tipo='JORNAL', query=${query})}" class="filter-btn"
                    th:classappend="${selectedType == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL} ? 'active'">
                     <i class="material-icons">newspaper</i>
                     <span>Jornais</span>
@@ -62,16 +62,16 @@
             <div class="acervo-card" th:each="item : ${itens}">
 
                 <div class="card-img-wrapper position-relative">
-                    <span class="card-badge" th:text="${item.type}">Tipo</span>
+                    <span class="card-badge" th:text="${item.tipo}">Tipo</span>
                     <div class="position-absolute top-0 start-0 m-2" style="z-index: 10;"
                          sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">
-                    <span th:if="${item.isActive}"
+                    <span th:if="${item.ativo}"
                           class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center"
                           style="width: 30px; height: 30px;" title="Item Visível">
                             <span class="material-symbols-outlined text-white"
                                   style="font-size: 18px;">visibility</span>
                         </span>
-                        <span th:if="${!item.isActive}"
+                        <span th:if="${!item.ativo}"
                               class="badge bg-dark bg-opacity-75 rounded-circle d-flex align-items-center justify-content-center"
                               style="width: 30px; height: 30px;" title="Item Oculto">
                             <span class="material-symbols-outlined text-white"
@@ -115,13 +115,13 @@
                          class="card-img">
 
                     <th:block th:if="${item.imagemUrl == null}">
-                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}"
+                        <img th:if="${item.tipo == T(com.guris.trezemaio.model.enums.TipoItem).LIVRO}"
                              src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600"
                              alt="Capa" class="card-img">
-                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}"
+                        <img th:if="${item.tipo == T(com.guris.trezemaio.model.enums.TipoItem).JORNAL}"
                              src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=600"
                              alt="Capa" class="card-img">
-                        <img th:if="${item.type == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}"
+                        <img th:if="${item.tipo == T(com.guris.trezemaio.model.enums.TipoItem).REVISTA}"
                              src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&q=80&w=600"
                              alt="Capa" class="card-img">
                     </th:block>
@@ -130,25 +130,25 @@
 
                 <div class="card-content">
                     <div class="card-info">
-                        <h3 class="card-title" th:text="${item.title}">Título</h3>
+                        <h3 class="card-title" th:text="${item.titulo}">Título</h3>
                         <p class="card-subtitle" th:text="${item.autor != null ? item.autor : 'Autor Desconhecido'}">
                             Autor</p>
                     </div>
                     <button type="button" class="btn-ver-mais"
                             th:data-imagem="${item.imagemExibicao}"
-                            th:data-title="${item.title}"
-                            th:data-subtitle="${item.subtitle}"
-                            th:data-type="${item.type}"
+                            th:data-titulo="${item.titulo}"
+                            th:data-subtitulo="${item.subtitulo}"
+                            th:data-tipo="${item.tipo}"
                             th:data-autor="${item.autor}"
                             th:data-edicao="${item.edicao}"
-                            th:data-language="${item.language}"
-                            th:data-pages="${item.pagesCount}"
-                            th:data-date="${item.publicationDate}"
-                            th:data-quantity="${item.quantity}"
-                            th:data-localization="${item.localization}"
-                            th:data-description="${item.description}"
+                            th:data-idioma="${item.idioma}"
+                            th:data-paginas="${item.totalPaginas}"
+                            th:data-data="${item.dataPublicacao}"
+                            th:data-quantidade="${item.quantidade}"
+                            th:data-localizacao="${item.localizacao}"
+                            th:data-descricao="${item.descricao}"
                             th:data-doador="${item.doador != null ? item.doador : 'Nenhum'}"
-                            th:data-editora="${item.editora != null ? item.editora.name : 'Nenhuma'}"
+                            th:data-editora="${item.editora != null ? item.editora.nome : 'Nenhuma'}"
                             th:data-codigo="${item.codigo}"
                             th:data-info="${item.infoEspecifica}"
                             th:data-criadopor="${item.criadoPor}"
@@ -328,10 +328,10 @@
         var imgSrc = btn.getAttribute("data-imagem");
         document.getElementById("modalImg").src = imgSrc || "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=300";
 
-        document.getElementById("modalType").textContent = btn.getAttribute("data-type") || '-';
-        document.getElementById("modalTitle").textContent = btn.getAttribute("data-title") || 'Sem título';
+        document.getElementById("modalType").textContent = btn.getAttribute("data-tipo") || '-';
+        document.getElementById("modalTitle").textContent = btn.getAttribute("data-titulo") || 'Sem título';
 
-        var subtitle = btn.getAttribute("data-subtitle");
+        var subtitle = btn.getAttribute("data-subtitulo");
         var subtitleEl = document.getElementById("modalSubtitle");
         if (subtitle && subtitle.trim() !== "") {
             subtitleEl.textContent = subtitle;
@@ -343,14 +343,14 @@
         document.getElementById("modalAutor").textContent = btn.getAttribute("data-autor") || 'Não informado';
         document.getElementById("modalCodigo").textContent = btn.getAttribute("data-codigo") || 'Não gerado';
         document.getElementById("modalEdicao").textContent = btn.getAttribute("data-edicao") || 'Não informado';
-        document.getElementById("modalLanguage").textContent = btn.getAttribute("data-language") || 'Não informado';
-        document.getElementById("modalPages").textContent = btn.getAttribute("data-pages") || '0';
-        document.getElementById("modalQuantity").textContent = btn.getAttribute("data-quantity") || '0';
-        document.getElementById("modalDate").textContent = btn.getAttribute("data-date") || 'Não informada';
-        document.getElementById("modalLocalization").textContent = btn.getAttribute("data-localization") || 'Não informada';
+        document.getElementById("modalLanguage").textContent = btn.getAttribute("data-idioma") || 'Não informado';
+        document.getElementById("modalPages").textContent = btn.getAttribute("data-paginas") || '0';
+        document.getElementById("modalQuantity").textContent = btn.getAttribute("data-quantidade") || '0';
+        document.getElementById("modalDate").textContent = btn.getAttribute("data-data") || 'Não informada';
+        document.getElementById("modalLocalization").textContent = btn.getAttribute("data-localizacao") || 'Não informada';
         document.getElementById("modalEditora").textContent = btn.getAttribute("data-editora") || 'Nenhuma';
         document.getElementById("modalDoador").textContent = btn.getAttribute("data-doador") || 'Nenhum';
-        document.getElementById("modalDescription").textContent = btn.getAttribute("data-description") || 'Sem descrição.';
+        document.getElementById("modalDescription").textContent = btn.getAttribute("data-descricao") || 'Sem descrição.';
 
         var info = btn.getAttribute("data-info");
         var infoWrapper = document.getElementById("modalInfoWrapper");

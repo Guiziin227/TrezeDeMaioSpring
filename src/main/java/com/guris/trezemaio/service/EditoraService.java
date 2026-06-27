@@ -44,7 +44,7 @@ public class EditoraService {
 
     @Transactional
     public Editora salvar(Editora editora) {
-        logger.info("Salvando editora: {}", editora.getName());
+        logger.info("Salvando editora: {}", editora.getNome());
         return editoraRepository.save(editora);
     }
 

@@ -54,19 +54,19 @@
                     <tr th:each="item : ${itens}">
                         <td>
                             <span class="badge-perfil"
-                                  th:classappend="${#strings.toLowerCase(item.type)}"
-                                  th:text="${item.type}">Tipo</span>
+                                  th:classappend="${#strings.toLowerCase(item.tipo)}"
+                                  th:text="${item.tipo}">Tipo</span>
                         </td>
-                        <td th:text="${item.title}">Título</td>
+                        <td th:text="${item.titulo}">Título</td>
                         <td th:text="${item.autor}">Autor</td>
                         <td th:text="${item.codigo}">Código</td>
                         <td>
-                            <span th:if="${item.isActive}"
+                            <span th:if="${item.ativo}"
                                   class="badge-visivel ativo">
                                 <span class="material-symbols-outlined" style="font-size:15px;">visibility</span>
                                 Visível
                             </span>
-                            <span th:if="${!item.isActive}"
+                            <span th:if="${!item.ativo}"
                                   class="badge-visivel inativo">
                                 <span class="material-symbols-outlined" style="font-size:15px;">visibility_off</span>
                                 Oculto
@@ -103,7 +103,7 @@
                             </a>
                             <a href="#" class="btn-action btn-delete" title="Excluir Item"
                                th:data-id="${item.id}"
-                               th:data-name="${item.title}"
+                               th:data-name="${item.titulo}"
                                onclick="openDeleteModal(this)">
                                 <i class="material-icons">delete</i>
                             </a>

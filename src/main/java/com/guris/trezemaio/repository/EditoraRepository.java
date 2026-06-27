@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface EditoraRepository extends JpaRepository<Editora, Long> {
 
     @Query("SELECT e FROM Editora e WHERE " +
-            "(:query IS NULL OR LOWER(e.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "(:query IS NULL OR LOWER(e.nome) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(e.cnpj) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<Editora> searchEditoras(@Param("query") String query);
 }

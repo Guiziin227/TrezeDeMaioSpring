@@ -13,16 +13,16 @@ import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    Optional<Item> findFirstByTypeOrderByIdDesc(TipoItem type);
+    Optional<Item> findFirstByTipoOrderByIdDesc(TipoItem tipo);
 
     @Query("SELECT i FROM Item i WHERE " +
-            "(:type IS NULL OR i.type = :type) AND " +
-            "(:isAdminOrBibliotecario = true OR i.isActive = true) AND " +
-            "(:query IS NULL OR LOWER(i.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "(:tipo IS NULL OR i.tipo = :tipo) AND " +
+            "(:isAdminOrBibliotecario = true OR i.ativo = true) AND " +
+            "(:query IS NULL OR LOWER(i.titulo) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(i.autor) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "OR LOWER(i.description) LIKE LOWER(CONCAT('%', :query, '%')))")
+            "OR LOWER(i.descricao) LIKE LOWER(CONCAT('%', :query, '%')))")
     Page<Item> searchAcervo(
-            @Param("type") TipoItem type,
+            @Param("tipo") TipoItem tipo,
             @Param("query") String query,
             @Param("isAdminOrBibliotecario") boolean isAdminOrBibliotecario,
             Pageable pageable
@@ -30,7 +30,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
 
     @Query("SELECT i FROM Item i WHERE " +
-            "(:query IS NULL OR LOWER(i.title) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "(:query IS NULL OR LOWER(i.titulo) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(i.autor) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(i.codigo) LIKE LOWER(CONCAT('%', :query, '%')))")
     Page<Item> searchGerenciar(

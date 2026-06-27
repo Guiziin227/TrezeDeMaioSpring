@@ -21,14 +21,14 @@
 
         <form th:action="@{/editora/create}" th:object="${editora}" method="post" class="form-container">
             <input type="hidden" th:field="*{id}" />
-            <input type="hidden" th:field="*{address.id}" />
+            <input type="hidden" th:field="*{endereco.id}" />
 
             <h3 class="subtype-titulo">Dados da Editora</h3>
             <div class="form-grid">
                 <div class="input-group-custom">
                     <label for="name">Nome da Editora</label>
-                    <input id="name" type="text" th:field="*{name}" class="custom-input" placeholder="Ex: Editora Rocco" required>
-                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="field-error"></span>
+                    <input id="name" type="text" th:field="*{nome}" class="custom-input" placeholder="Ex: Editora Rocco" required>
+                    <span th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="field-error"></span>
                 </div>
 
                 <div class="input-group-custom">
@@ -42,37 +42,37 @@
             <div class="form-grid">
                 <div class="input-group-custom">
                     <label for="cep">CEP</label>
-                    <input id="cep" type="text" th:field="*{address.cep}" class="custom-input" placeholder="00000-000">
+                    <input id="cep" type="text" th:field="*{endereco.cep}" class="custom-input" placeholder="00000-000">
                 </div>
 
                 <div class="input-group-custom">
                     <label for="logradouro">Logradouro / Rua</label>
-                    <input id="logradouro" type="text" th:field="*{address.logradouro}" class="custom-input" placeholder="Ex: Av. Paulista">
+                    <input id="logradouro" type="text" th:field="*{endereco.logradouro}" class="custom-input" placeholder="Ex: Av. Paulista">
                 </div>
 
                 <div class="input-group-custom">
                     <label for="numero">Número</label>
-                    <input id="numero" type="text" th:field="*{address.numero}" class="custom-input" placeholder="Ex: 123">
+                    <input id="numero" type="text" th:field="*{endereco.numero}" class="custom-input" placeholder="Ex: 123">
                 </div>
 
                 <div class="input-group-custom">
                     <label for="bairro">Bairro</label>
-                    <input id="bairro" type="text" th:field="*{address.bairro}" class="custom-input" placeholder="Ex: Centro">
+                    <input id="bairro" type="text" th:field="*{endereco.bairro}" class="custom-input" placeholder="Ex: Centro">
                 </div>
 
                 <div class="input-group-custom">
                     <label for="cidade">Cidade</label>
-                    <input id="cidade" type="text" th:field="*{address.cidade}" class="custom-input" placeholder="Ex: São Paulo">
+                    <input id="cidade" type="text" th:field="*{endereco.cidade}" class="custom-input" placeholder="Ex: São Paulo">
                 </div>
 
                 <div class="input-group-custom">
                     <label for="estado">Estado</label>
-                    <input id="estado" type="text" th:field="*{address.estado}" class="custom-input" placeholder="Ex: SP">
+                    <input id="estado" type="text" th:field="*{endereco.estado}" class="custom-input" placeholder="Ex: SP">
                 </div>
 
                 <div class="input-group-custom">
                     <label for="pais">País</label>
-                    <input id="pais" type="text" th:field="*{address.pais}" class="custom-input" placeholder="Ex: Brasil">
+                    <input id="pais" type="text" th:field="*{endereco.pais}" class="custom-input" placeholder="Ex: Brasil">
                 </div>
             </div>
 
