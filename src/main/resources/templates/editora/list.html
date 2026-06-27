@@ -52,6 +52,8 @@
                         <th>Nome</th>
                         <th>CNPJ</th>
                         <th>Endereço / Cidade</th>
+                        <th>Criado por</th>
+                        <th>Editado por</th>
                         <th sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')">Ações</th>
                     </tr>
                 </thead>
@@ -60,6 +62,31 @@
                         <td th:text="${editora.name}" style="font-weight: 500;">Nome</td>
                         <td th:text="${editora.cnpj != null && !editora.cnpj.isEmpty() ? editora.cnpj : 'Não informado'}">CNPJ</td>
                         <td th:text="${editora.address != null ? editora.address.cidade + ' - ' + editora.address.estado : 'Não informado'}">Endereço</td>
+
+                        <td class="audit-cell">
+                            <div class="audit-row">
+                                <span class="audit-label">Por</span>
+                                <span class="audit-value" th:text="${editora.criadoPor != null ? editora.criadoPor : '-'}">-</span>
+                            </div>
+                            <div class="audit-row">
+                                <span class="audit-label">Em</span>
+                                <span class="audit-value"
+                                      th:text="${editora.dataCriacao != null ? #temporals.format(editora.dataCriacao, 'dd/MM/yyyy') : '-'}">-</span>
+                            </div>
+                        </td>
+
+                        <td class="audit-cell">
+                            <div class="audit-row">
+                                <span class="audit-label">Por</span>
+                                <span class="audit-value" th:text="${editora.modificadoPor != null ? editora.modificadoPor : '-'}">-</span>
+                            </div>
+                            <div class="audit-row">
+                                <span class="audit-label">Em</span>
+                                <span class="audit-value"
+                                      th:text="${editora.dataModificacao != null ? #temporals.format(editora.dataModificacao, 'dd/MM/yyyy') : '-'}">-</span>
+                            </div>
+                        </td>
+
                         <td sec:authorize="hasAnyAuthority('ADMINISTRADOR', 'BIBLIOTECARIO')" class="text-center actions-cell">
                             <a th:href="@{/editora/editar/{id}(id=${editora.id})}"
                                class="btn-action btn-edit" title="Editar Editora">
@@ -74,7 +101,7 @@
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(editoras)}">
-                        <td colspan="4" style="text-align:center; color:#9c8878; padding: 30px;">
+                        <td colspan="6" style="text-align:center; color:#9c8878; padding: 30px;">
                             Nenhuma editora cadastrada.
                         </td>
                     </tr>
