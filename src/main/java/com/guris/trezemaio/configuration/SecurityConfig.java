@@ -36,7 +36,14 @@ public class SecurityConfig {
                         .failureUrl("/usuario/login?error")
                         .permitAll()
                 )
-                .logout(l -> l.logoutSuccessUrl("/").permitAll());
+                .logout(l -> l
+                        .logoutRequestMatcher(request -> "/logout".equals(request.getRequestURI()))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
 
         return httpSecurity.getOrBuild();
     }
