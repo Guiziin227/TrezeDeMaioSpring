@@ -40,22 +40,26 @@ public class UsuarioController {
 
     @GetMapping("/usuario/form")
     public String form(Model model) {
-        model.addAttribute("usuario", new Usuario());
+        if (!model.containsAttribute("usuario")) {
+            model.addAttribute("usuario", new Usuario());
+        }
         return FORM_VIEW;
     }
 
     @PostMapping("/usuario/create")
     public String create(@ModelAttribute Usuario usuario, RedirectAttributes attributes) {
         try{
-            usuarioService.criarUsuario(usuario);
-            attributes.addFlashAttribute("mensagemSucesso", "Usuario criado com sucesso!");
+            usuarioService.salvarUsuario(usuario);
+            attributes.addFlashAttribute("mensagemSucesso", "Usuário salvo com sucesso!");
             return "redirect:/usuario/list";
         }catch(IllegalArgumentException e){
             attributes.addFlashAttribute("mensagemErro", e.getMessage());
+            attributes.addFlashAttribute("usuario", usuario);
+            if (usuario.getId() != null) {
+                return "redirect:/usuario/edit/" + usuario.getId();
+            }
             return "redirect:/usuario/form";
         }
-
-
     }
 
     @GetMapping("/usuario/list")
@@ -66,8 +70,11 @@ public class UsuarioController {
 
     @GetMapping("/usuario/edit/{id}")
     public String edit(@PathVariable UUID id, Model model) {
-        Usuario usuario = usuarioService.buscarPorId(id);
-        model.addAttribute("usuario", usuario);
+        if (!model.containsAttribute("usuario")) {
+            Usuario usuario = usuarioService.buscarPorId(id);
+            usuario.setSenha(""); // Limpa a senha para o formulário vir vazio
+            model.addAttribute("usuario", usuario);
+        }
         return FORM_VIEW;
     }
 

@@ -18,7 +18,7 @@
 <div class="main-container">
 
     <div class="cadastro-card">
-        <h1 class="cadastro-titulo">Cadastro de Usuário</h1>
+        <h1 class="cadastro-titulo" th:text="${usuario.id == null} ? 'Cadastro de Usuário' : 'Edição de Usuário'">Cadastro de Usuário</h1>
 
         <div th:if="${mensagemErro}" class="alert-mensagem alert-erro">
             <span th:text="${mensagemErro}"></span>
@@ -38,7 +38,10 @@
 
             <div class="input-group-custom">
                 <label for="password">Senha</label>
-                <input id="password" type="password" th:field="*{senha}" placeholder="Digite a senha" class="custom-input" required>
+                <input id="password" type="password" th:field="*{senha}" 
+                       th:placeholder="${usuario.id == null} ? 'Digite a senha' : 'Deixe em branco para manter a senha atual'" 
+                       class="custom-input" 
+                       th:required="${usuario.id == null}">
             </div>
 
             <div class="input-group-custom">
