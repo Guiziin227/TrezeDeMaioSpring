@@ -132,7 +132,6 @@ http://localhost:8080
 * Guilherme Scher
 * José Barros
 * José Otávio Baggio
-* 
 ---
 
 # Demonstração
