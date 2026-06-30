@@ -138,3 +138,5 @@ http://localhost:8080
 
 Vídeo de demonstração do sistema:
 https://www.youtube.com/watch?v=GnGZ4wLCbYo
+Vídeo devagar:
+https://youtu.be/AQb-9veTx5o
